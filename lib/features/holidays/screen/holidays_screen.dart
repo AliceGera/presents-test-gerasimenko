@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
@@ -34,16 +32,18 @@ class HolidaysScreen extends ElementaryWidget<IHolidaysScreenWidgetModel> {
           ),
         ),
       ),
-      body: _Body(openNextScreen: wm.openNextScreen),
+      body: _Body(openNextScreen: wm.openNextScreen, editHolidayScreen: wm.editHolidayScreen),
     );
   }
 }
 
 class _Body extends StatelessWidget {
   final VoidCallback openNextScreen;
+  final VoidCallback editHolidayScreen;
 
   const _Body({
     required this.openNextScreen,
+    required this.editHolidayScreen,
   });
 
   @override
@@ -97,7 +97,10 @@ class _Body extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SvgPicture.asset(SvgIcons.dots),
+                    InkWell(
+                      onTap: editHolidayScreen,
+                      child: SvgPicture.asset(SvgIcons.dots),
+                    ),
                   ],
                 ),
               ),

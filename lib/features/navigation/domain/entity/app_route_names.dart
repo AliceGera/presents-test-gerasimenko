@@ -30,6 +30,7 @@ abstract class AppRouteNames {
   /// AddHolidayScreen route name.
   static const String addHolidayScreen = 'addHolidayRouter';
 
-  /// LogHistoryScreen route name.
-  static const String logHistoryScreen = 'logHistoryRouter';
+  /// EditHolidayScreen route name.
+  static const String editHolidayScreen = 'editHolidayRouter';
+
 }

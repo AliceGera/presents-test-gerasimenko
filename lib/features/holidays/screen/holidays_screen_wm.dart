@@ -9,8 +9,8 @@ import 'package:provider/provider.dart';
 
 /// Factory for [HolidaysScreenWidgetModel].
 HolidaysScreenWidgetModel holidaysScreenWmFactory(
-  BuildContext context,
-) {
+    BuildContext context,
+    ) {
   final appScope = context.read<IAppScope>();
   final model = HolidaysScreenModel();
 
@@ -23,13 +23,18 @@ class HolidaysScreenWidgetModel extends WidgetModel<HolidaysScreen, HolidaysScre
   final AppRouter _appRouter;
 
   HolidaysScreenWidgetModel(
-    super._model,
-    this._appRouter,
-  );
+      super._model,
+      this._appRouter,
+      );
 
   @override
   void openNextScreen() {
     _appRouter.push(AddHolidayRouter());
+  }
+
+  @override
+  void editHolidayScreen() {
+    _appRouter.push(EditHolidayRouter());
   }
 }
 
@@ -37,4 +42,7 @@ class HolidaysScreenWidgetModel extends WidgetModel<HolidaysScreen, HolidaysScre
 abstract class IHolidaysScreenWidgetModel with ThemeIModelMixin implements IWidgetModel {
   /// Navigate to room screen.
   void openNextScreen();
+
+  /// Navigate to edit holiday screen.
+  void editHolidayScreen();
 }
