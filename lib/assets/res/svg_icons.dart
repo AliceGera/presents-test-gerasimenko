@@ -16,6 +16,9 @@ class SvgIcons {
   static const String activeSettings ='assets/icons/active_settings.svg';
   static const String dots ='assets/icons/dots.svg';
   static const String calendar ='assets/icons/calendar.svg';
+  static const String privacy ='assets/icons/privacy.svg';
+  static const String userAgreement ='assets/icons/user_agreement.svg';
+  static const String rateApp ='assets/icons/rate_app.svg';
 
   static const List<String> values = [testSvg];
 }

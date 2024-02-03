@@ -55,7 +55,7 @@ class TempScreenWidgetModel extends WidgetModel<TempScreen, ITempScreenModel> wi
   List<BottomNavigationBarItem> get navigationBarItems => _navigationBarItems;
 
   List<PageRouteInfo> get _routes {
-    final defaultRoutes = <PageRouteInfo>[HolidaysRouter(), GiftsReceivedRouter(), NewsRouter(), SettingsRouter(), GiftsGivenRouter()];
+    final defaultRoutes = <PageRouteInfo>[HolidaysRouter(), GiftsReceivedRouter(), NewsRouter(), GiftsGivenRouter(), SettingsRouter()];
 
     return defaultRoutes;
   }
