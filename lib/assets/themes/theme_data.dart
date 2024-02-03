@@ -39,7 +39,7 @@ abstract class AppThemeData {
       selectedItemColor: _lightColorScheme.primary,
       unselectedItemColor: _lightColorScheme.onBackground,
     ),
-    scaffoldBackgroundColor: _lightColorScheme.background,
+    scaffoldBackgroundColor:Color(0xff131849),
     extensions: [_lightColorScheme, _textTheme],
   );
 

@@ -12,14 +12,23 @@ abstract class AppRouteNames {
   /// TempScreen route name.
   static const String uiKitScreen = 'uiKitRouter';
 
-  /// DebugScreen route name.
-  static const String debugScreen = 'debugRouter';
+  /// GiftsGivenScreen route name.
+  static const String giftsGivenScreen = 'giftsGivenRouter';
 
-  /// DashScreen route name.
-  static const String dashScreen = 'dashRouter';
+  /// HolidaysScreen route name.
+  static const String holidaysScreen = 'holidaysRouter';
 
-  /// InfoScreen route name.
-  static const String infoScreen = 'infoRouter';
+  /// GiftsReceivedScreen route name.
+  static const String giftsReceivedScreen = 'giftsReceivedRouter';
+
+  /// NewsScreen route name.
+  static const String newsScreen = 'newsRouter';
+
+  /// SettingsScreen route name.
+  static const String settingsScreen = 'settingsRouter';
+
+  /// AddHolidayScreen route name.
+  static const String addHolidayScreen = 'addHolidayRouter';
 
   /// LogHistoryScreen route name.
   static const String logHistoryScreen = 'logHistoryRouter';
