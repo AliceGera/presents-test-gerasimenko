@@ -24,6 +24,9 @@ abstract class AppRouteNames {
   /// NewsScreen route name.
   static const String newsScreen = 'newsRouter';
 
+  /// ReadNewsScreen route name.
+  static const String readNewsScreen = 'readNewsRouter';
+
   /// SettingsScreen route name.
   static const String settingsScreen = 'settingsRouter';
 

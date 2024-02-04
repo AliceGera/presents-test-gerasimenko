@@ -98,6 +98,7 @@ class _Body extends StatelessWidget {
                       ],
                     ),
                     InkWell(
+                      highlightColor: Colors.transparent, splashColor: Colors.transparent,
                       onTap: editHolidayScreen,
                       child: SvgPicture.asset(SvgIcons.dots),
                     ),

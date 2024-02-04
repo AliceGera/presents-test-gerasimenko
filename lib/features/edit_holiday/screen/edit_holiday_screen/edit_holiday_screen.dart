@@ -1,7 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:flutter_template/assets/colors/app_colors.dart';
+import 'package:flutter_template/assets/res/resources.dart';
 import 'package:flutter_template/assets/text/text_style.dart';
 import 'package:flutter_template/features/common/widgets/app_button_widget.dart';
 import 'package:flutter_template/features/edit_holiday/screen/edit_holiday_screen/edit_holiday_screen_widget_model.dart';
@@ -23,10 +25,19 @@ class EditHolidayScreen extends ElementaryWidget<IEditHolidayScreenWidgetModel> 
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
+        automaticallyImplyLeading: false,
         backgroundColor: AppColors.backgroundColor,
-        title: Text(
-          'Edit a holiday',
-          style: AppTextStyle.bold19.value.copyWith(color: AppColors.white),
+        title: Row(
+          children: [
+            InkWell(highlightColor: Colors.transparent, splashColor: Colors.transparent, onTap: wm.closeScreen, child: SvgPicture.asset(SvgIcons.backArrow)),
+            Padding(
+              padding: const EdgeInsets.only(left: 36),
+              child: Text(
+                'Edit a holiday',
+                style: AppTextStyle.bold19.value.copyWith(color: AppColors.white),
+              ),
+            ),
+          ],
         ),
       ),
       body: _Body(closeScreen: wm.closeScreen),

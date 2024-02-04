@@ -9,5 +9,7 @@ class AppColors {
   static const Color textFieldBackground = Color(0xff2F3149);
   static const Color gray = Color(0xff363B62);
   static const Color black = Colors.black;
+  static const Color lightGray = Color(0xffBDC1CB);
+
   AppColors._();
 }

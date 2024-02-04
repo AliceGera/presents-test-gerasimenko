@@ -24,6 +24,9 @@ abstract class AppRoutePaths {
   /// Path to news screen.
   static const String newsPath = 'news';
 
+  /// Path to read news screen.
+  static const String readNewsPath = '/readNews';
+
   /// Path to settings screen.
   static const String settingsPath = 'settings';
 
