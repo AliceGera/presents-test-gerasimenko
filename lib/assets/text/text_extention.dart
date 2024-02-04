@@ -6,6 +6,9 @@ class AppTextTheme extends ThemeExtension<AppTextTheme> {
   /// Text style 12_133.
   final TextStyle regular12;
 
+  /// Text style 13_138.
+  final TextStyle regular13;
+
   /// Text style 14_140.
   final TextStyle regular14;
 
@@ -35,6 +38,7 @@ class AppTextTheme extends ThemeExtension<AppTextTheme> {
 
   AppTextTheme._({
     required this.regular12,
+    required this.regular13,
     required this.regular14,
     required this.regular16,
     required this.medium11,
@@ -49,6 +53,7 @@ class AppTextTheme extends ThemeExtension<AppTextTheme> {
   /// Base app text theme.
   AppTextTheme.base()
       : regular12 = AppTextStyle.regular12.value,
+        regular13 = AppTextStyle.regular13.value,
         regular14 = AppTextStyle.regular14.value,
         regular16 = AppTextStyle.regular16.value,
         medium11 = AppTextStyle.medium11.value,
@@ -70,6 +75,7 @@ class AppTextTheme extends ThemeExtension<AppTextTheme> {
 
     return AppTextTheme._(
       regular12: TextStyle.lerp(regular12, other.regular12, t)!,
+      regular13: TextStyle.lerp(regular13, other.regular13, t)!,
       regular14: TextStyle.lerp(regular14, other.regular14, t)!,
       regular16: TextStyle.lerp(regular16, other.regular16, t)!,
       medium11: TextStyle.lerp(medium11, other.medium11, t)!,
@@ -91,6 +97,7 @@ class AppTextTheme extends ThemeExtension<AppTextTheme> {
   @override
   ThemeExtension<AppTextTheme> copyWith({
     TextStyle? regular12,
+    TextStyle? regular13,
     TextStyle? regular14,
     TextStyle? regular16,
     TextStyle? medium11,
@@ -103,6 +110,7 @@ class AppTextTheme extends ThemeExtension<AppTextTheme> {
   }) {
     return AppTextTheme._(
       regular12: regular12 ?? this.regular12,
+      regular13: regular13 ?? this.regular13,
       regular14: regular14 ?? this.regular14,
       regular16: regular16 ?? this.regular16,
       medium11: medium11 ?? this.medium11,

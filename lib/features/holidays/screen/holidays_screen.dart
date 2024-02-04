@@ -86,10 +86,7 @@ class _Body extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                'Saint Valentine’s Day',
-                                style: AppTextStyle.bold19.value.copyWith(color: AppColors.white),
-                              ),
+                              Text('Saint Valentine’s Day', style: AppTextStyle.bold19.value.copyWith(color: AppColors.white)),
                               const SizedBox(height: 8),
                               Text('14.02.2023', style: AppTextStyle.medium11.value.copyWith(color: AppColors.white)),
                             ],
@@ -98,7 +95,8 @@ class _Body extends StatelessWidget {
                       ],
                     ),
                     InkWell(
-                      highlightColor: Colors.transparent, splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
                       onTap: editHolidayScreen,
                       child: SvgPicture.asset(SvgIcons.dots),
                     ),
