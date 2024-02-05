@@ -1,17 +1,25 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_template/features/add_holiday/screen/add_holiday_screen/add_holiday_screen_export.dart';
-import 'package:flutter_template/features/edit_holiday/screen/edit_holiday_screen/edit_holiday_screen_export.dart';
 import 'package:flutter_template/features/gifts_given/screens/gifts_given_screen/gifts_given_screen_export.dart';
-import 'package:flutter_template/features/gifts_received/screen/gifts_received_screen_export.dart';
-import 'package:flutter_template/features/holidays/screen/holidays_screen_export.dart';
+import 'package:flutter_template/features/gifts_received/screens/add_gift_received_screen/add_gift_received_screen_export.dart';
+import 'package:flutter_template/features/gifts_received/screens/edit_gift_received_screen/edit_gift_received_screen_export.dart';
+import 'package:flutter_template/features/gifts_received/screens/gifts_received_screen/gifts_received_screen_export.dart';
+import 'package:flutter_template/features/gifts_received/screens/holiday_name_screen/holiday_name_screen_export.dart';
+import 'package:flutter_template/features/gifts_received/screens/who_gave_present_screen/who_gave_present_screen_export.dart';
+import 'package:flutter_template/features/holidays/screens/add_holiday_screen/add_holiday_screen_export.dart';
+import 'package:flutter_template/features/holidays/screens/edit_holiday_screen/edit_holiday_screen_export.dart';
+import 'package:flutter_template/features/holidays/screens/holidays_screen/holidays_screen_export.dart';
+import 'package:flutter_template/features/navigation/domain/entity/add_gift_received/add_gift_received_routes.dart';
 import 'package:flutter_template/features/navigation/domain/entity/add_holiday/add_holiday_routes.dart';
+import 'package:flutter_template/features/navigation/domain/entity/edit_gift_received/edit_gift_received_routes.dart';
 import 'package:flutter_template/features/navigation/domain/entity/edit_holiday/edit_holiday_routes.dart';
+import 'package:flutter_template/features/navigation/domain/entity/holiday_name/holiday_name_routes.dart';
 import 'package:flutter_template/features/navigation/domain/entity/read_news/read_news_routes.dart';
 import 'package:flutter_template/features/navigation/domain/entity/temp/temp_routes.dart';
-import 'package:flutter_template/features/news/screen/news_screen_export.dart';
-import 'package:flutter_template/features/read_news/screen/read_news_screen_export.dart';
+import 'package:flutter_template/features/navigation/domain/entity/who_gave_present/who_gave_present_routes.dart';
+import 'package:flutter_template/features/news/screens/news_screen/news_screen_export.dart';
+import 'package:flutter_template/features/news/screens/read_news_screen/read_news_screen_export.dart';
 import 'package:flutter_template/features/settings/screen/settings_screen_export.dart';
 import 'package:flutter_template/features/temp/screens/temp_screen/temp_screen_export.dart';
 
@@ -36,6 +44,10 @@ class AppRouter extends _$AppRouter {
         addHolidayRoutes,
         editHolidayRoutes,
         readNewsRoutes,
+        addGiftReceivedRoutes,
+        editGiftReceivedRoutes,
+        whoGavePresentRoutes,
+        holidayNameRoutes,
       ];
 
   AppRouter._();

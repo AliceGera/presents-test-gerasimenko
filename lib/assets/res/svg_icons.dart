@@ -24,5 +24,8 @@ class SvgIcons {
   static const String fourStars ='assets/icons/4stars.svg';
   static const String fiveStars ='assets/icons/5stars.svg';
   static const String editGift ='assets/icons/edit_gift.svg';
+  static const String trash ='assets/icons/trash.svg';
+  static const String checkChoose ='assets/icons/check_choose.svg';
+  static const String close ='assets/icons/close.svg';
   static const List<String> values = [testSvg];
 }

@@ -21,6 +21,12 @@ abstract class AppRoutePaths {
   /// Path to gifts received screen.
   static const String giftsReceivedPath = 'gifts_received';
 
+  /// Path to add gift received screen.
+  static const String addGiftReceivedPath = '/add_gift_received';
+
+  /// Path to edit gift received screen.
+  static const String editGiftReceivedPath = '/edit_gift_received';
+
   /// Path to news screen.
   static const String newsPath = 'news';
 
@@ -35,4 +41,12 @@ abstract class AppRoutePaths {
 
   /// Path to edit holiday screen.
   static const String editHolidayPath = '/editHoliday';
+
+  /// Path to who gave present screen.
+  static const String whoGavePresentPath = '/whoGavePresent';
+
+  /// Path to holiday name Screen.
+  static const String holidayNamePath = '/holidayNamePresent';
+
+
 }
