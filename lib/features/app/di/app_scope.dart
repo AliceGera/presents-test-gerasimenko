@@ -4,7 +4,10 @@ import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_template/api/service/holidays_api.dart';
 import 'package:flutter_template/config/environment/environment.dart';
+import 'package:flutter_template/features/common/domain/repository/holidays_repository.dart';
+import 'package:flutter_template/features/common/service/holidays_service.dart';
 import 'package:flutter_template/features/common/service/theme/theme_service.dart';
 import 'package:flutter_template/features/common/service/theme/theme_service_impl.dart';
 import 'package:flutter_template/features/common/utils/analytics/amplitude/amplitude_analytic_tracker.dart';
@@ -19,6 +22,8 @@ import 'package:flutter_template/persistence/storage/theme_storage/theme_storage
 import 'package:flutter_template/util/default_error_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:flutter_template/api/data/holiday_database.dart';
+
 /// Scope of dependencies which need through all app's life.
 class AppScope implements IAppScope {
   static const _themeByDefault = ThemeMode.system;
@@ -30,6 +35,9 @@ class AppScope implements IAppScope {
   late final AppRouter _router;
   late final IThemeService _themeService;
   late final IAnalyticsService _analyticsService;
+  late final HolidaysService _holidaysService;
+  late final HolidaysRepository _holidaysRepository;
+  late final HolidaysApi _holidaysApi;
 
   @override
   late VoidCallback applicationRebuilder;
@@ -52,13 +60,17 @@ class AppScope implements IAppScope {
   @override
   IAnalyticsService get analyticsService => _analyticsService;
 
+  @override
+  HolidaysService get holidaysService => _holidaysService;
+
   late IThemeModeStorage _themeModeStorage;
 
   /// Create an instance [AppScope].
   AppScope(this._sharedPreferences) {
     /// List interceptor. Fill in as needed.
     final additionalInterceptors = <Interceptor>[];
-
+    _holidaysApi = HolidaysApi(AppDatabase());
+    _holidaysService = _initHolidaysService();
     _dio = _initDio(additionalInterceptors);
     _errorHandler = DefaultErrorHandler();
     _router = AppRouter.instance();
@@ -116,6 +128,11 @@ class AppScope implements IAppScope {
   Future<void> _onThemeModeChanged() async {
     await _themeModeStorage.saveThemeMode(mode: _themeService.currentThemeMode);
   }
+
+  HolidaysService _initHolidaysService() {
+    _holidaysRepository = HolidaysRepository(_holidaysApi);
+    return HolidaysService(_holidaysRepository);
+  }
 }
 
 /// App dependencies.
@@ -143,4 +160,7 @@ abstract class IAppScope {
 
   /// Analytics sending service
   IAnalyticsService get analyticsService;
+
+  /// Analytics sending hotel
+  HolidaysService get holidaysService;
 }

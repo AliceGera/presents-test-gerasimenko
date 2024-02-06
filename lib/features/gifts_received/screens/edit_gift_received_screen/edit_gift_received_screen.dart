@@ -9,16 +9,20 @@ import 'package:flutter_template/features/common/widgets/app_add_or_edit_gift_wi
 import 'package:flutter_template/features/gifts_received/screens/edit_gift_received_screen/edit_gift_received_screen_widget_model.dart';
 import 'package:flutter_template/features/navigation/domain/entity/app_route_names.dart';
 
+import 'package:flutter_template/features/common/domain/data/holidays/holidays_data.dart';
+
 /// EditGiftReceived screens.
 @RoutePage(
   name: AppRouteNames.editGiftReceivedScreen,
 )
 class EditGiftReceivedScreen extends ElementaryWidget<IEditGiftReceivedScreenWidgetModel> {
   /// Create an instance [EditGiftReceivedScreen].
-  const EditGiftReceivedScreen({
+  EditGiftReceivedScreen({
+   // required this.holiday,
     Key? key,
     WidgetModelFactory wmFactory = editGiftReceivedScreenWidgetModelFactory,
   }) : super(wmFactory, key: key);
+ // Holiday holiday;
 
   @override
   Widget build(IEditGiftReceivedScreenWidgetModel wm) {
@@ -40,7 +44,7 @@ class EditGiftReceivedScreen extends ElementaryWidget<IEditGiftReceivedScreenWid
           ],
         ),
       ),
-      body: _Body(closeScreen: wm.closeScreen,whoGavePresentScreen: wm.whoGavePresentScreen,chooseHolidayNameScreen: wm.chooseHolidayNameScreen),
+      body: _Body(closeScreen: wm.closeScreen, whoGavePresentScreen: wm.whoGavePresentScreen, chooseHolidayNameScreen: wm.chooseHolidayNameScreen),
     );
   }
 }
@@ -49,7 +53,8 @@ class _Body extends StatelessWidget {
   final VoidCallback closeScreen;
   final VoidCallback whoGavePresentScreen;
   final VoidCallback chooseHolidayNameScreen;
-  _Body({required this.closeScreen,required this.whoGavePresentScreen,required this.chooseHolidayNameScreen});
+
+  _Body({required this.closeScreen, required this.whoGavePresentScreen, required this.chooseHolidayNameScreen});
 
   final textController = TextEditingController();
 

@@ -61,7 +61,13 @@ class _Body extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: [
-          AppItemListWidget(onPressedEdit: () {}, mainNames: mainNames, secondText: secondText),
+          AppItemListWidget<String>(
+            onPressedEdit: (value) {},
+            mainNames: mainNames,
+            secondText: secondText,
+            photoList: [],
+            values: mainNames,
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 12),
             child: AppButtonWidget(

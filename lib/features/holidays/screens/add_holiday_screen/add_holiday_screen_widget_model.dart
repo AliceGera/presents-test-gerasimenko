@@ -1,4 +1,5 @@
 import 'package:elementary/elementary.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/features/app/di/app_scope.dart';
 import 'package:flutter_template/features/holidays/screens/add_holiday_screen/add_holiday_screen.dart';
@@ -13,10 +14,10 @@ AddHolidayScreenWidgetModel addHolidayScreenWidgetModelFactory(
   BuildContext context,
 ) {
   final appDependencies = context.read<IAppScope>();
-
+  final appScope = context.read<IAppScope>();
   final model = AddHolidayScreenModel(
     appDependencies.errorHandler,
-
+    appScope.holidaysService,
   );
   final router = appDependencies.router;
   return AddHolidayScreenWidgetModel(model, router);
@@ -33,13 +34,25 @@ class AddHolidayScreenWidgetModel extends WidgetModel<AddHolidayScreen, AddHolid
     this.router,
   );
 
+  final TextEditingController _holidayNameController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+
   @override
   void initWidgetModel() {
+    _holidayNameController.addListener(() {
+      model.holidayName = _holidayNameController.text;
+    });
+    _dateController.addListener(() {
+      model.holidayDate = _dateController.text;
+    });
+
     super.initWidgetModel();
   }
 
   @override
   void dispose() {
+    _holidayNameController.dispose();
+    _dateController.dispose();
     super.dispose();
   }
 
@@ -47,10 +60,39 @@ class AddHolidayScreenWidgetModel extends WidgetModel<AddHolidayScreen, AddHolid
   void closeScreen() {
     router.pop();
   }
+
+  ///метод добавления holiday
+  Future<void> addHoliday() async {
+    await model.addHoliday();
+    router.pop();
+  }
+
+  ///метод добавления holiday
+  @override
+  void savePhoto(Uint8List photo) async {
+    model.photo = photo;
+  }
+
+  @override
+  TextEditingController get holidayNameController => _holidayNameController;
+
+  @override
+  TextEditingController get dateController => _dateController;
 }
 
 /// Interface of [AddHolidayScreenWidgetModel].
 abstract class IAddHolidayScreenWidgetModel implements IWidgetModel {
   /// Method to close the debug screens.
-  void closeScreen() {}
+  void closeScreen();
+
+  /// Method to add holiday.
+  Future<void> addHoliday();
+
+  void savePhoto(Uint8List photo);
+
+  /// Method get email controller for email field
+  TextEditingController get holidayNameController;
+
+  /// Method get date controller for date field
+  TextEditingController get dateController;
 }

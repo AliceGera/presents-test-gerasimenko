@@ -27,5 +27,7 @@ class SvgIcons {
   static const String trash ='assets/icons/trash.svg';
   static const String checkChoose ='assets/icons/check_choose.svg';
   static const String close ='assets/icons/close.svg';
+  static const String photoCamera ='assets/icons/photoCamera.svg';
+
   static const List<String> values = [testSvg];
 }

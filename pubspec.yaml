@@ -4,6 +4,10 @@ description: a Flutter template project for development.
 publish_to: none
 
 dependencies:
+  image_picker: ^1.0.7
+  union_state: ^0.0.1
+  drift: ^2.15.0
+  sqlite3_flutter_libs: ^0.5.0
   flutter_svg: ^2.0.9
   analytics: 1.0.2
   auto_route: 7.8.4
@@ -39,6 +43,7 @@ dev_dependencies:
   retrofit_generator: 8.0.6
   spider: 4.2.2
   surf_lint_rules: 3.0.0
+  drift_dev: ^2.9.0
 
 environment:
     sdk: '>=3.2.5 <4.0.0'

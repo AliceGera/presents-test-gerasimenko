@@ -39,17 +39,20 @@ class WhoGavePresentScreen extends ElementaryWidget<IWhoGavePresentScreenWidgetM
           ],
         ),
       ),
-      body: _Body(closeScreen: wm.closeScreen,),
+      body: _Body(
+        closeScreen: wm.closeScreen,
+      ),
     );
   }
 }
 
 class _Body extends StatelessWidget {
   final VoidCallback closeScreen;
+
   //final VoidCallback openEditScreen;
   _Body({
     required this.closeScreen,
-   // required this.openEditScreen,
+    // required this.openEditScreen,
   });
 
   final List<String> mainNames = ['Angela Miller', 'Jessica Garcia', 'Natalie Lewis', 'Stephen White', 'Thomas Brown', 'Young Robinson'];
@@ -62,7 +65,13 @@ class _Body extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: [
-          AppItemListWidget(onPressedEdit: (){}, mainNames: mainNames, secondText: secondText),
+          AppItemListWidget<String>(
+            onPressedEdit: (value) {},
+            mainNames: mainNames,
+            secondText: secondText,
+            photoList: [],
+            values: mainNames,
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 12),
             child: AppButtonWidget(

@@ -45,7 +45,7 @@ class ReadNewsScreenWidgetModel extends WidgetModel<ReadNewsScreen, ReadNewsScre
 
   @override
   void openNewsScreen() {
-    router.push(AddHolidayRouter());
+    router.push(AddHolidayRouter(loadAgain: () {  }));
   }
 }
 
