@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/config/app_config.dart';
-import 'package:flutter_template/features/common/domain/data/holidays/holidays_data.dart';
+import 'package:flutter_template/features/common/domain/data/holidays/holiday_data.dart';
 import 'package:flutter_template/features/common/service/holidays_service.dart';
 
 /// Model for
@@ -15,6 +15,7 @@ class EditHolidayScreenModel extends ElementaryModel {
   String _holidayDate = '';
   Uint8List _photo = Uint8List(0);
   int _id = 0;
+
   String get holidayName => _holidayName;
 
   set holidayName(String newHolidayName) {
@@ -32,6 +33,7 @@ class EditHolidayScreenModel extends ElementaryModel {
   set photo(Uint8List newPhoto) {
     _photo = newPhoto;
   }
+
   int get id => _id;
 
   set id(int newId) {
@@ -48,6 +50,7 @@ class EditHolidayScreenModel extends ElementaryModel {
       ),
     );
   }
+
   Future<void> deleteHoliday() async {
     await _holidaysService.deleteHoliday(
       Holiday(
@@ -64,6 +67,7 @@ class EditHolidayScreenModel extends ElementaryModel {
 
   /// Create an instance [EditHolidayScreenModel].
   EditHolidayScreenModel(
-    this.errorHandler, this._holidaysService,
+    this.errorHandler,
+    this._holidaysService,
   ) : super(errorHandler: errorHandler);
 }

@@ -4,9 +4,15 @@ import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_template/api/data/gift_database.dart';
+import 'package:flutter_template/api/data/holiday_database.dart';
+import 'package:flutter_template/api/service/gifts_received_api.dart';
 import 'package:flutter_template/api/service/holidays_api.dart';
 import 'package:flutter_template/config/environment/environment.dart';
+import 'package:flutter_template/features/common/domain/repository/gifrs_repository.dart';
 import 'package:flutter_template/features/common/domain/repository/holidays_repository.dart';
+import 'package:flutter_template/features/common/service/gifts_service.dart';
+import 'package:flutter_template/features/common/service/holidays_and_gifts_service.dart';
 import 'package:flutter_template/features/common/service/holidays_service.dart';
 import 'package:flutter_template/features/common/service/theme/theme_service.dart';
 import 'package:flutter_template/features/common/service/theme/theme_service_impl.dart';
@@ -22,8 +28,6 @@ import 'package:flutter_template/persistence/storage/theme_storage/theme_storage
 import 'package:flutter_template/util/default_error_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:flutter_template/api/data/holiday_database.dart';
-
 /// Scope of dependencies which need through all app's life.
 class AppScope implements IAppScope {
   static const _themeByDefault = ThemeMode.system;
@@ -38,6 +42,10 @@ class AppScope implements IAppScope {
   late final HolidaysService _holidaysService;
   late final HolidaysRepository _holidaysRepository;
   late final HolidaysApi _holidaysApi;
+  late final GiftsApi _giftsApi;
+  late final GiftsService _giftsService;
+  late final GiftsRepository _giftsRepository;
+  late final HolidayAndGiftsService _holidayAndGiftsService;
 
   @override
   late VoidCallback applicationRebuilder;
@@ -62,6 +70,10 @@ class AppScope implements IAppScope {
 
   @override
   HolidaysService get holidaysService => _holidaysService;
+  @override
+  GiftsService get giftsService => _giftsService;
+  @override
+  HolidayAndGiftsService get holidayAndGiftsService => _holidayAndGiftsService;
 
   late IThemeModeStorage _themeModeStorage;
 
@@ -71,6 +83,9 @@ class AppScope implements IAppScope {
     final additionalInterceptors = <Interceptor>[];
     _holidaysApi = HolidaysApi(AppDatabase());
     _holidaysService = _initHolidaysService();
+    _giftsApi = GiftsApi(AppGiftsDatabase());
+    _giftsService = _initGiftsService();
+    _holidayAndGiftsService= _initHolidayAndGiftsService();
     _dio = _initDio(additionalInterceptors);
     _errorHandler = DefaultErrorHandler();
     _router = AppRouter.instance();
@@ -133,6 +148,13 @@ class AppScope implements IAppScope {
     _holidaysRepository = HolidaysRepository(_holidaysApi);
     return HolidaysService(_holidaysRepository);
   }
+  GiftsService _initGiftsService() {
+    _giftsRepository = GiftsRepository(_giftsApi);
+    return GiftsService(_giftsRepository);
+  }
+  HolidayAndGiftsService _initHolidayAndGiftsService() {
+    return HolidayAndGiftsService(_giftsRepository,_holidaysRepository);
+  }
 }
 
 /// App dependencies.
@@ -152,6 +174,7 @@ abstract class IAppScope {
   /// A service that stores and retrieves app theme mode.
   IThemeService get themeService;
 
+
   /// Init theme service with theme from storage or default value.
   Future<void> initTheme();
 
@@ -161,6 +184,13 @@ abstract class IAppScope {
   /// Analytics sending service
   IAnalyticsService get analyticsService;
 
-  /// Analytics sending hotel
+  /// Analytics
   HolidaysService get holidaysService;
+
+  /// Analytics
+  GiftsService get giftsService;
+
+  /// Analytics
+  HolidayAndGiftsService get holidayAndGiftsService;
+
 }

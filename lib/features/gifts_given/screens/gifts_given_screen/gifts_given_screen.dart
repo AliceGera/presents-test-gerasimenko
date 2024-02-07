@@ -60,7 +60,10 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppGiftWidget(holidaysList:holidaysList,
-        presentsList: presentsList, namesList: namesList, starsList: starsList, editGiftReceived: editGiftReceived, openAddGiftScreen: openAddGiftScreen);
+    return AppGiftWidget(
+      editGiftReceived: editGiftReceived,
+      openAddGiftScreen: openAddGiftScreen,
+      gifts: [],
+    );
   }
 }

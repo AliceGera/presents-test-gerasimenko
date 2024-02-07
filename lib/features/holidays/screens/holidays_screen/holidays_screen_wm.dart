@@ -1,8 +1,7 @@
 import 'package:elementary/elementary.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/features/app/di/app_scope.dart';
-import 'package:flutter_template/features/common/domain/data/holidays/holidays_data.dart';
+import 'package:flutter_template/features/common/domain/data/holidays/holiday_data.dart';
 import 'package:flutter_template/features/common/mixin/theme_mixin.dart';
 import 'package:flutter_template/features/holidays/screens/holidays_screen/holidays_screen.dart';
 import 'package:flutter_template/features/holidays/screens/holidays_screen/holidays_screen_model.dart';
@@ -45,16 +44,13 @@ class HolidaysScreenWidgetModel extends WidgetModel<HolidaysScreen, HolidaysScre
   }
 
   @override
-  void openNextScreen() {
-    _appRouter.push(AddHolidayRouter(loadAgain:loadAgain));
+  void openAddHolidayScreen() {
+    _appRouter.push(AddHolidayRouter(loadAgain: loadAgain));
   }
 
   @override
   void editHolidayScreen(Holiday holiday) {
-    if (kDebugMode) {
-      print(33333);
-    }
-    _appRouter.push(EditHolidayRouter(holiday:  holiday,loadAgain:loadAgain));
+    _appRouter.push(EditHolidayRouter(holiday: holiday, loadAgain: loadAgain));
   }
 
   @override
@@ -69,7 +65,7 @@ class HolidaysScreenWidgetModel extends WidgetModel<HolidaysScreen, HolidaysScre
 /// Interface of [IHolidaysScreenWidgetModel].
 abstract class IHolidaysScreenWidgetModel with ThemeIModelMixin implements IWidgetModel {
   /// Navigate to room screen.
-  void openNextScreen();
+  void openAddHolidayScreen();
 
   /// Navigate to edit holiday screen.
   void editHolidayScreen(Holiday holiday);

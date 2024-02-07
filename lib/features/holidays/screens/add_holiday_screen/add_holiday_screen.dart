@@ -10,7 +10,6 @@ import 'package:flutter_template/assets/text/text_style.dart';
 import 'package:flutter_template/features/common/widgets/app_button_widget.dart';
 import 'package:flutter_template/features/common/widgets/app_camera_widget.dart';
 import 'package:flutter_template/features/common/widgets/app_textfield_widget.dart';
-import 'package:flutter_template/features/common/widgets/repository.dart';
 import 'package:flutter_template/features/holidays/screens/add_holiday_screen/add_holiday_screen_widget_model.dart';
 import 'package:flutter_template/features/navigation/domain/entity/app_route_names.dart';
 
@@ -60,8 +59,6 @@ class AddHolidayScreen extends ElementaryWidget<IAddHolidayScreenWidgetModel> {
 }
 
 class _Body extends StatelessWidget {
-  final ImageRepository repository = ImageRepository();
-  final PageController controller = PageController();
   final VoidCallback closeScreen;
   final Future<void> Function() addHoliday;
   final void Function(Uint8List photo) savePhoto;
@@ -89,7 +86,6 @@ class _Body extends StatelessWidget {
           AppTextFieldWidget(
             text: 'Name of the holiday',
             controller: holidayNameController,
-
             //formKey: wm.formEmailKey,
             //validatorText: wm.getEmailValidationTex,
           ),
@@ -97,7 +93,6 @@ class _Body extends StatelessWidget {
           AppTextFieldWidget(
             text: 'Date',
             controller: dateController,
-
             //formKey: wm.formEmailKey,
             //validatorText: wm.getEmailValidationTex,
           ),

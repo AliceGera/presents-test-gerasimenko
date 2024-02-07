@@ -12,6 +12,8 @@ import 'package:flutter_template/features/common/widgets/app_textfield_widget.da
 
 import 'package:flutter_template/assets/res/resources.dart';
 
+import 'package:flutter_template/features/common/widgets/app_camera_widget.dart';
+
 class AppAddOrEditGiftWidget extends StatelessWidget {
 
   final VoidCallback? closeScreen;
@@ -42,7 +44,7 @@ class AppAddOrEditGiftWidget extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(height: 88, width: 88, color: AppColors.gray),
+                 // AppCameraWidget(savePhoto: ),
                   const SizedBox(width: 30),
                   Column(
                     children: [

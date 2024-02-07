@@ -9,8 +9,6 @@ import 'package:flutter_template/features/common/widgets/app_add_or_edit_gift_wi
 import 'package:flutter_template/features/gifts_received/screens/edit_gift_received_screen/edit_gift_received_screen_widget_model.dart';
 import 'package:flutter_template/features/navigation/domain/entity/app_route_names.dart';
 
-import 'package:flutter_template/features/common/domain/data/holidays/holidays_data.dart';
-
 /// EditGiftReceived screens.
 @RoutePage(
   name: AppRouteNames.editGiftReceivedScreen,

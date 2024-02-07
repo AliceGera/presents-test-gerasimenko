@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_template/assets/colors/app_colors.dart';
 import 'package:flutter_template/assets/res/resources.dart';
 import 'package:flutter_template/assets/text/text_style.dart';
+import 'package:flutter_template/features/common/domain/data/holiday_with_gifts/holiday_with_gifts_data.dart';
 import 'package:flutter_template/features/common/widgets/app_gifts_widget.dart';
 import 'package:flutter_template/features/gifts_received/screens/gifts_received_screen/gifts_received_screen_wm.dart';
 import 'package:flutter_template/features/navigation/domain/entity/app_route_names.dart';
+import 'package:union_state/union_state.dart';
 
 /// Main widget for GiftsReceivedScreen feature.
 @RoutePage(
@@ -31,7 +33,11 @@ class GiftsReceivedScreen extends ElementaryWidget<IGiftsReceivedScreenWidgetMod
           ),
         ),
       ),
-      body: _Body(openAddGiftScreen: wm.openAddGiftScreen, editGiftReceived: wm.editGiftReceived),
+      body: _Body(
+        openAddGiftScreen: wm.openAddGiftScreen,
+        editGiftReceived: wm.editGiftReceived,
+        giftsState: wm.giftsState,
+      ),
     );
   }
 }
@@ -39,12 +45,18 @@ class GiftsReceivedScreen extends ElementaryWidget<IGiftsReceivedScreenWidgetMod
 class _Body extends StatelessWidget {
   final VoidCallback openAddGiftScreen;
   final VoidCallback editGiftReceived;
+  UnionStateNotifier<List<HolidayWithGiftsData>> giftsState;
 
   _Body({
     required this.openAddGiftScreen,
     required this.editGiftReceived,
+    required this.giftsState,
   });
-  final List<String> holidaysList = ['Saint Valentine’s Day, 14.02.2023', 'Halloween, 31.11.2023'];
+
+  final List<String> holidaysList = [
+    'Saint Valentine’s Day, 14.02.2023',
+    'Halloween, 31.11.2023',
+  ];
 
   final List<List<String>> presentsList = [
     ['Soft toy', 'Chocolate', 'Painting', 'Bracelet'],
@@ -64,7 +76,17 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppGiftWidget(holidaysList:holidaysList,
-        presentsList: presentsList, namesList: namesList, starsList: starsList, editGiftReceived: editGiftReceived, openAddGiftScreen: openAddGiftScreen);
+    return UnionStateListenableBuilder<List<HolidayWithGiftsData>>(
+      unionStateListenable: giftsState,
+      builder: (_, gifts) {
+        return AppGiftWidget(
+          gifts: gifts,
+          editGiftReceived: editGiftReceived,
+          openAddGiftScreen: openAddGiftScreen,
+        );
+      },
+      loadingBuilder: (_, hotel) => const SizedBox(),
+      failureBuilder: (_, exception, hotel) => const SizedBox(),
+    );
   }
 }

@@ -67,7 +67,7 @@ class AddHolidayScreenWidgetModel extends WidgetModel<AddHolidayScreen, AddHolid
     router.pop();
   }
 
-  ///метод добавления holiday
+  ///метод добавления photo
   @override
   void savePhoto(Uint8List photo) async {
     model.photo = photo;

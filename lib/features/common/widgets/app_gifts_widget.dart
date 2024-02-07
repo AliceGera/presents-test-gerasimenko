@@ -5,29 +5,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_template/assets/colors/app_colors.dart';
-import 'package:flutter_template/assets/text/text_style.dart';
-
-import 'package:flutter_template/features/common/widgets/app_button_widget.dart';
-import 'package:flutter_template/features/common/widgets/app_textfield_widget.dart';
-
 import 'package:flutter_template/assets/res/resources.dart';
+import 'package:flutter_template/assets/text/text_style.dart';
+import 'package:flutter_template/features/common/domain/data/holiday_with_gifts/holiday_with_gifts_data.dart';
+import 'package:flutter_template/features/common/widgets/app_button_widget.dart';
 
 class AppGiftWidget extends StatelessWidget {
   final VoidCallback? openAddGiftScreen;
   final VoidCallback? editGiftReceived;
-  final List<String> holidaysList;
-  final List<List<String>> presentsList;
-  final List<List<String>> namesList;
-  final List<List<String>> starsList;
+  final List<HolidayWithGiftsData> gifts;
 
   const AppGiftWidget({
     super.key,
-    required this.holidaysList,
-    required this.presentsList,
-    required this.namesList,
-    required this.starsList,
     required this.editGiftReceived,
     this.openAddGiftScreen,
+    required this.gifts,
   });
 
   @override
@@ -43,54 +35,81 @@ class AppGiftWidget extends StatelessWidget {
                 separatorBuilder: (context, ind) => const SizedBox(height: 32),
                 physics: const ClampingScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: holidaysList.length,
+                itemCount: gifts.length,
                 itemBuilder: (context, ind) => Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(bottom: 16),
                       child: Text(
-                        holidaysList[ind],
+                        gifts[ind].holiday.holidayName,
                         style: AppTextStyle.medium16.value.copyWith(color: AppColors.white),
                       ),
                     ),
-                    SizedBox(
-                      height: 250,
-                      child: ListView.separated(
-                        physics: const ClampingScrollPhysics(),
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: presentsList[ind].length,
-                        itemBuilder: (context, index) => SizedBox(
-                          height: 250,
-                          width: 170,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Stack(
-                                alignment: AlignmentDirectional.topEnd,
-                                children: [
-                                  Container(color: AppColors.gray, height: 170, width: double.infinity),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8),
-                                    child: InkWell(onTap: editGiftReceived, child: SvgPicture.asset(SvgIcons.editGift)),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 8),
-                              Text(presentsList[ind][index],
-                                  maxLines: 1, overflow: TextOverflow.ellipsis, style: AppTextStyle.bold14.value.copyWith(color: AppColors.white)),
-                              const SizedBox(height: 4),
-                              Text(namesList[ind][index],
-                                  maxLines: 1, overflow: TextOverflow.ellipsis, style: AppTextStyle.regular13.value.copyWith(color: AppColors.white)),
-                              const SizedBox(height: 8),
-                              SvgPicture.asset(starsList[ind][index]),
-                            ],
+                    if (gifts[ind].gifts.isNotEmpty)
+                      SizedBox(
+                        height: 250,
+                        child: ListView.separated(
+                          physics: const ClampingScrollPhysics(),
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: gifts[ind].gifts.length,
+                          itemBuilder: (context, index) => SizedBox(
+                            height: 250,
+                            width: 170,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Stack(
+                                  alignment: AlignmentDirectional.topEnd,
+                                  children: [
+                                    /*Container(
+                                      color: AppColors.gray,
+                                      height: 170,
+                                      width: double.infinity,
+                                    ),*/
+                                    SizedBox(
+                                      height: 170,
+                                      width: 170,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(8),
+                                        child: Image.memory(
+                                          gifts[ind].gifts[index].photo,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8),
+                                      child: InkWell(
+                                        onTap: editGiftReceived,
+                                        child: SvgPicture.asset(SvgIcons.editGift),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  gifts[ind].gifts[index].giftsName,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppTextStyle.bold14.value.copyWith(color: AppColors.white),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  gifts[ind].gifts[index].whoGave,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppTextStyle.regular13.value.copyWith(color: AppColors.white),
+                                ),
+                                const SizedBox(height: 8),
+                                //SvgPicture.asset(starsList[ind][index]),
+                              ],
+                            ),
                           ),
+                          separatorBuilder: (context, index) => const SizedBox(width: 7),
                         ),
-                        separatorBuilder: (context, index) => const SizedBox(width: 7),
                       ),
-                    ),
                   ],
                 ),
               ),

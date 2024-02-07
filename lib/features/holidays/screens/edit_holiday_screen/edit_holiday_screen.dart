@@ -7,7 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter_template/assets/colors/app_colors.dart';
 import 'package:flutter_template/assets/res/resources.dart';
 import 'package:flutter_template/assets/text/text_style.dart';
-import 'package:flutter_template/features/common/domain/data/holidays/holidays_data.dart';
+import 'package:flutter_template/features/common/domain/data/holidays/holiday_data.dart';
 import 'package:flutter_template/features/common/widgets/app_button_widget.dart';
 import 'package:flutter_template/features/common/widgets/app_camera_widget.dart';
 import 'package:flutter_template/features/common/widgets/app_textfield_widget.dart';
@@ -103,16 +103,9 @@ class _Body extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           const SizedBox(height: 12),
-          /*_TextFieldWidget(
-            text: 'Name of the holiday',
-            //controller: wm.emailController,
-            //formKey: wm.formEmailKey,
-            //validatorText: wm.getEmailValidationTex,
-          ),*/
           AppTextFieldWidget(
             text: 'Name of the holiday',
             controller: holidayNameController,
-
             //formKey: wm.formEmailKey,
             //validatorText: wm.getEmailValidationTex,
           ),
@@ -120,7 +113,6 @@ class _Body extends StatelessWidget {
           AppTextFieldWidget(
             text: 'Date',
             controller: dateController,
-
             //formKey: wm.formEmailKey,
             //validatorText: wm.getEmailValidationTex,
           ),
@@ -155,75 +147,3 @@ class _Body extends StatelessWidget {
     );
   }
 }
-
-/*
-class _TextFieldWidget extends StatefulWidget {
-  _TextFieldWidget({
-    required this.text,
-    // required this.formKey,
-    // required this.controller,
-    this.validatorText,
-  });
-
-  //final TextEditingController controller;
-  //final GlobalKey<FormState> formKey;
-  final String text;
-  final String? Function()? validatorText;
-  String? _currentValidationText;
-
-  @override
-  State<_TextFieldWidget> createState() => _TextFieldWidgetState();
-}
-
-class _TextFieldWidgetState extends State<_TextFieldWidget> {
-  _TextFieldWidgetState();
-
-  @override
-  Widget build(BuildContext context) {
-    return Form(
-      //key: widget.formKey,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
-          children: [
-            TextFormField(
-              validator: (value) {
-                setState(() {
-                  widget._currentValidationText = widget.validatorText?.call();
-                });
-                return '';
-              },
-              //controller: widget.controller,
-              decoration: InputDecoration(
-                errorBorder: const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(12)),
-                ),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: const BorderSide(width: 0, color: AppColors.textFieldBackground),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: const BorderSide(width: 0, color: AppColors.textFieldBackground),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                focusedErrorBorder: const UnderlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(12)),
-                  borderSide: BorderSide(color: AppColors.textFieldBackground, width: 0),
-                ),
-                fillColor: AppColors.textFieldBackground,
-                filled: true,
-                labelText: widget.text,
-                labelStyle: const TextStyle(color: AppColors.white),
-                border: InputBorder.none,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-*/

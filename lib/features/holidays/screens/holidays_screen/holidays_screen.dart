@@ -3,7 +3,7 @@ import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/assets/colors/app_colors.dart';
 import 'package:flutter_template/assets/text/text_style.dart';
-import 'package:flutter_template/features/common/domain/data/holidays/holidays_data.dart';
+import 'package:flutter_template/features/common/domain/data/holidays/holiday_data.dart';
 import 'package:flutter_template/features/common/widgets/app_button_widget.dart';
 import 'package:flutter_template/features/common/widgets/app_iteams_list_widget.dart';
 import 'package:flutter_template/features/holidays/screens/holidays_screen/holidays_screen_wm.dart';
@@ -34,7 +34,7 @@ class HolidaysScreen extends ElementaryWidget<IHolidaysScreenWidgetModel> {
         ),
       ),
       body: _Body(
-        openNextScreen: wm.openNextScreen,
+        openNextScreen: wm.openAddHolidayScreen,
         editHolidayScreen: wm.editHolidayScreen,
         holidaysState: wm.holidaysState,
       ),

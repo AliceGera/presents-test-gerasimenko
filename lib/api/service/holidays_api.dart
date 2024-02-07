@@ -1,7 +1,5 @@
 import 'package:flutter_template/api/data/holiday_database.dart';
-import 'package:flutter_template/features/common/domain/data/holidays/holidays_data.dart';
-
-/// Интерфейс API клиента.
+import 'package:flutter_template/features/common/domain/data/holidays/holiday_data.dart';
 
 class HolidaysApi {
   HolidaysApi(this.appDatabase);
