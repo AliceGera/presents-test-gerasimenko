@@ -6,14 +6,18 @@ import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/api/data/gift_database.dart';
 import 'package:flutter_template/api/data/holiday_database.dart';
+import 'package:flutter_template/api/data/persons_database.dart';
 import 'package:flutter_template/api/service/gifts_received_api.dart';
 import 'package:flutter_template/api/service/holidays_api.dart';
+import 'package:flutter_template/api/service/persons_api.dart';
 import 'package:flutter_template/config/environment/environment.dart';
 import 'package:flutter_template/features/common/domain/repository/gifrs_repository.dart';
 import 'package:flutter_template/features/common/domain/repository/holidays_repository.dart';
+import 'package:flutter_template/features/common/domain/repository/persons_repository.dart';
 import 'package:flutter_template/features/common/service/gifts_service.dart';
 import 'package:flutter_template/features/common/service/holidays_and_gifts_service.dart';
 import 'package:flutter_template/features/common/service/holidays_service.dart';
+import 'package:flutter_template/features/common/service/persons_service.dart';
 import 'package:flutter_template/features/common/utils/analytics/amplitude/amplitude_analytic_tracker.dart';
 import 'package:flutter_template/features/common/utils/analytics/firebase/firebase_analytic_tracker.dart';
 import 'package:flutter_template/features/common/utils/analytics/mock/mock_amplitude_analytics.dart';
@@ -21,8 +25,6 @@ import 'package:flutter_template/features/common/utils/analytics/mock/mock_fireb
 import 'package:flutter_template/features/common/utils/analytics/service/analytics_service.dart';
 import 'package:flutter_template/features/common/utils/analytics/service/analytics_service_impl.dart';
 import 'package:flutter_template/features/navigation/service/router.dart';
-import 'package:flutter_template/persistence/storage/theme_storage/theme_storage.dart';
-import 'package:flutter_template/persistence/storage/theme_storage/theme_storage_impl.dart';
 import 'package:flutter_template/util/default_error_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -41,7 +43,9 @@ class AppScope implements IAppScope {
   late final GiftsService _giftsService;
   late final GiftsRepository _giftsRepository;
   late final HolidayAndGiftsService _holidayAndGiftsService;
-
+  late final PersonsApi _personsApi;
+  late final PersonsService _personsService;
+  late final PersonsRepository _personsRepository;
   @override
   late VoidCallback applicationRebuilder;
 
@@ -69,7 +73,8 @@ class AppScope implements IAppScope {
   @override
   HolidayAndGiftsService get holidayAndGiftsService => _holidayAndGiftsService;
 
-  late IThemeModeStorage _themeModeStorage;
+  @override
+  PersonsService get personsService => _personsService;
 
   /// Create an instance [AppScope].
   AppScope(this._sharedPreferences) {
@@ -80,15 +85,12 @@ class AppScope implements IAppScope {
     _giftsApi = GiftsApi(AppGiftsDatabase());
     _giftsService = _initGiftsService();
     _holidayAndGiftsService = _initHolidayAndGiftsService();
+    _personsApi = PersonsApi(AppPersonsDatabase());
+    _personsService = _initPersonsService();
     _dio = _initDio(additionalInterceptors);
     _errorHandler = DefaultErrorHandler();
     _router = AppRouter.instance();
-    _themeModeStorage = ThemeModeStorageImpl(_sharedPreferences);
-    _analyticsService = AnalyticsServiceImpl([
-      // TODO(init): can be removed MockFirebaseAnalytics and MockAmplitudeAnalytics, added for demo analytics track
-      FirebaseAnalyticTracker(MockFirebaseAnalytics()),
-      AmplitudeAnalyticTracker(MockAmplitudeAnalytics()),
-    ]);
+    _analyticsService = AnalyticsServiceImpl([]);
   }
 
   Dio _initDio(Iterable<Interceptor> additionalInterceptors) {
@@ -140,6 +142,11 @@ class AppScope implements IAppScope {
   HolidayAndGiftsService _initHolidayAndGiftsService() {
     return HolidayAndGiftsService(_giftsRepository, _holidaysRepository);
   }
+
+  PersonsService _initPersonsService() {
+    _personsRepository = PersonsRepository(_personsApi);
+    return PersonsService(_personsRepository);
+  }
 }
 
 /// App dependencies.
@@ -170,4 +177,7 @@ abstract class IAppScope {
 
   /// Analytics
   HolidayAndGiftsService get holidayAndGiftsService;
+
+  /// Analytics
+  PersonsService get personsService;
 }

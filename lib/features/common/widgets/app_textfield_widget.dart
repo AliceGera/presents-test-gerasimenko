@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 import 'package:flutter_template/assets/colors/app_colors.dart';
+import 'package:flutter_template/assets/res/resources.dart';
 import 'package:flutter_template/assets/text/text_style.dart';
 
 class AppTextFieldWidget extends StatefulWidget {
@@ -30,19 +32,28 @@ class _AppTextFieldWidgetState extends State<AppTextFieldWidget> {
 
   bool isFocused = false;
   bool isShowFloatingLabel = false;
+  bool showClose = false;
+
+  void listener() {
+    setState(() {
+      showClose = widget.controller.text.isEmpty;
+    });
+  }
 
   @override
   void initState() {
     _focus.addListener(_onFocusChange);
+    widget.controller.addListener(listener);
     super.initState();
   }
 
   @override
   void dispose() {
-    super.dispose();
+    widget.controller.removeListener(listener);
     _focus
       ..removeListener(_onFocusChange)
       ..dispose();
+    super.dispose();
   }
 
   void _onFocusChange() {
@@ -60,12 +71,13 @@ class _AppTextFieldWidgetState extends State<AppTextFieldWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widget.controller.value.text.isNotEmpty || _focus.hasFocus
-                ? Text(
-                    widget.text,
-                    style: AppTextStyle.regular13.value.copyWith(color: AppColors.white),
-                  )
-                : SizedBox(),
+            if (!showClose || _focus.hasFocus)
+              Text(
+                widget.text,
+                style: AppTextStyle.regular13.value.copyWith(color: AppColors.white),
+              )
+            else
+              const SizedBox(),
             TextFormField(
               maxLines: widget.lines,
               style: AppTextStyle.regular13.value.copyWith(color: AppColors.white),
@@ -78,6 +90,38 @@ class _AppTextFieldWidgetState extends State<AppTextFieldWidget> {
               focusNode: _focus,
               controller: widget.controller,
               decoration: InputDecoration(
+                suffixIcon: (widget.lines > 1)
+                    ? Padding(
+                        padding: const EdgeInsets.only(left: 0, top: 0, right: 0, bottom: 100),
+                        child: Align(
+                          widthFactor: 1,
+                          heightFactor: 1,
+                          child: !showClose
+                              ? InkWell(
+                                  onTap: () {
+                                    widget.controller.text = '';
+                                  },
+                                  child: SvgPicture.asset(
+                                    SvgIcons.close,
+                                  ),
+                                )
+                              : const SizedBox(),
+                        ),
+                      )
+                    : Align(
+                        widthFactor: 1,
+                        heightFactor: 1,
+                        child: !showClose
+                            ? InkWell(
+                                onTap: () {
+                                  widget.controller.text = '';
+                                },
+                                child: SvgPicture.asset(
+                                  SvgIcons.close,
+                                ),
+                              )
+                            : const SizedBox(),
+                      ),
                 isDense: true,
                 contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                 errorBorder: const OutlineInputBorder(

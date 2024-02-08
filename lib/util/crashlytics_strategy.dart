@@ -1,3 +1,4 @@
+/*
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:surf_logger/surf_logger.dart';
@@ -41,3 +42,4 @@ class CrashlyticsRemoteLogStrategy extends RemoteUserLogStrategy {
     }
   }
 }
+*/

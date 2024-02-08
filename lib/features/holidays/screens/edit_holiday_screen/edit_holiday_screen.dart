@@ -20,57 +20,127 @@ import 'package:flutter_template/features/navigation/domain/entity/app_route_nam
 )
 class EditHolidayScreen extends ElementaryWidget<IEditHolidayScreenWidgetModel> {
   /// Create an instance [EditHolidayScreen].
-  const EditHolidayScreen(
-    this.loadAgain, {
+  const EditHolidayScreen({
+    required this.loadAgain,
     required this.holiday,
+    this.showInBottomSheet = false,
     Key? key,
     WidgetModelFactory wmFactory = editHolidayScreenWidgetModelFactory,
   }) : super(wmFactory, key: key);
+
   final VoidCallback loadAgain;
   final Holiday holiday;
+  final bool? showInBottomSheet;
 
   @override
   Widget build(IEditHolidayScreenWidgetModel wm) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: false,
-        automaticallyImplyLeading: false,
-        backgroundColor: AppColors.backgroundColor,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
+    final body = _Body(
+      loadAgain: loadAgain,
+      closeScreen: wm.closeScreen,
+      holiday: holiday,
+      holidayNameController: wm.holidayNameController,
+      dateController: wm.dateController,
+      savePhoto: wm.savePhoto,
+      editHoliday: wm.editHoliday,
+    );
+    return showInBottomSheet == true
+        ? BottomSheet(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                InkWell(
-                    highlightColor: Colors.transparent, splashColor: Colors.transparent, onTap: wm.closeScreen, child: SvgPicture.asset(SvgIcons.backArrow)),
                 Padding(
-                  padding: const EdgeInsets.only(left: 36),
-                  child: Text(
-                    'Edit a holiday',
-                    style: AppTextStyle.bold19.value.copyWith(color: AppColors.white),
+                  padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Spacer(),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 36),
+                        child: Text(
+                          'Edit a holiday',
+                          style: AppTextStyle.bold19.value.copyWith(color: AppColors.white),
+                        ),
+                      ),
+                      const Spacer(),
+                      InkWell(
+                          highlightColor: Colors.transparent, splashColor: Colors.transparent, onTap: wm.closeScreen, child: SvgPicture.asset(SvgIcons.close)),
+                    ],
                   ),
                 ),
+                body,
               ],
             ),
-            InkWell(
-                highlightColor: Colors.transparent,
-                splashColor: Colors.transparent,
-                onTap: () async {
-                  await wm.deleteHoliday();
-                  loadAgain.call();
-                },
-                child: SvgPicture.asset(SvgIcons.trash)),
-          ],
-        ),
-      ),
-      body: _Body(
-        loadAgain: loadAgain,
-        closeScreen: wm.closeScreen,
-        holiday: holiday,
-        holidayNameController: wm.holidayNameController,
-        dateController: wm.dateController,
-        savePhoto: wm.savePhoto,
-        editHoliday: wm.editHoliday,
+            initWidgetModel: () {
+              wm.initBottomSheetWidgetModel(holiday);
+            },
+          )
+        : Scaffold(
+            appBar: AppBar(
+              centerTitle: false,
+              automaticallyImplyLeading: false,
+              backgroundColor: AppColors.backgroundColor,
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      InkWell(
+                          highlightColor: Colors.transparent,
+                          splashColor: Colors.transparent,
+                          onTap: wm.closeScreen,
+                          child: SvgPicture.asset(SvgIcons.backArrow)),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 36),
+                        child: Text(
+                          'Edit a holiday',
+                          style: AppTextStyle.bold19.value.copyWith(color: AppColors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                  InkWell(
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      onTap: () async {
+                        await wm.deleteHoliday();
+                        loadAgain.call();
+                      },
+                      child: SvgPicture.asset(SvgIcons.trash)),
+                ],
+              ),
+            ),
+            body: body,
+          );
+  }
+}
+
+class BottomSheet extends StatefulWidget {
+  final Widget content;
+  final VoidCallback initWidgetModel;
+
+  const BottomSheet({
+    super.key,
+    required this.content,
+    required this.initWidgetModel,
+  });
+
+  @override
+  State<BottomSheet> createState() => _BottomSheetState();
+}
+
+class _BottomSheetState extends State<BottomSheet> {
+  @override
+  void initState() {
+    widget.initWidgetModel.call();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: ColoredBox(
+        color: AppColors.backgroundColor,
+        child: widget.content,
       ),
     );
   }
@@ -100,25 +170,22 @@ class _Body extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           const SizedBox(height: 12),
           AppTextFieldWidget(
             text: 'Name of the holiday',
             controller: holidayNameController,
-            //formKey: wm.formEmailKey,
-            //validatorText: wm.getEmailValidationTex,
           ),
           const SizedBox(height: 8),
           AppTextFieldWidget(
             text: 'Date',
             controller: dateController,
-            //formKey: wm.formEmailKey,
-            //validatorText: wm.getEmailValidationTex,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16),
-            child: AppCameraWidget(savePhoto: savePhoto, photoHoliday: holiday.photo),
+            child: AppCameraWidget(savePhoto: savePhoto, photo: holiday.photo),
           ),
           Row(
             children: [

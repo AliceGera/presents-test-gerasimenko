@@ -5,19 +5,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_template/assets/colors/app_colors.dart';
+import 'package:flutter_template/assets/res/resources.dart';
 import 'package:flutter_template/assets/text/text_style.dart';
 import 'package:flutter_template/features/common/domain/data/gifts/gift_data.dart';
-
 import 'package:flutter_template/features/common/widgets/app_button_widget.dart';
-import 'package:flutter_template/features/common/widgets/app_textfield_widget.dart';
-
-import 'package:flutter_template/assets/res/resources.dart';
-
 import 'package:flutter_template/features/common/widgets/app_camera_widget.dart';
+import 'package:flutter_template/features/common/widgets/app_textfield_widget.dart';
 
 class AppAddOrEditGiftWidget extends StatelessWidget {
   final VoidCallback? closeScreen;
-  final VoidCallback? whoGavePresentScreen;
+  final VoidCallback? personScreen;
   final VoidCallback? chooseHolidayNameScreen;
   final TextEditingController commentController;
   final TextEditingController giftNameController;
@@ -27,7 +24,7 @@ class AppAddOrEditGiftWidget extends StatelessWidget {
 
   const AppAddOrEditGiftWidget({
     super.key,
-    required this.whoGavePresentScreen,
+    required this.personScreen,
     required this.chooseHolidayNameScreen,
     this.closeScreen,
     required this.commentController,
@@ -54,7 +51,7 @@ class AppAddOrEditGiftWidget extends StatelessWidget {
                 children: [
                   AppCameraWidget(
                     savePhoto: (file) {},
-                    photoHoliday: gift.photo,
+                    photo: gift.photo,
                   ),
                   const SizedBox(width: 30),
                   Column(
@@ -76,22 +73,25 @@ class AppAddOrEditGiftWidget extends StatelessWidget {
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: AppColors.darkBlue),
             child: Padding(
               padding: const EdgeInsets.all(16),
+
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AppTextFieldWidget(
                     text: 'Gift name',
                     controller: giftNameController,
-                    //formKey: wm.formEmailKey,
-                    //validatorText: wm.getEmailValidationTex,
                   ),
                   const SizedBox(height: 8),
+                  Text('Who gave it',style:AppTextStyle.regular12.value.copyWith(color: AppColors.white) ,),
+
                   InkWell(
-                    onTap: whoGavePresentScreen,
+                    onTap: personScreen,
                     child: ChooseWidget(
-                      text: gift.whoGave.isNotEmpty ? gift.whoGave : 'Who gave it',
+                      text: gift.whoGave != null ? gift.whoGave! : 'Who gave it',
                     ),
                   ),
                   const SizedBox(height: 8),
+                  Text('Holiday name',style:AppTextStyle.regular12.value.copyWith(color: AppColors.white) ,),
                   InkWell(
                     onTap: chooseHolidayNameScreen,
                     child: ChooseWidget(
@@ -103,8 +103,6 @@ class AppAddOrEditGiftWidget extends StatelessWidget {
                     text: 'A comment',
                     controller: commentController,
                     lines: 7,
-                    //formKey: wm.formEmailKey,
-                    //validatorText: wm.getEmailValidationTex,
                   ),
                 ],
               ),

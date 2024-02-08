@@ -27,14 +27,6 @@ class _AppState extends State<App> {
     super.initState();
 
     _scope = widget.appScope..applicationRebuilder = _rebuildApplication;
-
-
-    final configStorage = ConfigSettingsStorageImpl(_scope.sharedPreferences);
-    final environment = Environment.instance();
-    if (!environment.isRelease) {
-      environment
-        ..refreshConfigProxy(configStorage);
-    }
   }
 
   void _rebuildApplication() {

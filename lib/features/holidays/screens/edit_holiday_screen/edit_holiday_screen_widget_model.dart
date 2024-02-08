@@ -2,6 +2,7 @@ import 'package:elementary/elementary.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/features/app/di/app_scope.dart';
+import 'package:flutter_template/features/common/domain/data/holidays/holiday_data.dart';
 import 'package:flutter_template/features/holidays/screens/edit_holiday_screen/edit_holiday_screen.dart';
 import 'package:flutter_template/features/holidays/screens/edit_holiday_screen/edit_holiday_screen_model.dart';
 import 'package:flutter_template/features/navigation/service/router.dart';
@@ -39,12 +40,7 @@ class EditHolidayScreenWidgetModel extends WidgetModel<EditHolidayScreen, EditHo
 
   @override
   void initWidgetModel() {
-    final args = router.current.args as EditHolidayRouterArgs?;
-
-    if (kDebugMode) {
-      print(111111);
-      print(args?.holiday.holidayDate);
-    }
+    final args = router.current.args is EditHolidayRouterArgs ? router.current.args! as EditHolidayRouterArgs : null;
 
     _holidayNameController.addListener(() {
       model.holidayName = _holidayNameController.text;
@@ -52,27 +48,23 @@ class EditHolidayScreenWidgetModel extends WidgetModel<EditHolidayScreen, EditHo
     _dateController.addListener(() {
       model.holidayDate = _dateController.text;
     });
-    _holidayNameController.text = args?.holiday.holidayName ?? '';
-    if (kDebugMode) {
-      print(111112);
-
+    if (args != null) {
+      _holidayNameController.text = args.holiday.holidayName;
+      _dateController.text = args.holiday.holidayDate;
+      model.photo = args.holiday.photo;
+      model.id = args.holiday.id;
     }
-    _dateController.text = args?.holiday.holidayDate ?? '';
-    if (kDebugMode) {
-      print(111113);
 
-    }
-    model.photo = args?.holiday.photo ?? Uint8List(0);
-    if (kDebugMode) {
-      print(111114);
-
-    }
-    model.id= args?.holiday.id ?? 0;
-    if (kDebugMode) {
-      print(111115);
-
-    }
     super.initWidgetModel();
+  }
+
+  @override
+  void initBottomSheetWidgetModel(Holiday holiday) {
+    _holidayNameController.text = holiday.holidayName;
+    _dateController.text = holiday.holidayDate;
+    model
+      ..photo = holiday.photo
+      ..id = holiday.id;
   }
 
   @override
@@ -98,17 +90,17 @@ class EditHolidayScreenWidgetModel extends WidgetModel<EditHolidayScreen, EditHo
   void savePhoto(Uint8List photo) async {
     model.photo = photo;
   }
+
   ///метод edit holiday
   Future<void> editHoliday() async {
     await model.editHoliday();
     router.pop();
   }
-  ///метод edit holiday
+
+  ///метод delete holiday
   Future<void> deleteHoliday() async {
     await model.deleteHoliday();
-    if (kDebugMode) {
-      print(909090);
-    }
+
     router.pop();
   }
 }
@@ -131,4 +123,6 @@ abstract class IEditHolidayScreenWidgetModel implements IWidgetModel {
 
   /// Method to add holiday.
   Future<void> deleteHoliday();
+
+  void initBottomSheetWidgetModel(Holiday holiday);
 }

@@ -10,8 +10,6 @@ import 'package:flutter_template/assets/colors/app_colors.dart';
 import 'package:flutter_template/assets/res/resources.dart';
 import 'package:flutter_template/assets/text/text_style.dart';
 
-import 'package:flutter_template/features/common/domain/data/holidays/holiday_data.dart';
-
 class AppItemListWidget<T> extends StatelessWidget {
   final void Function(T) onPressedEdit;
   final void Function(T)? chooseItem;
@@ -21,15 +19,14 @@ class AppItemListWidget<T> extends StatelessWidget {
   final List<String> secondText;
   final List<Uint8List> photoList;
 
-  const AppItemListWidget(
-    {
+  const AppItemListWidget({
     super.key,
     required this.values,
     required this.onPressedEdit,
     required this.mainNames,
     required this.secondText,
     required this.photoList,
-        this.chooseItem,
+    this.chooseItem,
   });
 
   @override

@@ -48,10 +48,10 @@ class AppGiftWidget extends StatelessWidget {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(bottom: 16),
-                      child: Text(
-                        holidayWithGifts[ind].holiday.holidayName,
+                      child: holidayWithGifts[ind].gifts.isNotEmpty?Text(
+                        '${holidayWithGifts[ind].holiday.holidayName} ${holidayWithGifts[ind].holiday.holidayDate}',
                         style: AppTextStyle.medium16.value.copyWith(color: AppColors.white),
-                      ),
+                      ):const SizedBox(),
                     ),
                     if (holidayWithGifts[ind].gifts.isNotEmpty)
                       SizedBox(

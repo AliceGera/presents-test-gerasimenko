@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_template/config/app_config.dart';
 import 'package:flutter_template/config/environment/build_types.dart';
@@ -14,7 +13,7 @@ class Environment implements Listenable {
   static Environment? _instance;
 
   /// Firebase options for initialize.
-  final FirebaseOptions? firebaseOptions;
+
   final BuildType _currentBuildType;
 
   /// Configuration.
@@ -36,7 +35,6 @@ class Environment implements Listenable {
   Environment._(
     this._currentBuildType,
     AppConfig config,
-    this.firebaseOptions,
   ) : _config = ValueNotifier<AppConfig>(config);
 
   /// Provides instance [Environment].
@@ -56,12 +54,10 @@ class Environment implements Listenable {
   static void init({
     required BuildType buildType,
     required AppConfig config,
-    FirebaseOptions? firebaseOptions,
   }) {
     _instance ??= Environment._(
       buildType,
       config,
-      firebaseOptions,
     );
   }
 

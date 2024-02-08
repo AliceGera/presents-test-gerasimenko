@@ -34,7 +34,7 @@ class HolidaysScreen extends ElementaryWidget<IHolidaysScreenWidgetModel> {
         ),
       ),
       body: _Body(
-        openNextScreen: wm.openAddHolidayScreen,
+        openAddHolidayScreen: wm.openAddHolidayScreen,
         editHolidayScreen: wm.editHolidayScreen,
         holidaysState: wm.holidaysState,
       ),
@@ -43,12 +43,12 @@ class HolidaysScreen extends ElementaryWidget<IHolidaysScreenWidgetModel> {
 }
 
 class _Body extends StatelessWidget {
-  final VoidCallback openNextScreen;
+  final VoidCallback openAddHolidayScreen;
   final void Function(Holiday holiday) editHolidayScreen;
   UnionStateNotifier<List<Holiday>> holidaysState;
 
   _Body({
-    required this.openNextScreen,
+    required this.openAddHolidayScreen,
     required this.editHolidayScreen,
     required this.holidaysState,
   });
@@ -73,7 +73,7 @@ class _Body extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 child: AppButtonWidget(
                   title: 'Add a holiday +',
-                  onPressed: openNextScreen,
+                  onPressed: openAddHolidayScreen,
                 ),
               ),
             ],

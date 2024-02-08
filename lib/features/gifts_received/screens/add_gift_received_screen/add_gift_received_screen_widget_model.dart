@@ -69,7 +69,7 @@ class AddGiftReceivedScreenWidgetModel extends WidgetModel<AddGiftReceivedScreen
 
   @override
   void whoGavePresentScreen() {
-    router.push(WhoGavePresentRouter());
+    router.push(PersonRouter());
   }
 
   @override

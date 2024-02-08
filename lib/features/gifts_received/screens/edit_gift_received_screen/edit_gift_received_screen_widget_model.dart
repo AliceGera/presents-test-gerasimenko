@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_template/features/app/di/app_scope.dart';
 import 'package:flutter_template/features/common/domain/data/gifts/gift_data.dart';
 import 'package:flutter_template/features/common/domain/data/holidays/holiday_data.dart';
+import 'package:flutter_template/features/common/domain/data/person/person_data.dart';
 import 'package:flutter_template/features/gifts_received/screens/edit_gift_received_screen/edit_gift_received_screen.dart';
 import 'package:flutter_template/features/gifts_received/screens/edit_gift_received_screen/edit_gift_received_screen_model.dart';
 import 'package:flutter_template/features/navigation/service/router.dart';
@@ -40,28 +41,34 @@ class EditGiftReceivedScreenWidgetModel extends WidgetModel<EditGiftReceivedScre
 
   @override
   void dispose() {
+    _commentController.removeListener(commentListener);
+    _giftNameController.removeListener(giftListener);
     _commentController.dispose();
     _giftNameController.dispose();
     super.dispose();
+  }
+
+  void commentListener(){
+    model.giftComment = _commentController.text;
+  }
+
+  void giftListener(){
+    model.giftName = _giftNameController.text;
   }
 
   @override
   void initWidgetModel() {
     final args = router.current.args as EditGiftReceivedRouterArgs?;
 
-    _commentController.addListener(() {
-      model.holidayName = _commentController.text;
-    });
-    _giftNameController.addListener(() {
-      model.giftName = _giftNameController.text;
-    });
+    _commentController.addListener(commentListener);
+    _giftNameController.addListener(giftListener);
 
     if (args != null) {
       model
         ..gift = args.gift
         ..holidayName = args.holiday.holidayName;
-      _commentController.text = model.gift.giftComment;
-      _giftNameController.text = model.gift.giftName;
+      _commentController.text = args.gift.giftComment;
+      _giftNameController.text = args.gift.giftName;
       _giftState.value = model.gift;
     }
 
@@ -74,8 +81,12 @@ class EditGiftReceivedScreenWidgetModel extends WidgetModel<EditGiftReceivedScre
   }
 
   @override
-  void whoGavePresentScreen() {
-    router.push(WhoGavePresentRouter());
+  Future<void> choosePersonScreen() async {
+    final result = await router.push(PersonRouter());
+    if (result is Person) {
+      model.whoGavePresent = '${result.firstName} ${result.lastName}';
+      _giftState.value = model.gift;
+    }
   }
 
   ///метод edit holiday
@@ -96,9 +107,6 @@ class EditGiftReceivedScreenWidgetModel extends WidgetModel<EditGiftReceivedScre
 
   Future<void> deleteGift() async {
     await model.deleteGift();
-    if (kDebugMode) {
-      print(909090);
-    }
     router.pop();
   }
 
@@ -118,7 +126,7 @@ abstract class IEditGiftReceivedScreenWidgetModel implements IWidgetModel {
   void closeScreen() {}
 
   /// Method to .
-  void whoGavePresentScreen() {}
+  void choosePersonScreen() {}
 
   /// Method to.
   void chooseHolidayNameScreen() {}

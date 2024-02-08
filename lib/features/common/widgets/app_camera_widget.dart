@@ -12,11 +12,11 @@ class AppCameraWidget extends StatefulWidget {
   AppCameraWidget({
     super.key,
     required this.savePhoto,
-    this.photoHoliday,
+    this.photo,
   });
 
-  final Uint8List? photoHoliday;
-  void Function(Uint8List photo) savePhoto;
+  final void Function(Uint8List photo) savePhoto;
+  final Uint8List? photo;
 
   @override
   _AppCameraWidgetState createState() => _AppCameraWidgetState();
@@ -28,38 +28,39 @@ class _AppCameraWidgetState extends State<AppCameraWidget> {
 
   @override
   void initState() {
-    photo = widget.photoHoliday;
+    photo = widget.photo;
+    super.initState();
   }
 
-  Future getImageFromGallery() async {
+  Future<void> getImageFromGallery() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     setState(() {
       if (pickedFile != null) {
         final image = File(pickedFile.path);
         photo = image.readAsBytesSync();
-        if(photo!=null) {
+        if (photo != null) {
           widget.savePhoto.call(photo!);
         }
       }
     });
   }
 
-  Future getImageFromCamera() async {
+  Future<void> getImageFromCamera() async {
     final pickedFile = await picker.pickImage(source: ImageSource.camera);
 
     setState(() {
       if (pickedFile != null) {
         final image = File(pickedFile.path);
         photo = image.readAsBytesSync();
-        if(photo!=null) {
+        if (photo != null) {
           widget.savePhoto.call(photo!);
         }
       }
     });
   }
 
-  Future showOptions() async {
+  Future<void> showOptions() async {
     await showCupertinoModalPopup(
       context: context,
       builder: (context) => CupertinoActionSheet(
@@ -108,11 +109,22 @@ class _AppCameraWidgetState extends State<AppCameraWidget> {
                           SvgIcons.photoCamera,
                         ),
                       )
-                    : Image.memory(
-                        photo!,
-                        fit: BoxFit.cover,
-                        height: 90,
-                        width: 90,
+                    : Stack(
+                        alignment: Alignment.topRight,
+                        children: [
+                          Image.memory(
+                            photo!,
+                            fit: BoxFit.cover,
+                            height: 90,
+                            width: 90,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(2),
+                            child: SvgPicture.asset(
+                              SvgIcons.deletePhoto,
+                            ),
+                          ),
+                        ],
                       ),
               ),
             ),

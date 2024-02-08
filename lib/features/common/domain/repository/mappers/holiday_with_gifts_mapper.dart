@@ -7,6 +7,7 @@ import 'package:flutter_template/features/common/domain/repository/mappers/gifts
 List<HolidayWithGiftsData> mapDatabaseToHolidayWithGifts(
   List<Gift> gifts,
   List<Holiday> holidays,
+//
 ) {
   List<HolidayWithGiftsData> holidaysWithGiftsData = [];
   for (final holiday in holidays) {
@@ -14,7 +15,7 @@ List<HolidayWithGiftsData> mapDatabaseToHolidayWithGifts(
       HolidayWithGiftsData(
         gifts: gifts
             .where(
-              (gift) => gift.holidayId == holiday.id,
+              (gift) => gift.holidayId == holiday.id /*&& gift.isReceivedGift == */,
             )
             .toList(),
         holiday: holiday,

@@ -9,6 +9,7 @@ import 'package:flutter_template/features/common/domain/data/holidays/holiday_da
 import 'package:flutter_template/features/common/widgets/app_button_widget.dart';
 import 'package:flutter_template/features/common/widgets/app_iteams_list_widget.dart';
 import 'package:flutter_template/features/gifts_received/screens/holiday_name_screen/holiday_name_screen_widget_model.dart';
+import 'package:flutter_template/features/holidays/screens/edit_holiday_screen/edit_holiday_screen_export.dart';
 import 'package:flutter_template/features/navigation/domain/entity/app_route_names.dart';
 import 'package:union_state/union_state.dart';
 
@@ -35,17 +36,19 @@ class HolidayNameScreen extends ElementaryWidget<IHolidayNameScreenWidgetModel> 
             InkWell(highlightColor: Colors.transparent, splashColor: Colors.transparent, onTap: wm.closeScreen, child: SvgPicture.asset(SvgIcons.backArrow)),
             Padding(
               padding: const EdgeInsets.only(left: 36),
-              child: Text('Holiday selection', style: AppTextStyle.bold19.value.copyWith(color: AppColors.white)),
+              child: Text(
+                'Holiday selection',
+                style: AppTextStyle.bold19.value.copyWith(color: AppColors.white),
+              ),
             ),
           ],
         ),
       ),
       body: _Body(
         openNextScreen: wm.openAddHolidayScreen,
-        chooseHolidayScreen:wm.chooseHoliday,
-        editHolidayScreen: wm.editHolidayScreen,
+        chooseHolidayScreen: wm.chooseHoliday,
+        loadAgain: wm.loadAgain,
         holidaysState: wm.holidaysState,
-
       ),
     );
   }
@@ -55,13 +58,13 @@ class _Body extends StatelessWidget {
   final VoidCallback openNextScreen;
 
   final void Function(Holiday holiday) chooseHolidayScreen;
-  final void Function(Holiday holiday) editHolidayScreen;
+  final VoidCallback loadAgain;
   UnionStateNotifier<List<Holiday>> holidaysState;
 
   _Body({
     required this.chooseHolidayScreen,
     required this.openNextScreen,
-    required this.editHolidayScreen,
+    required this.loadAgain,
     required this.holidaysState,
   });
 
@@ -76,7 +79,23 @@ class _Body extends StatelessWidget {
             children: [
               AppItemListWidget<Holiday>(
                 chooseItem: chooseHolidayScreen,
-                onPressedEdit: editHolidayScreen.call,
+                onPressedEdit: (holiday){
+                  showModalBottomSheet<void>(
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                    ),
+                    backgroundColor: AppColors.darkBlue,
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (context) {
+                      return EditHolidayScreen(
+                        loadAgain: loadAgain,
+                        holiday: holiday,
+                        showInBottomSheet: true,
+                      );
+                    },
+                  );
+                },
                 mainNames: holidays.map((e) => e.holidayName).toList(),
                 secondText: holidays.map((e) => e.holidayDate).toList(),
                 photoList: holidays.map((e) => e.photo).toList(),

@@ -9,9 +9,6 @@ abstract class AppRouteNames {
   /// TempScreen route name.
   static const String tempScreen = 'tempRouter';
 
-  /// TempScreen route name.
-  static const String uiKitScreen = 'uiKitRouter';
-
   /// GiftsGivenScreen route name.
   static const String giftsGivenScreen = 'giftsGivenRouter';
 
@@ -43,9 +40,12 @@ abstract class AppRouteNames {
   static const String editHolidayScreen = 'editHolidayRouter';
 
   /// WhoGavePresentScreen route name.
-  static const String whoGavePresentScreen = 'whoGavePresentRouter';
+  static const String personScreen = 'personRouter';
 
   /// HolidayNameScreen route name.
   static const String holidayNameScreen = 'holidayNameRouter';
+
+  /// EditHolidayScreen route name.
+  static const String editPersonScreen = 'editPersonRouter';
 
 }

@@ -9,25 +9,16 @@ class GiftsService {
   Future<Future<List<Gift>>> getGifts() async {
     return _giftsRepository.getGifts();
   }
+
   Future<void> addGift(Gift data) async {
     await _giftsRepository.addGift(data);
   }
+
   Future<void> deleteGift(Gift data) async {
     await _giftsRepository.deleteGift(data);
   }
+
   Future<void> editGift(Gift data) async {
     await _giftsRepository.editGift(data);
   }
-/*
-  Future<void> addHoliday(Holiday data) async {
-    await _holidaysRepository.addHoliday(data);
-  }
-
-  Future<void> editHoliday(Holiday data) async {
-    await _holidaysRepository.editHoliday(data);
-  }
-
-  Future<void> deleteHoliday(Holiday data) async {
-    await _holidaysRepository.deleteHoliday(data);
-  }*/
 }
