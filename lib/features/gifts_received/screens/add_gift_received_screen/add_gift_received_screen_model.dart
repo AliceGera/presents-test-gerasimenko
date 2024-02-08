@@ -64,13 +64,13 @@ class AddGiftReceivedScreenModel extends ElementaryModel {
       Gift(
         id: 1,
         photo: _photo,
-        giftsRaiting: 0,
-        giftsName: _giftName,
-        giftsPrice: 0,
-        isReceivedGifts: true,
+        giftRaiting: 0,
+        giftName: _giftName,
+        giftPrice: 0,
+        isReceivedGift: true,
         whoGave: _whoGavePresent,
-        holidaysId: _holidayId,
-        giftsComment: _giftComment,
+        holidayId: _holidayId,
+        giftComment: _giftComment,
       ),
     );
   }

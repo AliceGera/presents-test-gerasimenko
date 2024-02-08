@@ -6,14 +6,14 @@ List<Gift> mapDatabaseToGifts(List<GiftsTableData> giftsTable) {
       .map(
         (e) => Gift(
           id: e.id,
-          giftsName: e.giftsName,
+          giftName: e.giftsName,
           photo: e.photo,
-          giftsPrice: e.giftsPrice,
-          isReceivedGifts: e.isReceivedGifts,
+          giftPrice: e.giftsPrice,
+          isReceivedGift: e.isReceivedGifts,
           whoGave: e.whoGave,
-          holidaysId: e.holidaysId,
-          giftsComment: e.giftsComment,
-          giftsRaiting: e.giftsRaiting,
+          holidayId: e.holidaysId,
+          giftComment: e.giftsComment,
+          giftRaiting: e.giftsRaiting,
         ),
       )
       .toList();

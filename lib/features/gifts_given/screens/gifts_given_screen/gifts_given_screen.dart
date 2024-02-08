@@ -60,10 +60,11 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppGiftWidget(
+    /*return AppGiftWidget(
       editGiftReceived: editGiftReceived,
       openAddGiftScreen: openAddGiftScreen,
       gifts: [],
-    );
+    );*/
+    return SizedBox();
   }
 }

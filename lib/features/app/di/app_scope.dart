@@ -14,8 +14,6 @@ import 'package:flutter_template/features/common/domain/repository/holidays_repo
 import 'package:flutter_template/features/common/service/gifts_service.dart';
 import 'package:flutter_template/features/common/service/holidays_and_gifts_service.dart';
 import 'package:flutter_template/features/common/service/holidays_service.dart';
-import 'package:flutter_template/features/common/service/theme/theme_service.dart';
-import 'package:flutter_template/features/common/service/theme/theme_service_impl.dart';
 import 'package:flutter_template/features/common/utils/analytics/amplitude/amplitude_analytic_tracker.dart';
 import 'package:flutter_template/features/common/utils/analytics/firebase/firebase_analytic_tracker.dart';
 import 'package:flutter_template/features/common/utils/analytics/mock/mock_amplitude_analytics.dart';
@@ -30,14 +28,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /// Scope of dependencies which need through all app's life.
 class AppScope implements IAppScope {
-  static const _themeByDefault = ThemeMode.system;
-
   final SharedPreferences _sharedPreferences;
 
   late final Dio _dio;
   late final ErrorHandler _errorHandler;
   late final AppRouter _router;
-  late final IThemeService _themeService;
   late final IAnalyticsService _analyticsService;
   late final HolidaysService _holidaysService;
   late final HolidaysRepository _holidaysRepository;
@@ -60,9 +55,6 @@ class AppScope implements IAppScope {
   AppRouter get router => _router;
 
   @override
-  IThemeService get themeService => _themeService;
-
-  @override
   SharedPreferences get sharedPreferences => _sharedPreferences;
 
   @override
@@ -70,8 +62,10 @@ class AppScope implements IAppScope {
 
   @override
   HolidaysService get holidaysService => _holidaysService;
+
   @override
   GiftsService get giftsService => _giftsService;
+
   @override
   HolidayAndGiftsService get holidayAndGiftsService => _holidayAndGiftsService;
 
@@ -85,7 +79,7 @@ class AppScope implements IAppScope {
     _holidaysService = _initHolidaysService();
     _giftsApi = GiftsApi(AppGiftsDatabase());
     _giftsService = _initGiftsService();
-    _holidayAndGiftsService= _initHolidayAndGiftsService();
+    _holidayAndGiftsService = _initHolidayAndGiftsService();
     _dio = _initDio(additionalInterceptors);
     _errorHandler = DefaultErrorHandler();
     _router = AppRouter.instance();
@@ -95,13 +89,6 @@ class AppScope implements IAppScope {
       FirebaseAnalyticTracker(MockFirebaseAnalytics()),
       AmplitudeAnalyticTracker(MockAmplitudeAnalytics()),
     ]);
-  }
-
-  @override
-  Future<void> initTheme() async {
-    final theme = await ThemeModeStorageImpl(_sharedPreferences).getThemeMode() ?? _themeByDefault;
-    _themeService = ThemeServiceImpl(theme);
-    _themeService.addListener(_onThemeModeChanged);
   }
 
   Dio _initDio(Iterable<Interceptor> additionalInterceptors) {
@@ -140,20 +127,18 @@ class AppScope implements IAppScope {
     return dio;
   }
 
-  Future<void> _onThemeModeChanged() async {
-    await _themeModeStorage.saveThemeMode(mode: _themeService.currentThemeMode);
-  }
-
   HolidaysService _initHolidaysService() {
     _holidaysRepository = HolidaysRepository(_holidaysApi);
     return HolidaysService(_holidaysRepository);
   }
+
   GiftsService _initGiftsService() {
     _giftsRepository = GiftsRepository(_giftsApi);
     return GiftsService(_giftsRepository);
   }
+
   HolidayAndGiftsService _initHolidayAndGiftsService() {
-    return HolidayAndGiftsService(_giftsRepository,_holidaysRepository);
+    return HolidayAndGiftsService(_giftsRepository, _holidaysRepository);
   }
 }
 
@@ -171,13 +156,6 @@ abstract class IAppScope {
   /// Class that coordinates navigation for the whole app.
   AppRouter get router;
 
-  /// A service that stores and retrieves app theme mode.
-  IThemeService get themeService;
-
-
-  /// Init theme service with theme from storage or default value.
-  Future<void> initTheme();
-
   /// Shared preferences.
   SharedPreferences get sharedPreferences;
 
@@ -192,5 +170,4 @@ abstract class IAppScope {
 
   /// Analytics
   HolidayAndGiftsService get holidayAndGiftsService;
-
 }

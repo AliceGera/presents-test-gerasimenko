@@ -15,16 +15,37 @@ class GiftsApi {
   Future<void> addGift(Gift data) async {
     await appGiftsDatabase.into(appGiftsDatabase.giftsTable).insert(
           GiftsTableCompanion.insert(
-            holidaysId: data.holidaysId,
+            holidaysId: data.holidayId,
             photo: data.photo,
-            giftsRaiting: data.giftsRaiting,
-            giftsName: data.giftsName,
-            giftsPrice: data.giftsPrice,
-            isReceivedGifts: data.isReceivedGifts,
+            giftsRaiting: data.giftRaiting,
+            giftsName: data.giftName,
+            giftsPrice: data.giftPrice,
+            isReceivedGifts: data.isReceivedGift,
             whoGave: '',
             giftsComment: '',
           ),
         );
+  }
+
+  Future<void> deleteGift(Gift data) async {
+    final resultTable = appGiftsDatabase.delete(appGiftsDatabase.giftsTable)..where((t) => t.id.equals(data.id));
+    await resultTable.go();
+  }
+
+  Future<void> editGift(Gift data) async {
+    final resultTable = appGiftsDatabase.update(appGiftsDatabase.giftsTable)..where((t) => t.id.equals(data.id));
+    await resultTable.write(
+      GiftsTableCompanion.insert(
+        giftsRaiting: data.giftRaiting,
+        giftsName: data.giftName,
+        giftsPrice: data.giftPrice,
+        isReceivedGifts: data.isReceivedGift,
+        whoGave: data.whoGave,
+        holidaysId: data.holidayId,
+        giftsComment: data.giftComment,
+        photo: data.photo,
+      ),
+    );
   }
 /* Future<void> addHoliday(Holiday data) async {
     await appDatabase.into(appDatabase.holidaysTable).insert(

@@ -14,7 +14,7 @@ List<HolidayWithGiftsData> mapDatabaseToHolidayWithGifts(
       HolidayWithGiftsData(
         gifts: gifts
             .where(
-              (gift) => gift.holidaysId == holiday.id,
+              (gift) => gift.holidayId == holiday.id,
             )
             .toList(),
         holiday: holiday,

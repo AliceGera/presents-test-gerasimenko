@@ -2,9 +2,10 @@ import 'package:auto_route/auto_route.dart';
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/assets/colors/app_colors.dart';
-import 'package:flutter_template/assets/res/resources.dart';
 import 'package:flutter_template/assets/text/text_style.dart';
+import 'package:flutter_template/features/common/domain/data/gifts/gift_data.dart';
 import 'package:flutter_template/features/common/domain/data/holiday_with_gifts/holiday_with_gifts_data.dart';
+import 'package:flutter_template/features/common/domain/data/holidays/holiday_data.dart';
 import 'package:flutter_template/features/common/widgets/app_gifts_widget.dart';
 import 'package:flutter_template/features/gifts_received/screens/gifts_received_screen/gifts_received_screen_wm.dart';
 import 'package:flutter_template/features/navigation/domain/entity/app_route_names.dart';
@@ -35,7 +36,7 @@ class GiftsReceivedScreen extends ElementaryWidget<IGiftsReceivedScreenWidgetMod
       ),
       body: _Body(
         openAddGiftScreen: wm.openAddGiftScreen,
-        editGiftReceived: wm.editGiftReceived,
+        editGiftsScreen: wm.editGiftsScreen,
         giftsState: wm.giftsState,
       ),
     );
@@ -44,35 +45,14 @@ class GiftsReceivedScreen extends ElementaryWidget<IGiftsReceivedScreenWidgetMod
 
 class _Body extends StatelessWidget {
   final VoidCallback openAddGiftScreen;
-  final VoidCallback editGiftReceived;
+  final void Function(Gift gift, Holiday holiday) editGiftsScreen;
   UnionStateNotifier<List<HolidayWithGiftsData>> giftsState;
 
   _Body({
     required this.openAddGiftScreen,
-    required this.editGiftReceived,
+    required this.editGiftsScreen,
     required this.giftsState,
   });
-
-  final List<String> holidaysList = [
-    'Saint Valentine’s Day, 14.02.2023',
-    'Halloween, 31.11.2023',
-  ];
-
-  final List<List<String>> presentsList = [
-    ['Soft toy', 'Chocolate', 'Painting', 'Bracelet'],
-    ['Candies', 'Cakes', 'Champagne'],
-    ['Ring with topaz and diamonds', 'Telescope', 'Statuette', 'Plaid', 'Table lamp', 'Wine Bottle'],
-  ];
-  final List<List<String>> namesList = [
-    ['Angela Miller', 'Young Robinson', 'Thomas Brown', 'Jessica Garcia'],
-    ['Candies', 'Cakes', 'Champagne'],
-    ['Thomas Brown', 'Stephen White', 'Angela Miller', 'Jessica Garcia', 'Young Robinson', 'Natalie Lewis'],
-  ];
-  final List<List<String>> starsList = [
-    [SvgIcons.threeStars, SvgIcons.threeStars, SvgIcons.threeStars, SvgIcons.threeStars],
-    [SvgIcons.threeStars, SvgIcons.threeStars, SvgIcons.threeStars],
-    [SvgIcons.threeStars, SvgIcons.threeStars, SvgIcons.threeStars, SvgIcons.threeStars, SvgIcons.threeStars, SvgIcons.threeStars],
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -80,8 +60,10 @@ class _Body extends StatelessWidget {
       unionStateListenable: giftsState,
       builder: (_, gifts) {
         return AppGiftWidget(
-          gifts: gifts,
-          editGiftReceived: editGiftReceived,
+          editGiftsScreen: editGiftsScreen.call,
+          holidayWithGifts: gifts,
+          //values: gifts,
+          //editGiftReceived: editGiftReceived,
           openAddGiftScreen: openAddGiftScreen,
         );
       },

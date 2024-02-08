@@ -2,14 +2,14 @@ import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/features/app/di/app_scope.dart';
 import 'package:flutter_template/features/common/domain/data/gifts/gift_data.dart';
+import 'package:flutter_template/features/common/domain/data/holiday_with_gifts/holiday_with_gifts_data.dart';
+import 'package:flutter_template/features/common/domain/data/holidays/holiday_data.dart';
 import 'package:flutter_template/features/common/mixin/theme_mixin.dart';
 import 'package:flutter_template/features/gifts_received/screens/gifts_received_screen/gifts_received_screen.dart';
 import 'package:flutter_template/features/gifts_received/screens/gifts_received_screen/gifts_received_screen_model.dart';
 import 'package:flutter_template/features/navigation/service/router.dart';
 import 'package:provider/provider.dart';
 import 'package:union_state/union_state.dart';
-
-import 'package:flutter_template/features/common/domain/data/holiday_with_gifts/holiday_with_gifts_data.dart';
 
 /// Factory for [GiftsReceivedScreenWidgetModel].
 GiftsReceivedScreenWidgetModel giftsReceivedScreenWmFactory(
@@ -57,8 +57,14 @@ class GiftsReceivedScreenWidgetModel extends WidgetModel<GiftsReceivedScreen, Gi
   }
 
   @override
-  void editGiftReceived() {
-    _appRouter.push(EditGiftReceivedRouter());
+  void editGiftsScreen(Gift gift, Holiday holiday) {
+    _appRouter.push(
+      EditGiftReceivedRouter(
+        gift: gift,
+        loadAgain: loadAgain,
+        holiday: holiday,
+      ),
+    );
   }
 
   @override
@@ -70,8 +76,8 @@ abstract interface class IGiftsReceivedScreenWidgetModel with ThemeIModelMixin i
   /// Navigate to room screen.
   void openAddGiftScreen();
 
-  /// Navigate to room screen.
-  void editGiftReceived();
+  /// Navigate to edit Gift screen.
+  void editGiftsScreen(Gift gifts, Holiday holiday);
 
   /// Navigate to load screen again.
   void loadAgain();

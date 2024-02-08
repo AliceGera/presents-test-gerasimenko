@@ -14,6 +14,13 @@ class GiftsRepository {
   Future<void> addGift(Gift data) async {
     await _apiClient.addGift(data);
   }
+  Future<void> deleteGift(Gift data) async {
+
+    await _apiClient.deleteGift(data);
+  }
+  Future<void> editGift(Gift data) async {
+    await _apiClient.editGift(data);
+  }
  /* Future<void> addHoliday(Holiday data) async {
     await _apiClient.addHoliday(data);
   }
