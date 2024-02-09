@@ -11,6 +11,9 @@ import 'package:flutter_template/features/common/domain/data/gifts/gift_data.dar
 import 'package:flutter_template/features/common/domain/data/holiday_with_gifts/holiday_with_gifts_data.dart';
 import 'package:flutter_template/features/common/domain/data/holidays/holiday_data.dart';
 import 'package:flutter_template/features/common/widgets/app_button_widget.dart';
+import 'package:flutter_template/features/common/widgets/delete_dialog_widget.dart';
+
+import 'package:flutter_template/features/common/widgets/edit_or_delete_dialog_widget.dart';
 
 class AppGiftWidget extends StatelessWidget {
   final VoidCallback? openAddGiftScreen;
@@ -18,11 +21,13 @@ class AppGiftWidget extends StatelessWidget {
   // final VoidCallback? editGiftReceived;
   final List<HolidayWithGiftsData> holidayWithGifts;
   final void Function(Gift, Holiday) editGiftsScreen;
+  final  Future<void>  Function(Gift) deleteGift;
 
   //final List<T> values;
   const AppGiftWidget({
     super.key,
     required this.editGiftsScreen,
+    required this.deleteGift,
     //  required this.values,
     // required this.editGiftReceived,
     this.openAddGiftScreen,
@@ -48,10 +53,12 @@ class AppGiftWidget extends StatelessWidget {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(bottom: 16),
-                      child: holidayWithGifts[ind].gifts.isNotEmpty?Text(
-                        '${holidayWithGifts[ind].holiday.holidayName} ${holidayWithGifts[ind].holiday.holidayDate}',
-                        style: AppTextStyle.medium16.value.copyWith(color: AppColors.white),
-                      ):const SizedBox(),
+                      child: holidayWithGifts[ind].gifts.isNotEmpty
+                          ? Text(
+                              '${holidayWithGifts[ind].holiday.holidayName} ${holidayWithGifts[ind].holiday.holidayDate}',
+                              style: AppTextStyle.medium16.value.copyWith(color: AppColors.white),
+                            )
+                          : const SizedBox(),
                     ),
                     if (holidayWithGifts[ind].gifts.isNotEmpty)
                       SizedBox(
@@ -70,33 +77,52 @@ class AppGiftWidget extends StatelessWidget {
                                 Stack(
                                   alignment: AlignmentDirectional.topEnd,
                                   children: [
-                                    /*Container(
-                                      color: AppColors.gray,
-                                      height: 170,
-                                      width: double.infinity,
-                                    ),*/
                                     SizedBox(
                                       height: 170,
                                       width: 170,
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(8),
-                                        child: Image.memory(
+                                        child: holidayWithGifts[ind].gifts[index].photo.isNotEmpty?Image.memory(
                                           holidayWithGifts[ind].gifts[index].photo,
                                           fit: BoxFit.cover,
-                                        ),
+                                        ):Container(color: AppColors.photoColorGray,),
                                       ),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.all(8),
-                                      child: InkWell(
-                                        onTap: () {
-                                          editGiftsScreen.call(
-                                            holidayWithGifts[ind].gifts[index],
-                                            holidayWithGifts[ind].holiday,
-                                          );
-                                        },
-                                        child: SvgPicture.asset(SvgIcons.editGift),
-                                      ),
+                                      child: Builder(builder: (context) {
+                                        return InkWell(
+                                          //barrierDismissible: true,
+                                          highlightColor: Colors.transparent,
+                                          splashColor: Colors.transparent,
+                                          onTap: () => showDialog<void>(
+                                              barrierDismissible: true,
+                                              context: context,
+                                              builder: (ctx) => EditOrDeleteDialogWidget(
+                                                    editGiftsScreen: () {
+                                                      editGiftsScreen.call(
+                                                        holidayWithGifts[ind].gifts[index],
+                                                        holidayWithGifts[ind].holiday,
+                                                      );
+                                                      Navigator.pop(ctx);
+                                                    },
+                                                    deleteGift: () {
+                                                      showDialog<void>(
+                                                        context: context,
+                                                        builder: (ctx) => DeleteDialogWidget(
+                                                          deleteGift: () async {
+                                                            Navigator.pop(ctx);
+                                                            await deleteGift.call(holidayWithGifts[ind].gifts[index]);
+                                                          },
+                                                        ),
+                                                      );
+                                                    },
+                                                  )),
+                                          child: SvgPicture.asset(SvgIcons.editGift),
+                                        );
+                                      }),
+
+                                      //),
                                     ),
                                   ],
                                 ),

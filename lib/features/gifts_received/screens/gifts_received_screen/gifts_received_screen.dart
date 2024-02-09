@@ -38,6 +38,7 @@ class GiftsReceivedScreen extends ElementaryWidget<IGiftsReceivedScreenWidgetMod
         openAddGiftScreen: wm.openAddGiftScreen,
         editGiftsScreen: wm.editGiftsScreen,
         giftsState: wm.giftsState,
+          deleteGift:wm.deleteGift,
       ),
     );
   }
@@ -47,8 +48,9 @@ class _Body extends StatelessWidget {
   final VoidCallback openAddGiftScreen;
   final void Function(Gift gift, Holiday holiday) editGiftsScreen;
   UnionStateNotifier<List<HolidayWithGiftsData>> giftsState;
-
+  final Future<void> Function(Gift gift) deleteGift;
   _Body({
+    required this.deleteGift,
     required this.openAddGiftScreen,
     required this.editGiftsScreen,
     required this.giftsState,
@@ -60,8 +62,9 @@ class _Body extends StatelessWidget {
       unionStateListenable: giftsState,
       builder: (_, gifts) {
         return AppGiftWidget(
-          editGiftsScreen: editGiftsScreen.call,
+          editGiftsScreen: editGiftsScreen,
           holidayWithGifts: gifts,
+          deleteGift:deleteGift,
           //values: gifts,
           //editGiftReceived: editGiftReceived,
           openAddGiftScreen: openAddGiftScreen,

@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:elementary/elementary.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_template/assets/colors/app_colors.dart';
@@ -8,6 +9,8 @@ import 'package:flutter_template/assets/text/text_style.dart';
 import 'package:flutter_template/features/common/domain/data/person/person_data.dart';
 import 'package:flutter_template/features/common/widgets/app_button_widget.dart';
 import 'package:flutter_template/features/common/widgets/app_iteams_list_widget.dart';
+import 'package:flutter_template/features/common/widgets/choose_edit_or_delete_dialog_widget.dart';
+import 'package:flutter_template/features/common/widgets/delete_dialog_widget.dart';
 import 'package:flutter_template/features/common/widgets/person_bottom_sheet_widget.dart';
 import 'package:flutter_template/features/gifts_received/screens/edit_person_screen/edit_person_screen_export.dart';
 import 'package:flutter_template/features/gifts_received/screens/person_screen/person_screen_widget_model.dart';
@@ -64,27 +67,52 @@ class _Body extends StatelessWidget {
           child: Column(
             children: [
               AppItemListWidget<Person>(
-                chooseItem: wm.choosePerson,
-                onPressedEdit: (person) {
-                  showModalBottomSheet<void>(
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-                    ),
-                    backgroundColor: AppColors.darkBlue,
-                    context: context,
-                    isScrollControlled: true,
-                    builder: (context) {
-                      return EditPersonScreen(
-                        loadAgain: wm.loadAgain,
-                        person: person,
-                      );
-                    },
-                  );
-                },
                 mainNames: persons.map((e) => e.firstName).toList(),
                 secondText: persons.map((e) => e.comment).toList(),
                 photoList: persons.map((e) => e.photo).toList(),
                 values: persons,
+                onTapThreeDots: (person) {
+                  showDialog<void>(
+                    context: context,
+                    builder: (ctx) => ChooseEditOrDeleteDialogWidget(
+                      icon:SvgIcons.checkChooseDialog,
+                      firstText:'Choose',
+                      editGiftsScreen: () {
+                        Navigator.pop(ctx);
+                        showModalBottomSheet<void>(
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                          ),
+                          backgroundColor: AppColors.darkBlue,
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (context) {
+                            return EditPersonScreen(
+                              loadAgain: wm.loadAgain,
+                              person: person,
+                            );
+                          },
+                        );
+                      },
+                      deleteGift: () {
+                        Navigator.pop(ctx);
+                        showDialog<void>(
+                          context: context,
+                          builder: (ctx) => DeleteDialogWidget(
+                            deleteGift: () async {
+                              Navigator.pop(ctx);
+                              await wm.deletePerson.call(person);
+                            },
+                          ),
+                        );
+                      },
+                      chooseItem: () {
+                        Navigator.pop(ctx);
+                        wm.choosePerson(person);
+                      },
+                    ),
+                  );
+                },
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 12),
@@ -97,14 +125,16 @@ class _Body extends StatelessWidget {
                       context: context,
                       isScrollControlled: true,
                       builder: (context) {
-                        return PersonBottomSheetWidget(
-                          addOrEditPerson: wm.addPerson,
-                          loadAgain: wm.loadAgain,
-                          savePhoto: wm.savePhoto,
-                          closeScreen: wm.closeScreen,
-                          firstNameController: wm.firstNameController,
-                          commentController: wm.commentController,
-                          lastNameController: wm.lastNameController,
+                        return SingleChildScrollView(
+                          child: PersonBottomSheetWidget(
+                            addOrEditPerson: wm.addPerson,
+                            loadAgain: wm.loadAgain,
+                            savePhoto: wm.savePhoto,
+                            closeScreen: wm.closeScreen,
+                            firstNameController: wm.firstNameController,
+                            commentController: wm.commentController,
+                            lastNameController: wm.lastNameController,
+                          ),
                         );
                       },
                     );

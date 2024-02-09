@@ -1,5 +1,4 @@
 import 'package:elementary/elementary.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/features/app/di/app_scope.dart';
 import 'package:flutter_template/features/common/domain/data/gifts/gift_data.dart';
@@ -84,7 +83,7 @@ class EditGiftReceivedScreenWidgetModel extends WidgetModel<EditGiftReceivedScre
   Future<void> choosePersonScreen() async {
     final result = await router.push(PersonRouter());
     if (result is Person) {
-      model.whoGavePresent = '${result.firstName} ${result.lastName}';
+      model.whoGave = '${result.firstName} ${result.lastName}';
       _giftState.value = model.gift;
     }
   }

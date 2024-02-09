@@ -17,7 +17,7 @@ GiftsReceivedScreenWidgetModel giftsReceivedScreenWmFactory(
 ) {
   final appScope = context.read<IAppScope>();
 
-  final model = GiftsReceivedScreenModel(appScope.holidayAndGiftsService);
+  final model = GiftsReceivedScreenModel(appScope.holidayAndGiftsService, appScope.giftsService);
   return GiftsReceivedScreenWidgetModel(model, appScope.router);
 }
 
@@ -67,6 +67,13 @@ class GiftsReceivedScreenWidgetModel extends WidgetModel<GiftsReceivedScreen, Gi
     );
   }
 
+  ///метод delete
+  Future<void> deleteGift(Gift gift) async {
+    await model.deleteGift(gift);
+    await _getGifts();
+    _appRouter.pop();
+  }
+
   @override
   UnionStateNotifier<List<HolidayWithGiftsData>> get giftsState => _giftsState;
 }
@@ -84,4 +91,7 @@ abstract interface class IGiftsReceivedScreenWidgetModel with ThemeIModelMixin i
 
   /// Method to get holidays screen.
   UnionStateNotifier<List<HolidayWithGiftsData>> get giftsState;
+
+  /// Method to add holiday.
+  Future<void> deleteGift(Gift gift);
 }

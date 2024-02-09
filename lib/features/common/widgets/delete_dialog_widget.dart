@@ -3,10 +3,16 @@ import 'package:flutter_template/assets/colors/app_colors.dart';
 import 'package:flutter_template/assets/text/text_style.dart';
 
 class DeleteDialogWidget extends StatelessWidget {
-  final VoidCallback loadAgain;
-  final Future<void> Function() deleteGift;
+  final VoidCallback? loadAgain;
+  final Future<void> Function()? deleteGift;
 
-  DeleteDialogWidget({super.key, required this.deleteGift, required this.loadAgain});
+
+
+  DeleteDialogWidget({
+    super.key,
+    this.deleteGift,
+    this.loadAgain,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +20,7 @@ class DeleteDialogWidget extends StatelessWidget {
       backgroundColor: AppColors.photoColorGray,
       surfaceTintColor: Colors.transparent,
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -50,8 +56,11 @@ class DeleteDialogWidget extends StatelessWidget {
                     backgroundColor: MaterialStateProperty.all(AppColors.buttonColorRed),
                   ),
                   onPressed: () async {
-                    await deleteGift.call();
-                    loadAgain.call();
+
+                      await deleteGift?.call();
+                      loadAgain?.call();
+
+
                   },
                   child: Text(
                     'Delete',

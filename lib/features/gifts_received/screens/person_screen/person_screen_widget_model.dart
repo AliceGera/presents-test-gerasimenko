@@ -104,6 +104,14 @@ class PersonScreenWidgetModel extends WidgetModel<PersonScreen, PersonScreenMode
   @override
   void choosePerson(Person person) {
     router.pop(person);
+
+  }
+
+  ///метод delete
+  Future<void> deletePerson(Person person) async {
+    await model.deletePerson(person);
+    await _getPersons();
+    router.pop();
   }
 }
 
@@ -136,4 +144,7 @@ abstract interface class IPersonScreenWidgetModel with ThemeIModelMixin implemen
   void choosePerson(Person person);
 
   void savePhoto(Uint8List photo);
+
+  Future<void> deletePerson(Person person);
+
 }

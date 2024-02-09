@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -102,7 +101,7 @@ class _AppCameraWidgetState extends State<AppCameraWidget> {
                 color: AppColors.photoColorGray,
               ),
               child: Center(
-                child: photo == null
+                child: (photo == null   || photo!.isEmpty)
                     ? InkWell(
                         onTap: showOptions,
                         child: SvgPicture.asset(

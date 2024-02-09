@@ -53,8 +53,20 @@ class HolidaysScreenWidgetModel extends WidgetModel<HolidaysScreen, HolidaysScre
     _appRouter.push(EditHolidayRouter(holiday: holiday, loadAgain: loadAgain));
   }
 
+  ///метод delete
+  Future<void> deleteHolidayScreen(Holiday holiday) async {
+    await model.deleteHolidays(holiday);
+    await _getHolidays();
+    _appRouter.pop();
+  }
+
+
   @override
   void loadAgain() {
+    _getHolidays();
+  }
+
+  updateFromRecivedScreen() {
     _getHolidays();
   }
 
@@ -70,8 +82,13 @@ abstract class IHolidaysScreenWidgetModel with ThemeIModelMixin implements IWidg
   /// Navigate to edit holiday screen.
   void editHolidayScreen(Holiday holiday);
 
+
+  Future<void> deleteHolidayScreen(Holiday holiday);
+
   /// Navigate to load screen again.
   void loadAgain();
+
+  void updateFromRecivedScreen();
 
   /// Method to get holidays screen.
   UnionStateNotifier<List<Holiday>> get holidaysState;

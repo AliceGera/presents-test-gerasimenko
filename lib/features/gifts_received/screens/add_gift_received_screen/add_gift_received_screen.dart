@@ -44,57 +44,26 @@ class AddGiftReceivedScreen extends ElementaryWidget<IAddGiftReceivedScreenWidge
         ),
       ),
       body: _Body(
-        closeScreen: wm.closeScreen,
-        whoGavePresentScreen: wm.whoGavePresentScreen,
-        chooseHolidayNameScreen: wm.chooseHolidayNameScreen,
-        savePhoto: wm.savePhoto,
-        giftNameController: wm.giftNameController,
-        commentController: wm.commentController,
-        addGift: wm.addGift,
+        wm: wm,
         loadAgain: loadAgain,
-        giftsState: wm.giftsState,
-        holidayNameState: wm.holidayNameState,
       ),
     );
   }
 }
 
 class _Body extends StatelessWidget {
-  final VoidCallback closeScreen;
-  final VoidCallback whoGavePresentScreen;
-  final VoidCallback chooseHolidayNameScreen;
-  final void Function(Uint8List photo) savePhoto;
-  final TextEditingController giftNameController;
-  final TextEditingController commentController;
-  final Future<void> Function() addGift;
+  final IAddGiftReceivedScreenWidgetModel wm;
   final VoidCallback loadAgain;
-  final UnionStateNotifier<Gift> giftsState;
-  final ValueNotifier<String?> holidayNameState;
 
   _Body({
-    required this.closeScreen,
-    required this.whoGavePresentScreen,
-    required this.chooseHolidayNameScreen,
-    required this.savePhoto,
-    required this.giftNameController,
-    required this.commentController,
-    required this.addGift,
+    required this.wm,
     required this.loadAgain,
-    required this.giftsState,
-    required this.holidayNameState,
   });
 
   @override
   Widget build(BuildContext context) {
-    return /*AppAddOrEditGiftWidget(
-      closeScreen: closeScreen,
-      whoGavePresentScreen: whoGavePresentScreen,
-      chooseHolidayNameScreen: chooseHolidayNameScreen,
-      textController: textController,
-    );*/
-
-        UnionStateListenableBuilder<Gift>(
-      unionStateListenable: giftsState,
+    return UnionStateListenableBuilder<Gift>(
+      unionStateListenable: wm.giftsState,
       builder: (_, gift) {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -109,13 +78,22 @@ class _Body extends StatelessWidget {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      AppCameraWidget(savePhoto: savePhoto),
+                      AppCameraWidget(savePhoto: wm.savePhoto),
                       const SizedBox(width: 30),
                       Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text('Rate the gift', style: AppTextStyle.regular14.value.copyWith(color: AppColors.white)),
-
-                          ///
+                          Row(
+                            children: [
+                              InkWell(
+                                  child: SvgPicture.asset('assets/icons/star.svg')),
+                              SvgPicture.asset('assets/icons/star.svg'),
+                              SvgPicture.asset('assets/icons/star.svg'),
+                              SvgPicture.asset('assets/icons/star.svg'),
+                              SvgPicture.asset('assets/icons/star.svg'),
+                            ],
+                          ),
                         ],
                       ),
                     ],
@@ -128,34 +106,38 @@ class _Body extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       AppTextFieldWidget(
                         text: 'Gift name',
-                        controller: giftNameController,
-                        //formKey: wm.formEmailKey,
-                        //validatorText: wm.getEmailValidationTex,
+                        controller: wm.giftNameController,
                       ),
-                      const SizedBox(height: 8),
-                      InkWell(onTap: whoGavePresentScreen, child: ChooseWidget(text: 'Who gave it')),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
+                      Text('Who gave it', style: AppTextStyle.regular12.value.copyWith(color: AppColors.white)),
+                      ValueListenableBuilder<String?>(
+                        builder: (context, person, child) {
+                          return InkWell(onTap: wm.whoGavePresentScreen, child: ChooseWidget(text: person ?? 'Who gave it'));
+                        },
+                        valueListenable: wm.personState,
+                      ),
+                      SizedBox(height: 8),
+                      Text('Name of the holiday', style: AppTextStyle.regular12.value.copyWith(color: AppColors.white)),
                       ValueListenableBuilder<String?>(
                         builder: (context, holidayName, child) {
                           return InkWell(
-                            onTap: chooseHolidayNameScreen,
+                            onTap: wm.chooseHolidayNameScreen,
                             child: ChooseWidget(
                               text: holidayName ?? 'Name of the holiday',
                             ),
                           );
                         },
-                        valueListenable: holidayNameState,
+                        valueListenable: wm.holidayNameState,
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
                       AppTextFieldWidget(
                         text: 'A comment',
-                        controller: commentController,
+                        controller: wm.commentController,
                         lines: 7,
-                        //formKey: wm.formEmailKey,
-                        //validatorText: wm.getEmailValidationTex,
                       ),
                     ],
                   ),
@@ -164,13 +146,13 @@ class _Body extends StatelessWidget {
               const SizedBox(height: 20),
               Row(
                 children: [
-                  Expanded(child: AppButtonWidget(title: 'Cancel', color: AppColors.white, textColor: AppColors.black, onPressed: closeScreen)),
+                  Expanded(child: AppButtonWidget(title: 'Cancel', color: AppColors.white, textColor: AppColors.black, onPressed: wm.closeScreen)),
                   const SizedBox(width: 8),
                   Expanded(
                     child: AppButtonWidget(
                       title: 'Save',
                       onPressed: () async {
-                        await addGift();
+                        await wm.addGift();
                         loadAgain.call();
                       },
                     ),

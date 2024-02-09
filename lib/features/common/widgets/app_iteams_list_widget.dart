@@ -3,7 +3,6 @@
 // ignore_for_file: public_member_api_docs
 
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_template/assets/colors/app_colors.dart';
@@ -11,22 +10,19 @@ import 'package:flutter_template/assets/res/resources.dart';
 import 'package:flutter_template/assets/text/text_style.dart';
 
 class AppItemListWidget<T> extends StatelessWidget {
-  final void Function(T) onPressedEdit;
-  final void Function(T)? chooseItem;
   final List<T> values;
-
   final List<String> mainNames;
   final List<String> secondText;
   final List<Uint8List> photoList;
+  final void Function(T) onTapThreeDots;
 
   const AppItemListWidget({
     super.key,
     required this.values,
-    required this.onPressedEdit,
     required this.mainNames,
     required this.secondText,
     required this.photoList,
-    this.chooseItem,
+    required this.onTapThreeDots,
   });
 
   @override
@@ -41,7 +37,7 @@ class AppItemListWidget<T> extends StatelessWidget {
           shrinkWrap: true,
           itemCount: mainNames.length,
           itemBuilder: (context, index) => Builder(builder: (context) {
-            final widget = Row(
+            return Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -75,20 +71,11 @@ class AppItemListWidget<T> extends StatelessWidget {
                 InkWell(
                   highlightColor: Colors.transparent,
                   splashColor: Colors.transparent,
-                  onTap: () {
-                    onPressedEdit.call(values[index]);
-                  },
+                  onTap: () => onTapThreeDots.call(values[index]),
                   child: SvgPicture.asset(SvgIcons.dots),
                 ),
               ],
             );
-            return chooseItem != null
-                ? InkWell(
-                    onTap: () {
-                      chooseItem!.call(values[index]);
-                    },
-                    child: widget)
-                : widget;
           }),
         ),
       ),

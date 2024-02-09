@@ -40,4 +40,7 @@ class PersonScreenModel extends ElementaryModel {
     final persons = await _personsService.getPersons();
     return persons;
   }
+  Future<void> deletePerson(Person person) async {
+    await _personsService.deletePerson(person);
+  }
 }

@@ -1,8 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:elementary/elementary.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_template/config/app_config.dart';
 import 'package:flutter_template/features/common/domain/data/gifts/gift_data.dart';
 import 'package:flutter_template/features/common/service/gifts_service.dart';
 
@@ -42,7 +40,7 @@ class EditGiftReceivedScreenModel extends ElementaryModel {
     _gift = _gift.copyWith(photo: newPhoto);
   }
 
-  set whoGavePresent(String newWhoGavePresent) {
+  set whoGave(String newWhoGavePresent) {
     _gift = _gift.copyWith(whoGave: newWhoGavePresent);
   }
 

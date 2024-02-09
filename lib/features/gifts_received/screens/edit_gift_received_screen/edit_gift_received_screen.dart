@@ -8,7 +8,7 @@ import 'package:flutter_template/assets/text/text_style.dart';
 import 'package:flutter_template/features/common/domain/data/gifts/gift_data.dart';
 import 'package:flutter_template/features/common/domain/data/holidays/holiday_data.dart';
 import 'package:flutter_template/features/common/widgets/app_add_or_edit_gift_widget.dart';
-import 'package:flutter_template/features/common/widgets/dialog_widget.dart';
+import 'package:flutter_template/features/common/widgets/delete_dialog_widget.dart';
 import 'package:flutter_template/features/gifts_received/screens/edit_gift_received_screen/edit_gift_received_screen_widget_model.dart';
 import 'package:flutter_template/features/navigation/domain/entity/app_route_names.dart';
 
@@ -59,10 +59,13 @@ class EditGiftReceivedScreen extends ElementaryWidget<IEditGiftReceivedScreenWid
                   splashColor: Colors.transparent,
                   onTap: () => showDialog<void>(
                         context: context,
-                        builder: (ctx) => DeleteDialogWidget(deleteGift: () async{
-                          Navigator.pop(ctx);
-                          await wm.deleteGift();
-                        },loadAgain:loadAgain,),
+                        builder: (ctx) => DeleteDialogWidget(
+                          deleteGift: () async {
+                            Navigator.pop(ctx);
+                            await wm.deleteGift();
+                          },
+                          loadAgain: loadAgain,
+                        ),
                       ),
                   child: SvgPicture.asset(SvgIcons.trash));
             }),

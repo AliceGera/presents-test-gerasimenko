@@ -29,6 +29,9 @@ class SvgIcons {
   static const String close ='assets/icons/close.svg';
   static const String photoCamera ='assets/icons/photoCamera.svg';
   static const String deletePhoto ='assets/icons/delete_photo.svg';
-
+  static const String delete ='assets/icons/delete.svg';
+  static const String editPen ='assets/icons/edit_pen.svg';
+  static const String showPresents ='assets/icons/show_presents_icon.svg';
+  static const String checkChooseDialog ='assets/icons/check_choose_dialog.svg';
   static const List<String> values = [testSvg];
 }

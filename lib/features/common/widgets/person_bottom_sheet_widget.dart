@@ -82,6 +82,7 @@ class PersonBottomSheetWidget extends StatelessWidget {
           AppTextFieldWidget(
             text: 'comment',
             controller: commentController,
+            lines: 6,
           ),
           Padding(
             padding: const EdgeInsets.only(top: 8, bottom: 40),

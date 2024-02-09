@@ -1,11 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:elementary/elementary.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_template/config/app_config.dart';
-import 'package:flutter_template/features/common/domain/data/holidays/holiday_data.dart';
-import 'package:flutter_template/features/common/service/holidays_service.dart';
-
 import 'package:flutter_template/features/common/domain/data/person/person_data.dart';
 import 'package:flutter_template/features/common/service/persons_service.dart';
 

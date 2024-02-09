@@ -11,6 +11,7 @@ import 'package:flutter_template/features/common/domain/data/holidays/holiday_da
 import 'package:flutter_template/features/common/widgets/app_button_widget.dart';
 import 'package:flutter_template/features/common/widgets/app_camera_widget.dart';
 import 'package:flutter_template/features/common/widgets/app_textfield_widget.dart';
+import 'package:flutter_template/features/common/widgets/delete_dialog_widget.dart';
 import 'package:flutter_template/features/holidays/screens/edit_holiday_screen/edit_holiday_screen_widget_model.dart';
 import 'package:flutter_template/features/navigation/domain/entity/app_route_names.dart';
 
@@ -49,7 +50,7 @@ class EditHolidayScreen extends ElementaryWidget<IEditHolidayScreenWidgetModel> 
               mainAxisSize: MainAxisSize.min,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -98,14 +99,22 @@ class EditHolidayScreen extends ElementaryWidget<IEditHolidayScreenWidgetModel> 
                       ),
                     ],
                   ),
-                  InkWell(
-                      highlightColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      onTap: () async {
-                        await wm.deleteHoliday();
-                        loadAgain.call();
-                      },
-                      child: SvgPicture.asset(SvgIcons.trash)),
+                  Builder(builder: (context) {
+                    return InkWell(
+                        highlightColor: Colors.transparent,
+                        splashColor: Colors.transparent,
+                        onTap: () => showDialog<void>(
+                              context: context,
+                              builder: (ctx) => DeleteDialogWidget(
+                                deleteGift: () async {
+                                  Navigator.pop(ctx);
+                                  await wm.deleteHoliday();
+                                },
+                                loadAgain: loadAgain,
+                              ),
+                            ),
+                        child: SvgPicture.asset(SvgIcons.trash));
+                  }),
                 ],
               ),
             ),

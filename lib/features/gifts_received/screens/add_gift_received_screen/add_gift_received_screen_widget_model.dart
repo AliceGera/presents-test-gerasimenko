@@ -1,11 +1,10 @@
-import 'dart:typed_data';
-
 import 'package:elementary/elementary.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/features/app/di/app_scope.dart';
 import 'package:flutter_template/features/common/domain/data/gifts/gift_data.dart';
 import 'package:flutter_template/features/common/domain/data/holidays/holiday_data.dart';
+import 'package:flutter_template/features/common/domain/data/person/person_data.dart';
 import 'package:flutter_template/features/gifts_received/screens/add_gift_received_screen/add_gift_received_screen.dart';
 import 'package:flutter_template/features/gifts_received/screens/add_gift_received_screen/add_gift_received_screen_model.dart';
 import 'package:flutter_template/features/navigation/service/router.dart';
@@ -40,6 +39,7 @@ class AddGiftReceivedScreenWidgetModel extends WidgetModel<AddGiftReceivedScreen
   );
   final _giftsState = UnionStateNotifier<Gift>(Gift.init());
   final _holidayNameState = ValueNotifier<String?>(null);
+  final _personState = ValueNotifier<String?>(null);
   final TextEditingController _giftNameController = TextEditingController();
   final TextEditingController _commentController = TextEditingController();
 
@@ -68,8 +68,12 @@ class AddGiftReceivedScreenWidgetModel extends WidgetModel<AddGiftReceivedScreen
   }
 
   @override
-  void whoGavePresentScreen() {
-    router.push(PersonRouter());
+  Future<void> whoGavePresentScreen() async {
+    final result = await router.push(PersonRouter());
+    if (result is Person) {
+      model.whoGavePresent = '${result.firstName} ${result.lastName}';
+      _personState.value = model.whoGavePresent;
+    }
   }
 
   @override
@@ -119,6 +123,9 @@ class AddGiftReceivedScreenWidgetModel extends WidgetModel<AddGiftReceivedScreen
 
   @override
   ValueNotifier<String?> get holidayNameState => _holidayNameState;
+  @override
+  ValueNotifier<String?> get personState => _personState;
+
 }
 
 /// Interface of [AddGiftReceivedScreenWidgetModel].
@@ -144,6 +151,7 @@ abstract class IAddGiftReceivedScreenWidgetModel implements IWidgetModel {
   ///
   void savePhoto(Uint8List photo);
 
+
   ///
   void saveWhoGavePresent(String whoGavePresent);
 
@@ -154,4 +162,8 @@ abstract class IAddGiftReceivedScreenWidgetModel implements IWidgetModel {
   UnionStateNotifier<Gift> get giftsState;
 
   ValueNotifier<String?> get holidayNameState;
+
+  ValueNotifier<String?> get personState;
+ // UnionStateNotifier<Gift> get starsState;
+
 }

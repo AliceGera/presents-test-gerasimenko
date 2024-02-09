@@ -12,6 +12,10 @@ class HolidaysScreenModel extends ElementaryModel {
     final holidays = await _holidaysService.getHolidays();
     return holidays;
   }
+
+  Future<void> deleteHolidays(Holiday holiday) async {
+    await _holidaysService.deleteHoliday(holiday);
+  }
 }
 
 
