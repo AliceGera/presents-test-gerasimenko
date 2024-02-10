@@ -1,4 +1,5 @@
 import 'package:elementary/elementary.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/features/app/di/app_scope.dart';
 import 'package:flutter_template/features/common/domain/data/gifts/gift_data.dart';
@@ -40,18 +41,18 @@ class EditGiftReceivedScreenWidgetModel extends WidgetModel<EditGiftReceivedScre
 
   @override
   void dispose() {
-    _commentController.removeListener(commentListener);
-    _giftNameController.removeListener(giftListener);
+    _commentController.removeListener(_commentListener);
+    _giftNameController.removeListener(_giftListener);
     _commentController.dispose();
     _giftNameController.dispose();
     super.dispose();
   }
 
-  void commentListener(){
+  void _commentListener() {
     model.giftComment = _commentController.text;
   }
 
-  void giftListener(){
+  void _giftListener() {
     model.giftName = _giftNameController.text;
   }
 
@@ -59,8 +60,8 @@ class EditGiftReceivedScreenWidgetModel extends WidgetModel<EditGiftReceivedScre
   void initWidgetModel() {
     final args = router.current.args as EditGiftReceivedRouterArgs?;
 
-    _commentController.addListener(commentListener);
-    _giftNameController.addListener(giftListener);
+    _commentController.addListener(_commentListener);
+    _giftNameController.addListener(_giftListener);
 
     if (args != null) {
       model
@@ -80,33 +81,49 @@ class EditGiftReceivedScreenWidgetModel extends WidgetModel<EditGiftReceivedScre
   }
 
   @override
-  Future<void> choosePersonScreen() async {
+  Future<void> savePhoto(Uint8List photo) async {
+    model.photo = photo;
+  }
+
+  @override
+  Future<void> choosePersonOnTap() async {
     final result = await router.push(PersonRouter());
     if (result is Person) {
       model.whoGave = '${result.firstName} ${result.lastName}';
       _giftState.value = model.gift;
     }
-  }
-
-  ///метод edit holiday
-  Future<void> editGift() async {
-    await model.editGift();
-    router.pop();
+    if (kDebugMode) {
+      print(_giftState.value.whoGave);
+    }
   }
 
   @override
-  Future<void> chooseHolidayNameScreen() async {
+  Future<void> chooseHolidayNameOnTap() async {
     final result = await router.push(HolidayNameRouter());
     if (result is Holiday) {
-      model.holidayName = result.holidayName;
-      model.holidayId = result.id;
+      model
+        ..holidayName = result.holidayName
+        ..holidayId = result.id;
       _giftState.value = model.gift;
     }
   }
 
+  @override
+  Future<void> editGiftOnTap() async {
+    await model.editGift();
+    await router.pop();
+  }
+
+  @override
   Future<void> deleteGift() async {
     await model.deleteGift();
-    router.pop();
+    await router.pop();
+  }
+
+  @override
+  Future<void> rateOnTap(int rate) async {
+    model.giftRate = rate;
+    _giftState.value = model.gift;
   }
 
   @override
@@ -121,26 +138,33 @@ class EditGiftReceivedScreenWidgetModel extends WidgetModel<EditGiftReceivedScre
 
 /// Interface of [EditGiftReceivedScreenWidgetModel].
 abstract class IEditGiftReceivedScreenWidgetModel implements IWidgetModel {
-  /// Method to close the debug screens.
+  /// Method to close screen.
   void closeScreen() {}
 
-  /// Method to .
-  void choosePersonScreen() {}
+  /// Method to choose person.
+  void choosePersonOnTap() {}
 
-  /// Method to.
-  void chooseHolidayNameScreen() {}
+  /// Method to choose holiday name.
+  void chooseHolidayNameOnTap() {}
 
-  /// Method to add holiday.
-  Future<void> editGift();
+  /// Method to edit Gift.
+  Future<void> editGiftOnTap();
 
-  /// Method to add holiday.
+  /// Method to delete Gift.
   Future<void> deleteGift();
 
-  /// Method get email controller for email field
+  /// Method to save rate.
+  void rateOnTap(int rate);
+
+  /// Method to save photo.
+  void savePhoto(Uint8List photo);
+
+  /// Method get gift name controller for gift name field.
   TextEditingController get giftNameController;
 
-  /// Method get date controller for date field
+  /// Method get comment controller for comment field.
   TextEditingController get commentController;
 
+  ///Method get gift state.
   ValueNotifier<Gift> get giftState;
 }

@@ -48,27 +48,52 @@ class PersonScreenWidgetModel extends WidgetModel<PersonScreen, PersonScreenMode
     super.initWidgetModel();
   }
 
+  @override
+  void dispose() {
+    _firstNameController.dispose();
+    _commentController.dispose();
+    _lastNameController.dispose();
+    super.dispose();
+  }
+
   Future<void> _getPersons() async {
     final persons = await model.getPersons();
-    //await Future.delayed(const Duration(milliseconds: 100));
     _personsState.content(persons);
   }
 
   @override
-  void openEditPersonScreen(Person person) {
+  void cleanBottomSheetForAddPersonOnTap() {
+    _firstNameController.text = '';
+    _commentController.text = '';
+    _lastNameController.text = '';
+  }
+
+  @override
+  Future<void> addPersonOnTap() async {
+    await model.addPerson();
+    await router.pop();
+  }
+
+  @override
+  Future<void> savePhotoOnTap(Uint8List photo) async {
+    model.photo = photo;
+  }
+
+  @override
+  Future<void> deletePersonOnTap(Person person) async {
+    await model.deletePerson(person);
+    await _getPersons();
+    await router.pop();
+  }
+
+  @override
+  void editPersonOnTap(Person person) {
     router.push(EditPersonRouter(person: person, loadAgain: loadAgain));
   }
 
-  ///метод добавления holiday
-  Future<void> addPerson() async {
-    await model.addPerson();
-    router.pop();
-  }
-
-  ///метод добавления photo
   @override
-  void savePhoto(Uint8List photo) async {
-    model.photo = photo;
+  void choosePersonOnTap(Person person) {
+    router.pop(person);
   }
 
   @override
@@ -82,14 +107,6 @@ class PersonScreenWidgetModel extends WidgetModel<PersonScreen, PersonScreenMode
   }
 
   @override
-  void dispose() {
-    _firstNameController.dispose();
-    _commentController.dispose();
-    _lastNameController.dispose();
-    super.dispose();
-  }
-
-  @override
   TextEditingController get firstNameController => _firstNameController;
 
   @override
@@ -100,51 +117,43 @@ class PersonScreenWidgetModel extends WidgetModel<PersonScreen, PersonScreenMode
 
   @override
   UnionStateNotifier<List<Person>> get personsState => _personsState;
-
-  @override
-  void choosePerson(Person person) {
-    router.pop(person);
-
-  }
-
-  ///метод delete
-  Future<void> deletePerson(Person person) async {
-    await model.deletePerson(person);
-    await _getPersons();
-    router.pop();
-  }
 }
 
 /// Interface of [PersonScreenWidgetModel].
 abstract interface class IPersonScreenWidgetModel with ThemeIModelMixin implements IWidgetModel {
-  /// Navigate to  screen.
+  /// Navigate to close screen.
   void closeScreen();
 
-  /// Navigate to edit Person screen.
-  void openEditPersonScreen(Person person);
-
-  /// Navigate to load screen again.
+  /// Navigate to load screen again
   void loadAgain();
 
-  Future<void> addPerson();
+  ///clean controllers in bottom sheet
+  void cleanBottomSheetForAddPersonOnTap();
 
-  /// Method to get holidays screen.
+  /// Navigate to edit Person screen.
+  void editPersonOnTap(Person person);
+
+  /// Navigate to choose Person
+  void choosePersonOnTap(Person person);
+
+  ///savePhoto
+  void savePhotoOnTap(Uint8List photo);
+
+  ///add Person
+  Future<void> addPersonOnTap();
+
+  /// delete Person
+  Future<void> deletePersonOnTap(Person person);
+
+  /// Method to get persons state screen.
   UnionStateNotifier<List<Person>> get personsState;
 
-  /// Method get email controller for email field
+  /// Method get email controller for first name field
   TextEditingController get firstNameController;
 
-  /// Method get date controller for date field
+  /// Method get date controller for last name field
   TextEditingController get lastNameController;
 
-  /// Method get date controller for date field
+  /// Method get date controller for comment field
   TextEditingController get commentController;
-
-  /// Navigate to edit holiday screen.
-  void choosePerson(Person person);
-
-  void savePhoto(Uint8List photo);
-
-  Future<void> deletePerson(Person person);
-
 }

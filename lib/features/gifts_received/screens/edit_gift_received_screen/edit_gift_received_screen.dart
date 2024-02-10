@@ -74,40 +74,24 @@ class EditGiftReceivedScreen extends ElementaryWidget<IEditGiftReceivedScreenWid
       ),
       body: ValueListenableBuilder<Gift>(
         builder: (context, gift, child) {
-          return _Body(
-            wm: wm,
-            gift: gift,
-            loadAgain: loadAgain,
+          return SingleChildScrollView(
+            child: AppAddOrEditGiftWidget(
+              savePhoto: wm.savePhoto,
+              closeScreen: wm.closeScreen,
+              personScreen: wm.choosePersonOnTap,
+              chooseHolidayNameScreen: wm.chooseHolidayNameOnTap,
+              giftNameController: wm.giftNameController,
+              commentController: wm.commentController,
+              gift: gift,
+              editGift: wm.editGiftOnTap,
+              loadAgain: loadAgain,
+              rateOnTap: wm.rateOnTap,
+              isEdit: true,
+            ),
           );
         },
         valueListenable: wm.giftState,
       ),
-    );
-  }
-}
-
-class _Body extends StatelessWidget {
-  final IEditGiftReceivedScreenWidgetModel wm;
-  final VoidCallback loadAgain;
-  final Gift gift;
-
-  const _Body({
-    required this.wm,
-    required this.loadAgain,
-    required this.gift,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return AppAddOrEditGiftWidget(
-      closeScreen: wm.closeScreen,
-      personScreen: wm.choosePersonScreen,
-      chooseHolidayNameScreen: wm.chooseHolidayNameScreen,
-      giftNameController: wm.giftNameController,
-      commentController: wm.commentController,
-      gift: gift,
-      editGift: wm.editGift,
-      loadAgain: loadAgain,
     );
   }
 }

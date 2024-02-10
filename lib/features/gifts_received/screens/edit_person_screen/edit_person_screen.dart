@@ -72,6 +72,7 @@ class _BottomSheetState extends State<BottomSheet> {
             child: ValueListenableBuilder<Uint8List>(
               builder: (context, photo, child) {
                 return PersonBottomSheetWidget(
+
                   isEdit: true,
                   addOrEditPerson: widget.wm.editPerson,
                   loadAgain: widget.loadAgain,

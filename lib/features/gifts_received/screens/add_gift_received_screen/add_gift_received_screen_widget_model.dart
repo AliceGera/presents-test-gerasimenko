@@ -37,6 +37,7 @@ class AddGiftReceivedScreenWidgetModel extends WidgetModel<AddGiftReceivedScreen
     super._model,
     this.router,
   );
+
   final _giftsState = UnionStateNotifier<Gift>(Gift.init());
   final _holidayNameState = ValueNotifier<String?>(null);
   final _personState = ValueNotifier<String?>(null);
@@ -68,7 +69,7 @@ class AddGiftReceivedScreenWidgetModel extends WidgetModel<AddGiftReceivedScreen
   }
 
   @override
-  Future<void> whoGavePresentScreen() async {
+  Future<void> choosePersonScreenOnTap() async {
     final result = await router.push(PersonRouter());
     if (result is Person) {
       model.whoGavePresent = '${result.firstName} ${result.lastName}';
@@ -77,13 +78,31 @@ class AddGiftReceivedScreenWidgetModel extends WidgetModel<AddGiftReceivedScreen
   }
 
   @override
-  void chooseHolidayNameScreen() async {
+  Future<void> chooseHolidayNameScreen() async {
     final result = await router.push(HolidayNameRouter());
     if (result is Holiday) {
-      model.holidayName = result.holidayName;
-      model.holidayId = result.id;
+      model
+        ..holidayName = result.holidayName
+        ..holidayId = result.id;
       _holidayNameState.value = model.holidayName;
     }
+  }
+
+  @override
+  Future<void> savePhoto(Uint8List photo) async {
+    model.photo = photo;
+  }
+
+  @override
+  Future<void> chooseRateOnTap(int rate) async {
+    model.giftRate = rate;
+    _giftsState.content(model.gift);
+  }
+
+  @override
+  Future<void> addGift() async {
+    await model.addGift();
+    await router.pop();
   }
 
   @override
@@ -93,77 +112,47 @@ class AddGiftReceivedScreenWidgetModel extends WidgetModel<AddGiftReceivedScreen
   TextEditingController get commentController => _commentController;
 
   @override
-  void savePhoto(Uint8List photo) async {
-    model.photo = photo;
-  }
-
-  @override
-  void saveWhoGavePresent(String whoGavePresent) async {
-    model.whoGavePresent = whoGavePresent;
-  }
-
-  @override
-  void saveHolidayName(String holidayName, int holidayId) async {
-    model.holidayName = holidayName;
-    model.holidayId = holidayId;
-  }
-
-  ///метод добавления holiday
-  @override
-  Future<void> addGift() async {
-    await model.addGift();
-    if (kDebugMode) {
-      print(9999999);
-    }
-    await router.pop();
-  }
-
-  @override
   UnionStateNotifier<Gift> get giftsState => _giftsState;
 
   @override
   ValueNotifier<String?> get holidayNameState => _holidayNameState;
+
   @override
   ValueNotifier<String?> get personState => _personState;
-
 }
 
 /// Interface of [AddGiftReceivedScreenWidgetModel].
 abstract class IAddGiftReceivedScreenWidgetModel implements IWidgetModel {
-  /// Method to close the debug screens.
+  /// Method to close screen.
   void closeScreen() {}
 
-  /// Method to .
-  void whoGavePresentScreen() {}
+  /// Method to choose person screen.
+  void choosePersonScreenOnTap() {}
 
-  /// Method to.
+  /// Method to choose holiday name.
   void chooseHolidayNameScreen() {}
 
-  /// Method get email controller for email field
+  /// Method get email controller for email field.
   TextEditingController get giftNameController;
 
-  /// Method get date controller for date field
+  /// Method get date controller for date field.
   TextEditingController get commentController;
 
-  ///
+  /// Method to add gift.
   Future<void> addGift();
 
-  ///
+  /// Method to save photo.
   void savePhoto(Uint8List photo);
 
-
-  ///
-  void saveWhoGavePresent(String whoGavePresent);
-
-  ///
-  void saveHolidayName(String holidayName, int holidayId);
+  /// Method to save rate.
+  void chooseRateOnTap(int rate);
 
   /// Method to get holidays screen.
   UnionStateNotifier<Gift> get giftsState;
 
+  /// Method to get holiday name state.
   ValueNotifier<String?> get holidayNameState;
 
+  ///  Method to get person state.
   ValueNotifier<String?> get personState;
- // UnionStateNotifier<Gift> get starsState;
-
 }

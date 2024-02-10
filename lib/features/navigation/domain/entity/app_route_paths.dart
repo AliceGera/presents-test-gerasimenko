@@ -48,4 +48,7 @@ abstract class AppRoutePaths {
 
   /// Path to edit person screen.
   static const String editPersonPath = '/editPerson';
+
+  /// Path to  holiday gifts screen.
+  static const String holidayGiftsPath = '/holidayGifts';
 }

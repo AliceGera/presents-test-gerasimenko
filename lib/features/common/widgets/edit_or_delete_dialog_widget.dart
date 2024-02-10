@@ -43,7 +43,7 @@ class EditOrDeleteDialogWidget extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 InkWell(
-                  onTap: editGiftsScreen,
+                  onTap:( ){editGiftsScreen();},
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [

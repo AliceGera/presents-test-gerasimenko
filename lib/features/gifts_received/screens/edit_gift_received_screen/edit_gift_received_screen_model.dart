@@ -15,13 +15,15 @@ class EditGiftReceivedScreenModel extends ElementaryModel {
     this.errorHandler,
     this._giftsService,
   ) : super(errorHandler: errorHandler);
-
   Gift _gift = Gift.init();
 
   Gift get gift => _gift;
 
   set gift(Gift newGift) {
     _gift = newGift;
+  }
+  set giftRate(int newGiftRate) {
+    _gift = _gift.copyWith(giftRaiting: newGiftRate);
   }
 
   set giftName(String newGiftName) {

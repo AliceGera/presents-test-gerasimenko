@@ -48,4 +48,7 @@ abstract class AppRouteNames {
   /// EditHolidayScreen route name.
   static const String editPersonScreen = 'editPersonRouter';
 
+  /// HolidayGiftsScreen route name.
+  static const String holidayGiftsScreen = 'holidayGiftsRouter';
+
 }

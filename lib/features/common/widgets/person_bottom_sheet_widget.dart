@@ -23,10 +23,9 @@ class PersonBottomSheetWidget extends StatelessWidget {
   void Function(Uint8List photo) savePhoto;
   final VoidCallback loadAgain;
   final Uint8List? photo;
-
+  final VoidCallback? cleanBottomSheetForAddPersonOnTap;
 
   PersonBottomSheetWidget({
-    super.key,
     required this.closeScreen,
     required this.addOrEditPerson,
     required this.firstNameController,
@@ -34,8 +33,10 @@ class PersonBottomSheetWidget extends StatelessWidget {
     required this.lastNameController,
     required this.savePhoto,
     required this.loadAgain,
+    super.key,
     this.photo,
     this.isEdit,
+    this.cleanBottomSheetForAddPersonOnTap,
   });
 
   @override
@@ -106,6 +107,9 @@ class PersonBottomSheetWidget extends StatelessWidget {
                     title: 'Save',
                     onPressed: () async {
                       await addOrEditPerson();
+                      if (cleanBottomSheetForAddPersonOnTap != null) {
+                        cleanBottomSheetForAddPersonOnTap!();
+                      }
                       loadAgain.call();
                     },
                   ),

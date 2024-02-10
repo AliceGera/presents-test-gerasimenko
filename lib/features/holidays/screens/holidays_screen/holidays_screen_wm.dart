@@ -1,6 +1,8 @@
 import 'package:elementary/elementary.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/features/app/di/app_scope.dart';
+import 'package:flutter_template/features/common/domain/data/holiday_with_gifts/holiday_with_gifts_data.dart';
 import 'package:flutter_template/features/common/domain/data/holidays/holiday_data.dart';
 import 'package:flutter_template/features/common/mixin/theme_mixin.dart';
 import 'package:flutter_template/features/holidays/screens/holidays_screen/holidays_screen.dart';
@@ -14,19 +16,28 @@ HolidaysScreenWidgetModel holidaysScreenWmFactory(
   BuildContext context,
 ) {
   final appScope = context.read<IAppScope>();
-  final model = HolidaysScreenModel(appScope.holidaysService);
+  final model = HolidaysScreenModel(
+    appScope.holidaysService,
+    appScope.holidayAndGiftsService,
+  );
 
-  return HolidaysScreenWidgetModel(model, appScope.router);
+  return HolidaysScreenWidgetModel(
+    model,
+    appScope.router,
+    appScope as AppScope,
+  );
 }
 
 /// Widget model for [HolidaysScreen]
 class HolidaysScreenWidgetModel extends WidgetModel<HolidaysScreen, HolidaysScreenModel> with ThemeWMMixin implements IHolidaysScreenWidgetModel {
   /// Create an instance [HolidaysScreenWidgetModel].
   final AppRouter _appRouter;
+  final AppScope _appScope;
 
   HolidaysScreenWidgetModel(
     super._model,
     this._appRouter,
+    this._appScope,
   );
 
   final _holidaysState = UnionStateNotifier<List<Holiday>>([]);
@@ -34,40 +45,53 @@ class HolidaysScreenWidgetModel extends WidgetModel<HolidaysScreen, HolidaysScre
   @override
   void initWidgetModel() {
     _getHolidays();
+    _appScope.holidayRebuilder = _getHolidays;
     super.initWidgetModel();
   }
 
   Future<void> _getHolidays() async {
     final holidays = await model.getHolidays();
-    //await Future.delayed(const Duration(milliseconds: 100));
+
     _holidaysState.content(holidays);
+    await Future.delayed(const Duration(milliseconds: 500));
   }
 
   @override
   void openAddHolidayScreen() {
-    _appRouter.push(AddHolidayRouter(loadAgain: loadAgain));
+    _appRouter.push(
+      AddHolidayRouter(
+        loadAgain: loadAgain,
+      ),
+    );
   }
 
   @override
   void editHolidayScreen(Holiday holiday) {
-    _appRouter.push(EditHolidayRouter(holiday: holiday, loadAgain: loadAgain));
+    _appRouter.push(
+      EditHolidayRouter(
+        holiday: holiday,
+        loadAgain: loadAgain,
+      ),
+    );
   }
 
-  ///метод delete
-  Future<void> deleteHolidayScreen(Holiday holiday) async {
-    await model.deleteHolidays(holiday);
-    await _getHolidays();
-    _appRouter.pop();
+  @override
+  void openHolidayGiftsScreen(Holiday holiday) {
+    _appRouter.push(HolidayGiftsRouter(holiday: holiday));
   }
 
 
   @override
-  void loadAgain() {
-    _getHolidays();
+  Future<void> deleteHolidayScreen(Holiday holiday) async {
+    await model.deleteHolidays(holiday);
+    await loadAgain();
+    await _appRouter.pop();
   }
 
-  updateFromRecivedScreen() {
-    _getHolidays();
+  @override
+  Future<void> loadAgain() async {
+    _appScope.gifRecievedRebuilder.call();
+    await _getHolidays();
   }
 
   @override
@@ -76,19 +100,20 @@ class HolidaysScreenWidgetModel extends WidgetModel<HolidaysScreen, HolidaysScre
 
 /// Interface of [IHolidaysScreenWidgetModel].
 abstract class IHolidaysScreenWidgetModel with ThemeIModelMixin implements IWidgetModel {
-  /// Navigate to room screen.
+  /// Navigate to add screen.
   void openAddHolidayScreen();
 
   /// Navigate to edit holiday screen.
   void editHolidayScreen(Holiday holiday);
 
+  ///Navigate to screen with holidays gifts(received and given)
+  void openHolidayGiftsScreen(Holiday holiday);
 
+  /// Delete holiday.
   Future<void> deleteHolidayScreen(Holiday holiday);
 
   /// Navigate to load screen again.
-  void loadAgain();
-
-  void updateFromRecivedScreen();
+  Future<void> loadAgain();
 
   /// Method to get holidays screen.
   UnionStateNotifier<List<Holiday>> get holidaysState;

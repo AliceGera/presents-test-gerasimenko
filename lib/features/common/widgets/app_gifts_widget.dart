@@ -17,21 +17,16 @@ import 'package:flutter_template/features/common/widgets/edit_or_delete_dialog_w
 
 class AppGiftWidget extends StatelessWidget {
   final VoidCallback? openAddGiftScreen;
-
-  // final VoidCallback? editGiftReceived;
   final List<HolidayWithGiftsData> holidayWithGifts;
   final void Function(Gift, Holiday) editGiftsScreen;
-  final  Future<void>  Function(Gift) deleteGift;
+  final Future<void> Function(Gift) deleteGift;
 
-  //final List<T> values;
   const AppGiftWidget({
-    super.key,
     required this.editGiftsScreen,
     required this.deleteGift,
-    //  required this.values,
-    // required this.editGiftReceived,
-    this.openAddGiftScreen,
     required this.holidayWithGifts,
+    super.key,
+    this.openAddGiftScreen,
   });
 
   @override
@@ -53,21 +48,21 @@ class AppGiftWidget extends StatelessWidget {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(bottom: 16),
-                      child: holidayWithGifts[ind].gifts.isNotEmpty
+                      child: holidayWithGifts[ind].giftsReceived.isNotEmpty
                           ? Text(
                               '${holidayWithGifts[ind].holiday.holidayName} ${holidayWithGifts[ind].holiday.holidayDate}',
                               style: AppTextStyle.medium16.value.copyWith(color: AppColors.white),
                             )
                           : const SizedBox(),
                     ),
-                    if (holidayWithGifts[ind].gifts.isNotEmpty)
+                    if (holidayWithGifts[ind].giftsReceived.isNotEmpty)
                       SizedBox(
                         height: 250,
                         child: ListView.separated(
                           physics: const ClampingScrollPhysics(),
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
-                          itemCount: holidayWithGifts[ind].gifts.length,
+                          itemCount: holidayWithGifts[ind].giftsReceived.length,
                           itemBuilder: (context, index) => SizedBox(
                             height: 250,
                             width: 170,
@@ -82,26 +77,28 @@ class AppGiftWidget extends StatelessWidget {
                                       width: 170,
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(8),
-                                        child: holidayWithGifts[ind].gifts[index].photo.isNotEmpty?Image.memory(
-                                          holidayWithGifts[ind].gifts[index].photo,
-                                          fit: BoxFit.cover,
-                                        ):Container(color: AppColors.photoColorGray,),
+                                        child: holidayWithGifts[ind].giftsReceived[index].photo.isNotEmpty
+                                            ? Image.memory(
+                                                holidayWithGifts[ind].giftsReceived[index].photo,
+                                                fit: BoxFit.cover,
+                                              )
+                                            : Container(
+                                                color: AppColors.photoColorGray,
+                                              ),
                                       ),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.all(8),
                                       child: Builder(builder: (context) {
                                         return InkWell(
-                                          //barrierDismissible: true,
                                           highlightColor: Colors.transparent,
                                           splashColor: Colors.transparent,
                                           onTap: () => showDialog<void>(
-                                              barrierDismissible: true,
                                               context: context,
                                               builder: (ctx) => EditOrDeleteDialogWidget(
                                                     editGiftsScreen: () {
                                                       editGiftsScreen.call(
-                                                        holidayWithGifts[ind].gifts[index],
+                                                        holidayWithGifts[ind].giftsReceived[index],
                                                         holidayWithGifts[ind].holiday,
                                                       );
                                                       Navigator.pop(ctx);
@@ -112,7 +109,7 @@ class AppGiftWidget extends StatelessWidget {
                                                         builder: (ctx) => DeleteDialogWidget(
                                                           deleteGift: () async {
                                                             Navigator.pop(ctx);
-                                                            await deleteGift.call(holidayWithGifts[ind].gifts[index]);
+                                                            await deleteGift.call(holidayWithGifts[ind].giftsReceived[index]);
                                                           },
                                                         ),
                                                       );
@@ -128,20 +125,30 @@ class AppGiftWidget extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  holidayWithGifts[ind].gifts[index].giftName,
+                                  holidayWithGifts[ind].giftsReceived[index].giftName,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: AppTextStyle.bold14.value.copyWith(color: AppColors.white),
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  holidayWithGifts[ind].gifts[index].whoGave,
+                                  holidayWithGifts[ind].giftsReceived[index].whoGave,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: AppTextStyle.regular13.value.copyWith(color: AppColors.white),
                                 ),
                                 const SizedBox(height: 8),
-                                //SvgPicture.asset(starsList[ind][index]),
+                                Expanded(
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: 5,
+                                    itemBuilder: (context, itemIndex) => Icon(
+                                      Icons.star,
+                                      size: 20,
+                                      color: (itemIndex <= holidayWithGifts[ind].giftsReceived[index].giftRaiting - 1) ? AppColors.fillStar : AppColors.emptyStar,
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                           ),

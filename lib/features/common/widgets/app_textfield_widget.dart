@@ -7,10 +7,7 @@ import 'package:flutter_template/assets/text/text_style.dart';
 
 class AppTextFieldWidget extends StatefulWidget {
   AppTextFieldWidget({
-    super.key,
-    required this.text,
-    // required this.formKey,
-    required this.controller,
+    required this.text, required this.controller, super.key,
     this.validatorText,
     this.lines = 1,
   });
@@ -63,6 +60,7 @@ class _AppTextFieldWidgetState extends State<AppTextFieldWidget> {
   @override
   Widget build(BuildContext context) {
     return Form(
+
       //key: widget.formKey,
       child: DecoratedBox(
         decoration: BoxDecoration(

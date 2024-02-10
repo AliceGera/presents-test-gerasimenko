@@ -9,8 +9,6 @@ import 'package:flutter_template/features/holidays/screens/edit_holiday_screen/e
 import 'package:flutter_template/features/navigation/service/router.dart';
 import 'package:provider/provider.dart';
 
-// ignore_for_file: avoid_positional_boolean_parameters
-
 /// Factory for [EditPersonScreenWidgetModel].
 EditPersonScreenWidgetModel editPersonScreenWidgetModelFactory(
   BuildContext context,
@@ -78,22 +76,21 @@ class EditPersonScreenWidgetModel extends WidgetModel<EditPersonScreen, EditPers
     router.pop();
   }
 
-  ///метод добавления holiday
   @override
-  void savePhoto(Uint8List photo) async {
+  Future<void> savePhoto(Uint8List photo) async {
     model.photo = photo;
   }
 
-  ///метод edit holiday
+  @override
   Future<void> editPerson() async {
     await model.editPerson();
-    router.pop();
+    await router.pop();
   }
 
-  ///метод delete holiday
+  @override
   Future<void> deletePerson() async {
     await model.deletePerson();
-    router.pop();
+    await router.pop();
   }
 
   @override
@@ -111,26 +108,30 @@ class EditPersonScreenWidgetModel extends WidgetModel<EditPersonScreen, EditPers
 
 /// Interface of [EditPersonScreenWidgetModel].
 abstract class IEditPersonScreenWidgetModel implements IWidgetModel {
-  /// Method get email controller for email field
+  /// Method get comment controller for comment field
   TextEditingController get commentController;
 
-  /// Method get date controller for date field
+  /// Method get last name controller for lastName field
   TextEditingController get lastNameController;
 
+  ///Method get first name controller for first name field
   TextEditingController get firstNameController;
 
+  /// photo state
   ValueNotifier<Uint8List> get photoState;
 
-  /// Method to close the debug screens.
+  /// Method to close screens.
   void closeScreen() {}
 
+  ///save photo.
   void savePhoto(Uint8List photo);
 
-  /// Method to add person.
+  /// Method to edit person.
   Future<void> editPerson();
 
-  /// Method to add holiday.
+  /// Method to delete person.
   Future<void> deletePerson();
 
+  /// Method to initBottomSheet.
   void initBottomSheetWidgetModel(Person person);
 }

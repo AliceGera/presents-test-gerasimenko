@@ -9,7 +9,9 @@ import 'package:flutter_template/features/common/widgets/app_button_widget.dart'
 import 'package:flutter_template/features/common/widgets/app_iteams_list_widget.dart';
 import 'package:flutter_template/features/common/widgets/choose_edit_or_delete_dialog_widget.dart';
 import 'package:flutter_template/features/common/widgets/delete_dialog_widget.dart';
+import 'package:flutter_template/features/common/widgets/failed_state_screen.dart';
 import 'package:flutter_template/features/holidays/screens/holidays_screen/holidays_screen_wm.dart';
+import 'package:flutter_template/features/holidays/screens/holidays_screen/widgets/loading_holidays_widget.dart';
 import 'package:flutter_template/features/navigation/domain/entity/app_route_names.dart';
 import 'package:union_state/union_state.dart';
 
@@ -37,30 +39,23 @@ class HolidaysScreen extends ElementaryWidget<IHolidaysScreenWidgetModel> {
         ),
       ),
       body: _Body(
-        deleteHolidayScreen:wm.deleteHolidayScreen,
-        openAddHolidayScreen: wm.openAddHolidayScreen,
-        editHolidayScreen: wm.editHolidayScreen,
-        holidaysState: wm.holidaysState,
+        wm: wm,
       ),
     );
   }
 }
 
 class _Body extends StatelessWidget {
-  final VoidCallback openAddHolidayScreen;
-  final void Function(Holiday holiday) editHolidayScreen;
-  UnionStateNotifier<List<Holiday>> holidaysState;
-  Future<void> Function(Holiday holiday) deleteHolidayScreen;
-  _Body({
-    required this.openAddHolidayScreen,
-    required this.editHolidayScreen,
-    required this.holidaysState, required this.deleteHolidayScreen,
+  final IHolidaysScreenWidgetModel wm;
+
+  const _Body({
+    required this.wm,
   });
 
   @override
   Widget build(BuildContext context) {
     return UnionStateListenableBuilder<List<Holiday>>(
-      unionStateListenable: holidaysState,
+      unionStateListenable: wm.holidaysState,
       builder: (_, holidays) {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -71,15 +66,15 @@ class _Body extends StatelessWidget {
                 secondText: holidays.map((e) => e.holidayDate).toList(),
                 photoList: holidays.map((e) => e.photo).toList(),
                 values: holidays,
-                onTapThreeDots: (holiday){
+                onTapThreeDots: (holiday) {
                   showDialog<void>(
                     context: context,
                     builder: (ctx) => ChooseEditOrDeleteDialogWidget(
                       icon: SvgIcons.showPresents,
-                      firstText:'Presents',
+                      firstText: 'Presents',
                       editGiftsScreen: () {
                         Navigator.pop(ctx);
-                        editHolidayScreen.call(holiday);
+                        wm.editHolidayScreen.call(holiday);
                       },
                       deleteGift: () {
                         Navigator.pop(ctx);
@@ -87,15 +82,15 @@ class _Body extends StatelessWidget {
                           context: context,
                           builder: (ctx) => DeleteDialogWidget(
                             deleteGift: () async {
-                               Navigator.pop(ctx);
-                              await deleteHolidayScreen.call(holiday);
+                              Navigator.pop(ctx);
+                              await wm.deleteHolidayScreen.call(holiday);
                             },
                           ),
                         );
                       },
                       chooseItem: () {
                         Navigator.pop(ctx);
-                       // chooseItem?.call(values[index]);
+                        wm.openHolidayGiftsScreen.call(holiday);
                       },
                     ),
                   );
@@ -105,15 +100,15 @@ class _Body extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 child: AppButtonWidget(
                   title: 'Add a holiday +',
-                  onPressed: openAddHolidayScreen,
+                  onPressed: wm.openAddHolidayScreen,
                 ),
               ),
             ],
           ),
         );
       },
-      loadingBuilder: (_, hotel) => const SizedBox(),
-      failureBuilder: (_, exception, hotel) => const SizedBox(),
+      loadingBuilder: (_, hotel) => const LoadingHolidaysWidget(),
+      failureBuilder: (_, exception, hotel) => const FailedStateWidget(),
     );
   }
 }

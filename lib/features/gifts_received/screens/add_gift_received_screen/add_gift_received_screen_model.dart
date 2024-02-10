@@ -18,12 +18,18 @@ class AddGiftReceivedScreenModel extends ElementaryModel {
   String _giftComment = '';
   int _holidayId = 0;
   Uint8List _photo = Uint8List(0);
-
+  int _giftRate = 0;
   String _whoGavePresent = '';
 
   String _holidayName = '';
 
   String get giftName => _giftName;
+
+  set giftRate(int newGiftRate) {
+    _giftRate = newGiftRate;
+  }
+
+  int get giftRate => _giftRate;
 
   set giftName(String newGiftName) {
     _giftName = newGiftName;
@@ -59,12 +65,24 @@ class AddGiftReceivedScreenModel extends ElementaryModel {
     _holidayName = newHolidayName;
   }
 
+  Gift get gift => Gift(
+        id: 1,
+        photo: _photo,
+        giftRaiting: _giftRate,
+        giftName: _giftName,
+        giftPrice: 0,
+        isReceivedGift: true,
+        whoGave: _whoGavePresent,
+        holidayId: _holidayId,
+        giftComment: _giftComment,
+      );
+
   Future<void> addGift() async {
     await _giftsService.addGift(
       Gift(
         id: 1,
         photo: _photo,
-        giftRaiting: 0,
+        giftRaiting: _giftRate,
         giftName: _giftName,
         giftPrice: 0,
         isReceivedGift: true,
@@ -78,6 +96,6 @@ class AddGiftReceivedScreenModel extends ElementaryModel {
   /// Create an instance [AddGiftReceivedScreenModel].
   AddGiftReceivedScreenModel(
     this.errorHandler,
-      this._giftsService ,
+    this._giftsService,
   ) : super(errorHandler: errorHandler);
 }

@@ -8,8 +8,8 @@ import 'package:flutter_template/assets/text/text_style.dart';
 import 'package:flutter_template/features/common/domain/data/holidays/holiday_data.dart';
 import 'package:flutter_template/features/common/widgets/app_button_widget.dart';
 import 'package:flutter_template/features/common/widgets/app_iteams_list_widget.dart';
-import 'package:flutter_template/features/common/widgets/choose_edit_or_delete_dialog_widget.dart';
 import 'package:flutter_template/features/gifts_received/screens/holiday_name_screen/holiday_name_screen_widget_model.dart';
+import 'package:flutter_template/features/holidays/screens/add_holiday_screen/add_holiday_screen_export.dart';
 import 'package:flutter_template/features/holidays/screens/edit_holiday_screen/edit_holiday_screen_export.dart';
 import 'package:flutter_template/features/navigation/domain/entity/app_route_names.dart';
 import 'package:union_state/union_state.dart';
@@ -46,8 +46,7 @@ class HolidayNameScreen extends ElementaryWidget<IHolidayNameScreenWidgetModel> 
         ),
       ),
       body: _Body(
-        openNextScreen: wm.openAddHolidayScreen,
-        chooseHolidayScreen: wm.chooseHoliday,
+        chooseHoliday: wm.chooseHoliday,
         loadAgain: wm.loadAgain,
         holidaysState: wm.holidaysState,
       ),
@@ -56,15 +55,12 @@ class HolidayNameScreen extends ElementaryWidget<IHolidayNameScreenWidgetModel> 
 }
 
 class _Body extends StatelessWidget {
-  final VoidCallback openNextScreen;
-
-  final void Function(Holiday holiday) chooseHolidayScreen;
+  final void Function(Holiday holiday) chooseHoliday;
   final VoidCallback loadAgain;
   UnionStateNotifier<List<Holiday>> holidaysState;
 
   _Body({
-    required this.chooseHolidayScreen,
-    required this.openNextScreen,
+    required this.chooseHoliday,
     required this.loadAgain,
     required this.holidaysState,
   });
@@ -84,56 +80,45 @@ class _Body extends StatelessWidget {
                   secondText: holidays.map((e) => e.holidayDate).toList(),
                   photoList: holidays.map((e) => e.photo).toList(),
                   values: holidays,
-                  onTapThreeDots: (holiday){
-                    showDialog<void>(
-                      context: context,
-                      builder: (ctx) => ChooseEditOrDeleteDialogWidget(
-                        firstText:'Choose',
-                        icon:SvgIcons.checkChooseDialog,
-          
-                        editGiftsScreen: () {
-                          Navigator.pop(ctx);
-                          showModalBottomSheet<void>(
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-                            ),
-                            backgroundColor: AppColors.darkBlue,
-                            context: context,
-                            isScrollControlled: true,
-                            builder: (context) {
-                              return EditHolidayScreen(
-                                loadAgain: loadAgain,
-                                holiday: holiday,
-                                showInBottomSheet: true,
-                              );
-                            },
-                          );
-                        },
-                        deleteGift: () {
-                          Navigator.pop(ctx);
-                          // showDialog<void>(
-                          //   context: context,
-                          //   builder: (ctx) => DeleteDialogWidget(
-                          //     deleteGift: () async {
-                          //       Navigator.pop(ctx);
-                          //       await deleteHolidayScreen.call(holiday);
-                          //     },
-                          //   ),
-                          // );
-                        },
-                        chooseItem: () {
-                          Navigator.pop(ctx);
-                          chooseHolidayScreen.call(holiday);
-                        },
+                  onTapThreeDots: (holiday) {
+                    showModalBottomSheet<void>(
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
                       ),
+                      backgroundColor: AppColors.darkBlue,
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (context) {
+                        return EditHolidayScreen(
+                          loadAgain: loadAgain,
+                          holiday: holiday,
+                          showInBottomSheet: true,
+                        );
+                      },
                     );
                   },
+                  onItemTap: chooseHoliday,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   child: AppButtonWidget(
                     title: 'Add a holiday +',
-                    onPressed: openNextScreen,
+                    onPressed: () {
+                      showModalBottomSheet<void>(
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                        ),
+                        backgroundColor: AppColors.darkBlue,
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (context) {
+                          return AddHolidayScreen(
+                            loadAgain: loadAgain,
+                            showInBottomSheet: true,
+                          );
+                        },
+                      );
+                    }, // openNextScreen,
                   ),
                 ),
               ],

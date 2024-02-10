@@ -17,8 +17,15 @@ GiftsReceivedScreenWidgetModel giftsReceivedScreenWmFactory(
 ) {
   final appScope = context.read<IAppScope>();
 
-  final model = GiftsReceivedScreenModel(appScope.holidayAndGiftsService, appScope.giftsService);
-  return GiftsReceivedScreenWidgetModel(model, appScope.router);
+  final model = GiftsReceivedScreenModel(
+    appScope.holidayAndGiftsService,
+    appScope.giftsService,
+  );
+  return GiftsReceivedScreenWidgetModel(
+    model,
+    appScope.router,
+    appScope as AppScope,
+  );
 }
 
 /// Widget model for [GiftsReceivedScreen].
@@ -27,16 +34,19 @@ class GiftsReceivedScreenWidgetModel extends WidgetModel<GiftsReceivedScreen, Gi
     implements IGiftsReceivedScreenWidgetModel {
   /// Create an instance [GiftsReceivedScreenWidgetModel].
   final AppRouter _appRouter;
+  final AppScope _appScope;
 
   GiftsReceivedScreenWidgetModel(
     super._model,
     this._appRouter,
+    this._appScope,
   );
 
   final _giftsState = UnionStateNotifier<List<HolidayWithGiftsData>>([]);
 
   @override
   void initWidgetModel() {
+    _appScope.gifRecievedRebuilder = loadAgain;
     _getGifts();
     super.initWidgetModel();
   }
@@ -53,7 +63,11 @@ class GiftsReceivedScreenWidgetModel extends WidgetModel<GiftsReceivedScreen, Gi
 
   @override
   void openAddGiftScreen() {
-    _appRouter.push(AddGiftReceivedRouter(loadAgain: loadAgain));
+    _appRouter.push(
+      AddGiftReceivedRouter(
+        loadAgain: loadAgain,
+      ),
+    );
   }
 
   @override
@@ -67,11 +81,11 @@ class GiftsReceivedScreenWidgetModel extends WidgetModel<GiftsReceivedScreen, Gi
     );
   }
 
-  ///метод delete
+  @override
   Future<void> deleteGift(Gift gift) async {
     await model.deleteGift(gift);
     await _getGifts();
-    _appRouter.pop();
+    await _appRouter.pop();
   }
 
   @override
@@ -80,18 +94,18 @@ class GiftsReceivedScreenWidgetModel extends WidgetModel<GiftsReceivedScreen, Gi
 
 /// Interface of [GiftsReceivedScreenWidgetModel].
 abstract interface class IGiftsReceivedScreenWidgetModel with ThemeIModelMixin implements IWidgetModel {
-  /// Navigate to room screen.
+  /// Navigate to add gift screen.
   void openAddGiftScreen();
 
-  /// Navigate to edit Gift screen.
+  /// Navigate to edit gift screen.
   void editGiftsScreen(Gift gifts, Holiday holiday);
 
   /// Navigate to load screen again.
   void loadAgain();
 
-  /// Method to get holidays screen.
+  /// Method to get gifts screen.
   UnionStateNotifier<List<HolidayWithGiftsData>> get giftsState;
 
-  /// Method to add holiday.
+  /// Method to delete gift.
   Future<void> deleteGift(Gift gift);
 }

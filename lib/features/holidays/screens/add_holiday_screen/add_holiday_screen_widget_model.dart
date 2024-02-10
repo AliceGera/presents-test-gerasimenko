@@ -7,8 +7,6 @@ import 'package:flutter_template/features/holidays/screens/add_holiday_screen/ad
 import 'package:flutter_template/features/navigation/service/router.dart';
 import 'package:provider/provider.dart';
 
-// ignore_for_file: avoid_positional_boolean_parameters
-
 /// Factory for [AddHolidayScreenWidgetModel].
 AddHolidayScreenWidgetModel addHolidayScreenWidgetModelFactory(
   BuildContext context,
@@ -61,15 +59,14 @@ class AddHolidayScreenWidgetModel extends WidgetModel<AddHolidayScreen, AddHolid
     router.pop();
   }
 
-  ///метод добавления holiday
+  @override
   Future<void> addHoliday() async {
     await model.addHoliday();
-    router.pop();
+    await router.pop();
   }
 
-  ///метод добавления photo
   @override
-  void savePhoto(Uint8List photo) async {
+  Future<void> savePhoto(Uint8List photo) async {
     model.photo = photo;
   }
 
@@ -82,15 +79,16 @@ class AddHolidayScreenWidgetModel extends WidgetModel<AddHolidayScreen, AddHolid
 
 /// Interface of [AddHolidayScreenWidgetModel].
 abstract class IAddHolidayScreenWidgetModel implements IWidgetModel {
-  /// Method to close the debug screens.
+  /// Method to close screen
   void closeScreen();
 
   /// Method to add holiday.
   Future<void> addHoliday();
 
+  ///save photo
   void savePhoto(Uint8List photo);
 
-  /// Method get email controller for email field
+  /// Method get email controller for holiday name field
   TextEditingController get holidayNameController;
 
   /// Method get date controller for date field

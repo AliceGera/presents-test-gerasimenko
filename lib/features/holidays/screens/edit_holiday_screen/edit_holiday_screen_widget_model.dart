@@ -8,8 +8,6 @@ import 'package:flutter_template/features/holidays/screens/edit_holiday_screen/e
 import 'package:flutter_template/features/navigation/service/router.dart';
 import 'package:provider/provider.dart';
 
-// ignore_for_file: avoid_positional_boolean_parameters
-
 /// Factory for [EditHolidayScreenWidgetModel].
 EditHolidayScreenWidgetModel editHolidayScreenWidgetModelFactory(
   BuildContext context,
@@ -41,7 +39,6 @@ class EditHolidayScreenWidgetModel extends WidgetModel<EditHolidayScreen, EditHo
   @override
   void initWidgetModel() {
     final args = router.current.args is EditHolidayRouterArgs ? router.current.args! as EditHolidayRouterArgs : null;
-
     _holidayNameController.addListener(() {
       model.holidayName = _holidayNameController.text;
     });
@@ -51,11 +48,19 @@ class EditHolidayScreenWidgetModel extends WidgetModel<EditHolidayScreen, EditHo
     if (args != null) {
       _holidayNameController.text = args.holiday.holidayName;
       _dateController.text = args.holiday.holidayDate;
-      model.photo = args.holiday.photo;
-      model.id = args.holiday.id;
+      model
+        ..photo = args.holiday.photo
+        ..id = args.holiday.id;
     }
 
     super.initWidgetModel();
+  }
+
+  @override
+  void dispose() {
+    _holidayNameController.dispose();
+    _dateController.dispose();
+    super.dispose();
   }
 
   @override
@@ -68,15 +73,25 @@ class EditHolidayScreenWidgetModel extends WidgetModel<EditHolidayScreen, EditHo
   }
 
   @override
-  void dispose() {
-    _holidayNameController.dispose();
-    _dateController.dispose();
-    super.dispose();
+  void closeScreen() {
+    router.pop();
   }
 
   @override
-  void closeScreen() {
-    router.pop();
+  Future<void> savePhoto(Uint8List photo) async {
+    model.photo = photo;
+  }
+
+  @override
+  Future<void> editHoliday() async {
+    await model.editHoliday();
+    await router.pop();
+  }
+
+  @override
+  Future<void> deleteHoliday() async {
+    await model.deleteHoliday();
+    await router.pop();
   }
 
   @override
@@ -84,45 +99,28 @@ class EditHolidayScreenWidgetModel extends WidgetModel<EditHolidayScreen, EditHo
 
   @override
   TextEditingController get dateController => _dateController;
-
-  ///метод добавления holiday
-  @override
-  void savePhoto(Uint8List photo) async {
-    model.photo = photo;
-  }
-
-  ///метод edit holiday
-  Future<void> editHoliday() async {
-    await model.editHoliday();
-    router.pop();
-  }
-
-  ///метод delete holiday
-  Future<void> deleteHoliday() async {
-    await model.deleteHoliday();
-
-    router.pop();
-  }
 }
 
 /// Interface of [EditHolidayScreenWidgetModel].
 abstract class IEditHolidayScreenWidgetModel implements IWidgetModel {
-  /// Method to close the debug screens.
+  /// Method to close screen
   void closeScreen() {}
 
-  /// Method get email controller for email field
+  /// Method get email controller for holiday name field
   TextEditingController get holidayNameController;
 
   /// Method get date controller for date field
   TextEditingController get dateController;
 
+  ///Method to save photo
   void savePhoto(Uint8List photo);
 
-  /// Method to add holiday.
+  /// Method to edit holiday.
   Future<void> editHoliday();
 
-  /// Method to add holiday.
+  /// Method to delete holiday.
   Future<void> deleteHoliday();
 
+  /// init Bottom Sheet Widget
   void initBottomSheetWidgetModel(Holiday holiday);
 }

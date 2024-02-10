@@ -15,6 +15,7 @@ class AppItemListWidget<T> extends StatelessWidget {
   final List<String> secondText;
   final List<Uint8List> photoList;
   final void Function(T) onTapThreeDots;
+  final void Function(T)? onItemTap;
 
   const AppItemListWidget({
     super.key,
@@ -23,6 +24,7 @@ class AppItemListWidget<T> extends StatelessWidget {
     required this.secondText,
     required this.photoList,
     required this.onTapThreeDots,
+    this.onItemTap,
   });
 
   @override
@@ -36,37 +38,47 @@ class AppItemListWidget<T> extends StatelessWidget {
           physics: const ClampingScrollPhysics(),
           shrinkWrap: true,
           itemCount: mainNames.length,
-          itemBuilder: (context, index) => Builder(builder: (context) {
-            return Row(
+          itemBuilder: (context, index) {
+            final content = Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 90,
-                      width: 90,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.memory(
-                          photoList[index],
-                          fit: BoxFit.cover,
+                Expanded(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 90,
+                        width: 90,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.memory(
+                            photoList[index],
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 9),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(mainNames[index], style: AppTextStyle.bold19.value.copyWith(color: AppColors.white)),
-                          const SizedBox(height: 8),
-                          Text(secondText[index], style: AppTextStyle.medium11.value.copyWith(color: AppColors.white)),
-                        ],
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 9),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                mainNames[index],
+                                overflow: TextOverflow.ellipsis,
+                                style: AppTextStyle.bold19.value.copyWith(
+                                  color: AppColors.white,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(secondText[index], overflow: TextOverflow.ellipsis, style: AppTextStyle.medium11.value.copyWith(color: AppColors.white)),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 InkWell(
                   highlightColor: Colors.transparent,
@@ -76,7 +88,15 @@ class AppItemListWidget<T> extends StatelessWidget {
                 ),
               ],
             );
-          }),
+            return onItemTap != null
+                ? InkWell(
+                    onTap: () {
+                      onItemTap?.call(values[index]);
+                    },
+                    child: content,
+                  )
+                : content;
+          },
         ),
       ),
     );

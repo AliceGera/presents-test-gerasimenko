@@ -8,6 +8,7 @@ import 'package:flutter_template/assets/colors/app_colors.dart';
 import 'package:flutter_template/assets/res/resources.dart';
 import 'package:flutter_template/assets/text/text_style.dart';
 import 'package:flutter_template/features/common/domain/data/holidays/holiday_data.dart';
+import 'package:flutter_template/features/common/widgets/app_bottom_sheet.dart';
 import 'package:flutter_template/features/common/widgets/app_button_widget.dart';
 import 'package:flutter_template/features/common/widgets/app_camera_widget.dart';
 import 'package:flutter_template/features/common/widgets/app_textfield_widget.dart';
@@ -45,7 +46,7 @@ class EditHolidayScreen extends ElementaryWidget<IEditHolidayScreenWidgetModel> 
       editHoliday: wm.editHoliday,
     );
     return showInBottomSheet == true
-        ? BottomSheet(
+        ? AppBottomSheet(
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -120,38 +121,6 @@ class EditHolidayScreen extends ElementaryWidget<IEditHolidayScreenWidgetModel> 
             ),
             body: body,
           );
-  }
-}
-
-class BottomSheet extends StatefulWidget {
-  final Widget content;
-  final VoidCallback initWidgetModel;
-
-  const BottomSheet({
-    super.key,
-    required this.content,
-    required this.initWidgetModel,
-  });
-
-  @override
-  State<BottomSheet> createState() => _BottomSheetState();
-}
-
-class _BottomSheetState extends State<BottomSheet> {
-  @override
-  void initState() {
-    widget.initWidgetModel.call();
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: ColoredBox(
-        color: AppColors.backgroundColor,
-        child: widget.content,
-      ),
-    );
   }
 }
 

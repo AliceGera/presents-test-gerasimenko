@@ -2,6 +2,8 @@
 // ignore_for_, duplicate_ignore-file: public_member_api_docs
 // ignore_for_file: public_member_api_docs
 
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_template/assets/colors/app_colors.dart';
@@ -21,17 +23,23 @@ class AppAddOrEditGiftWidget extends StatelessWidget {
   final Gift gift;
   final Future<void> Function() editGift;
   final VoidCallback loadAgain;
+  final void Function(int) rateOnTap;
+  final bool? isEdit;
+  void Function(Uint8List photo) savePhoto;
 
-  const AppAddOrEditGiftWidget({
-    super.key,
+  AppAddOrEditGiftWidget({
+    required this.rateOnTap,
     required this.personScreen,
     required this.chooseHolidayNameScreen,
-    this.closeScreen,
     required this.commentController,
     required this.giftNameController,
     required this.gift,
     required this.editGift,
     required this.loadAgain,
+    required this.savePhoto,
+    super.key,
+    this.closeScreen,
+    this.isEdit,
   });
 
   @override
@@ -50,7 +58,7 @@ class AppAddOrEditGiftWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AppCameraWidget(
-                    savePhoto: (file) {},
+                    savePhoto: savePhoto,
                     photo: gift.photo,
                   ),
                   const SizedBox(width: 30),
@@ -60,6 +68,24 @@ class AppAddOrEditGiftWidget extends StatelessWidget {
                         'Rate the gift',
                         style: AppTextStyle.regular14.value.copyWith(
                           color: AppColors.white,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 45,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: 5,
+                          itemBuilder: (context, index) => InkWell(
+                            onTap: () {
+                              rateOnTap.call(index + 1);
+                            },
+                            child: Icon(
+                              Icons.star,
+                              size: 30,
+                              color: (index + 1 <= gift.giftRaiting) ? AppColors.fillStar : AppColors.emptyStar,
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -73,7 +99,6 @@ class AppAddOrEditGiftWidget extends StatelessWidget {
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: AppColors.darkBlue),
             child: Padding(
               padding: const EdgeInsets.all(16),
-
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -82,16 +107,21 @@ class AppAddOrEditGiftWidget extends StatelessWidget {
                     controller: giftNameController,
                   ),
                   const SizedBox(height: 8),
-                  Text('Who gave it',style:AppTextStyle.regular12.value.copyWith(color: AppColors.white) ,),
-
+                  Text(
+                    'Who gave it',
+                    style: AppTextStyle.regular12.value.copyWith(color: AppColors.white),
+                  ),
                   InkWell(
                     onTap: personScreen,
                     child: ChooseWidget(
-                      text: gift.whoGave != null ? gift.whoGave! : 'Who gave it',
+                      text: gift.whoGave.isEmpty ? 'Who gave it' : gift.whoGave,
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Text('Holiday name',style:AppTextStyle.regular12.value.copyWith(color: AppColors.white) ,),
+                  Text(
+                    'Holiday name',
+                    style: AppTextStyle.regular12.value.copyWith(color: AppColors.white),
+                  ),
                   InkWell(
                     onTap: chooseHolidayNameScreen,
                     child: ChooseWidget(
@@ -131,9 +161,9 @@ class AppAddOrEditGiftWidget extends StatelessWidget {
 }
 
 class ChooseWidget extends StatelessWidget {
-  ChooseWidget({
-    super.key,
+  const ChooseWidget({
     required this.text,
+    super.key,
   });
 
   final String text;

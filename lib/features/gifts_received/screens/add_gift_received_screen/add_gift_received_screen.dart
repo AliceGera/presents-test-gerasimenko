@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
@@ -62,117 +60,126 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return UnionStateListenableBuilder<Gift>(
-      unionStateListenable: wm.giftsState,
-      builder: (_, gift) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              const SizedBox(height: 12),
-              DecoratedBox(
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: AppColors.darkBlue),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      AppCameraWidget(savePhoto: wm.savePhoto),
-                      const SizedBox(width: 30),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Rate the gift', style: AppTextStyle.regular14.value.copyWith(color: AppColors.white)),
-                          Row(
-                            children: [
-                              InkWell(
-                                  child: SvgPicture.asset('assets/icons/star.svg')),
-                              SvgPicture.asset('assets/icons/star.svg'),
-                              SvgPicture.asset('assets/icons/star.svg'),
-                              SvgPicture.asset('assets/icons/star.svg'),
-                              SvgPicture.asset('assets/icons/star.svg'),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              DecoratedBox(
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: AppColors.darkBlue),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      AppTextFieldWidget(
-                        text: 'Gift name',
-                        controller: wm.giftNameController,
-                      ),
-                      SizedBox(height: 8),
-                      Text('Who gave it', style: AppTextStyle.regular12.value.copyWith(color: AppColors.white)),
-                      ValueListenableBuilder<String?>(
-                        builder: (context, person, child) {
-                          return InkWell(onTap: wm.whoGavePresentScreen, child: ChooseWidget(text: person ?? 'Who gave it'));
-                        },
-                        valueListenable: wm.personState,
-                      ),
-                      SizedBox(height: 8),
-                      Text('Name of the holiday', style: AppTextStyle.regular12.value.copyWith(color: AppColors.white)),
-                      ValueListenableBuilder<String?>(
-                        builder: (context, holidayName, child) {
-                          return InkWell(
-                            onTap: wm.chooseHolidayNameScreen,
-                            child: ChooseWidget(
-                              text: holidayName ?? 'Name of the holiday',
+    return SingleChildScrollView(
+      child: UnionStateListenableBuilder<Gift>(
+        unionStateListenable: wm.giftsState,
+        builder: (_, gift) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                const SizedBox(height: 12),
+                DecoratedBox(
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: AppColors.darkBlue),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AppCameraWidget(savePhoto: wm.savePhoto),
+                        const SizedBox(width: 30),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Rate the gift', style: AppTextStyle.regular14.value.copyWith(color: AppColors.white)),
+                            SizedBox(
+                              height: 45,
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: 5,
+                                itemBuilder: (context, index) => InkWell(
+                                  onTap: () {
+                                    wm.chooseRateOnTap.call(index+1);
+                                  },
+                                  child: Icon(
+                                    Icons.star,
+                                    size: 30,
+                                    color: gift.giftRaiting<index+1?AppColors.emptyStar:AppColors.fillStar,
+                                  ),
+                                ),
+                              ),
                             ),
-                          );
-                        },
-                        valueListenable: wm.holidayNameState,
-                      ),
-                      SizedBox(height: 8),
-                      AppTextFieldWidget(
-                        text: 'A comment',
-                        controller: wm.commentController,
-                        lines: 7,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                children: [
-                  Expanded(child: AppButtonWidget(title: 'Cancel', color: AppColors.white, textColor: AppColors.black, onPressed: wm.closeScreen)),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: AppButtonWidget(
-                      title: 'Save',
-                      onPressed: () async {
-                        await wm.addGift();
-                        loadAgain.call();
-                      },
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
-      loadingBuilder: (_, hotel) => const SizedBox(),
-      failureBuilder: (_, exception, hotel) => const SizedBox(),
+                ),
+                const SizedBox(height: 20),
+                DecoratedBox(
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: AppColors.darkBlue),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AppTextFieldWidget(
+                          text: 'Gift name',
+                          controller: wm.giftNameController,
+                        ),
+                        const SizedBox(height: 8),
+                        Text('Who gave it', style: AppTextStyle.regular12.value.copyWith(color: AppColors.white)),
+                        ValueListenableBuilder<String?>(
+                          builder: (context, person, child) {
+                            return InkWell(onTap: wm.choosePersonScreenOnTap, child: ChooseWidget(text: person ?? 'Who gave it'));
+                          },
+                          valueListenable: wm.personState,
+                        ),
+                        const SizedBox(height: 8),
+                        Text('Name of the holiday', style: AppTextStyle.regular12.value.copyWith(color: AppColors.white)),
+                        ValueListenableBuilder<String?>(
+                          builder: (context, holidayName, child) {
+                            return InkWell(
+                              onTap: wm.chooseHolidayNameScreen,
+                              child: ChooseWidget(
+                                text: holidayName ?? 'Name of the holiday',
+                              ),
+                            );
+                          },
+                          valueListenable: wm.holidayNameState,
+                        ),
+                        const SizedBox(height: 8),
+                        AppTextFieldWidget(
+                          text: 'A comment',
+                          controller: wm.commentController,
+                          lines: 7,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(child: AppButtonWidget(title: 'Cancel', color: AppColors.white, textColor: AppColors.black, onPressed: wm.closeScreen)),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: AppButtonWidget(
+                        title: 'Save',
+                        onPressed: () async {
+                          await wm.addGift();
+                          loadAgain.call();
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
+        loadingBuilder: (_, hotel) => const SizedBox(),
+        failureBuilder: (_, exception, hotel) => const SizedBox(),
+      ),
     );
   }
 }
 
 class ChooseWidget extends StatelessWidget {
-  ChooseWidget({
-    super.key,
-    required this.text,
+   const ChooseWidget({
+    required this.text, super.key,
   });
 
   final String text;

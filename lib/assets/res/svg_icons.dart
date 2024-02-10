@@ -33,5 +33,7 @@ class SvgIcons {
   static const String editPen ='assets/icons/edit_pen.svg';
   static const String showPresents ='assets/icons/show_presents_icon.svg';
   static const String checkChooseDialog ='assets/icons/check_choose_dialog.svg';
+  static const String addGift ='assets/icons/add_gift.svg';
+  static const String errorState ='assets/icons/error.svg';
   static const List<String> values = [testSvg];
 }

@@ -12,6 +12,13 @@ class Holiday {
     required this.holidayDate,
     required this.photo,
   });
+
+  static Holiday init() => Holiday(
+        holidayName: '',
+        holidayDate: '',
+        photo: Uint8List(0),
+        id: 0,
+      );
 }
 /* Holiday copyWith({
     final String? holidayName,
@@ -25,10 +32,3 @@ class Holiday {
       photo: photo ?? this.photo,
       );
   }*/
-
-/* static Holiday init() => Holiday(
-    holidayName: '',
-    holidayDate: '',
-    photo: 0,
-
-      );*/

@@ -38,22 +38,14 @@ class HolidayNameScreenWidgetModel extends WidgetModel<HolidayNameScreen, Holida
 
   Future<void> _getHolidays() async {
     final holidays = await model.getHolidays();
-    //await Future.delayed(const Duration(milliseconds: 100));
     _holidaysState.content(holidays);
-  }
-
-  @override
-  void openAddHolidayScreen() {
-    _appRouter.push(AddHolidayRouter(loadAgain: loadAgain));
   }
 
   @override
   void loadAgain() {
     _getHolidays();
+    context.read<IAppScope>().holidayRebuilder.call();
   }
-
-  @override
-  UnionStateNotifier<List<Holiday>> get holidaysState => _holidaysState;
 
   @override
   void closeScreen() {
@@ -64,19 +56,18 @@ class HolidayNameScreenWidgetModel extends WidgetModel<HolidayNameScreen, Holida
   void chooseHoliday(Holiday holiday) {
     _appRouter.pop(holiday);
   }
+
+  @override
+  UnionStateNotifier<List<Holiday>> get holidaysState => _holidaysState;
 }
 
 /// Interface of [HolidayNameScreenWidgetModel].
 abstract interface class IHolidayNameScreenWidgetModel with ThemeIModelMixin implements IWidgetModel {
-  /// Navigate to room screen.
+  /// Navigate to close screen.
   void closeScreen();
 
-  /// Navigate to room screen.
-  void openAddHolidayScreen();
-
-  /// Navigate to edit holiday screen.
+  /// Navigate to choose holiday screen.
   void chooseHoliday(Holiday holiday);
-
 
   /// Navigate to load screen again.
   void loadAgain();

@@ -13,21 +13,23 @@ import 'package:flutter_template/features/gifts_received/screens/holiday_name_sc
 import 'package:flutter_template/features/gifts_received/screens/person_screen/person_screen_export.dart';
 import 'package:flutter_template/features/holidays/screens/add_holiday_screen/add_holiday_screen_export.dart';
 import 'package:flutter_template/features/holidays/screens/edit_holiday_screen/edit_holiday_screen_export.dart';
+import 'package:flutter_template/features/holidays/screens/holiday_gifts_screen/holiday_gifts_screen_export.dart';
 import 'package:flutter_template/features/holidays/screens/holidays_screen/holidays_screen_export.dart';
 import 'package:flutter_template/features/navigation/domain/entity/add_gift_received/add_gift_received_routes.dart';
 import 'package:flutter_template/features/navigation/domain/entity/add_holiday/add_holiday_routes.dart';
 import 'package:flutter_template/features/navigation/domain/entity/edit_gift_received/edit_gift_received_routes.dart';
 import 'package:flutter_template/features/navigation/domain/entity/edit_holiday/edit_holiday_routes.dart';
 import 'package:flutter_template/features/navigation/domain/entity/edit_person/edit_person_routes.dart';
+import 'package:flutter_template/features/navigation/domain/entity/holiday_gifts/holiday_gifts_routes.dart';
 import 'package:flutter_template/features/navigation/domain/entity/holiday_name/holiday_name_routes.dart';
+import 'package:flutter_template/features/navigation/domain/entity/person/person_routes.dart';
 import 'package:flutter_template/features/navigation/domain/entity/read_news/read_news_routes.dart';
 import 'package:flutter_template/features/navigation/domain/entity/temp/temp_routes.dart';
-import 'package:flutter_template/features/navigation/domain/entity/person/person_routes.dart';
 import 'package:flutter_template/features/news/screens/news_screen/news_screen_export.dart';
 import 'package:flutter_template/features/news/screens/read_news_screen/read_news_screen_export.dart';
 import 'package:flutter_template/features/settings/screen/settings_screen_export.dart';
 import 'package:flutter_template/features/temp/screens/temp_screen/temp_screen_export.dart';
-
+import 'package:flutter_template/features/common/domain/data/holiday_with_gifts/holiday_with_gifts_data.dart';
 part 'router.gr.dart';
 
 /// When you add route with screen don't forget add imports of screen and screen_widget_model
@@ -54,6 +56,7 @@ class AppRouter extends _$AppRouter {
         whoPersonRoutes,
         holidayNameRoutes,
         editPersonRoutes,
+        holidayGiftsRoutes,
       ];
 
   AppRouter._();

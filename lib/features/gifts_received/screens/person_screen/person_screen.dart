@@ -75,8 +75,8 @@ class _Body extends StatelessWidget {
                   showDialog<void>(
                     context: context,
                     builder: (ctx) => ChooseEditOrDeleteDialogWidget(
-                      icon:SvgIcons.checkChooseDialog,
-                      firstText:'Choose',
+                      icon: SvgIcons.checkChooseDialog,
+                      firstText: 'Choose',
                       editGiftsScreen: () {
                         Navigator.pop(ctx);
                         showModalBottomSheet<void>(
@@ -100,15 +100,14 @@ class _Body extends StatelessWidget {
                           context: context,
                           builder: (ctx) => DeleteDialogWidget(
                             deleteGift: () async {
-                              Navigator.pop(ctx);
-                              await wm.deletePerson.call(person);
+                              await wm.deletePersonOnTap.call(person);
                             },
                           ),
                         );
                       },
                       chooseItem: () {
                         Navigator.pop(ctx);
-                        wm.choosePerson(person);
+                        wm.choosePersonOnTap(person);
                       },
                     ),
                   );
@@ -125,15 +124,21 @@ class _Body extends StatelessWidget {
                       context: context,
                       isScrollControlled: true,
                       builder: (context) {
-                        return SingleChildScrollView(
-                          child: PersonBottomSheetWidget(
-                            addOrEditPerson: wm.addPerson,
-                            loadAgain: wm.loadAgain,
-                            savePhoto: wm.savePhoto,
-                            closeScreen: wm.closeScreen,
-                            firstNameController: wm.firstNameController,
-                            commentController: wm.commentController,
-                            lastNameController: wm.lastNameController,
+                        return Padding(
+                          padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom,
+                          ),
+                          child: SingleChildScrollView(
+                            child: PersonBottomSheetWidget(
+                              addOrEditPerson: wm.addPersonOnTap,
+                              loadAgain: wm.loadAgain,
+                              savePhoto: wm.savePhotoOnTap,
+                              cleanBottomSheetForAddPersonOnTap: wm.cleanBottomSheetForAddPersonOnTap,
+                              closeScreen: wm.closeScreen,
+                              firstNameController: wm.firstNameController,
+                              commentController: wm.commentController,
+                              lastNameController: wm.lastNameController,
+                            ),
                           ),
                         );
                       },
