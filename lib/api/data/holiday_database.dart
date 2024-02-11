@@ -12,7 +12,7 @@ class HolidaysTable extends Table {
 
   TextColumn get holidaysName => text()();
 
-  TextColumn get holidayDate => text()();
+  DateTimeColumn get holidayDate => dateTime().nullable()();
 
   BlobColumn get photo => blob()();
 }

@@ -8,7 +8,7 @@ import 'package:flutter_template/assets/res/resources.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AppCameraWidget extends StatefulWidget {
-  AppCameraWidget({
+  const AppCameraWidget({
     super.key,
     required this.savePhoto,
     this.photo,
@@ -31,7 +31,7 @@ class _AppCameraWidgetState extends State<AppCameraWidget> {
     super.initState();
   }
 
-  Future<void> getImageFromGallery() async {
+  void getImageFromGallery() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     setState(() {
@@ -59,8 +59,8 @@ class _AppCameraWidgetState extends State<AppCameraWidget> {
     });
   }
 
-  Future<void> showOptions() async {
-    await showCupertinoModalPopup(
+  void showOptions() async {
+    showCupertinoModalPopup(
       context: context,
       builder: (context) => CupertinoActionSheet(
         actions: [
@@ -85,47 +85,46 @@ class _AppCameraWidgetState extends State<AppCameraWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      child: InkWell(
-        highlightColor: Colors.transparent,
-        splashColor: Colors.transparent,
-        onTap: showOptions,
-        child: SizedBox(
-          height: 90,
-          width: 90,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: DecoratedBox(
-              decoration: const BoxDecoration(
-                color: AppColors.photoColorGray,
-              ),
-              child: Center(
-                child: (photo == null   || photo!.isEmpty)
-                    ? InkWell(
-                        onTap: showOptions,
-                        child: SvgPicture.asset(
-                          SvgIcons.photoCamera,
-                        ),
-                      )
-                    : Stack(
-                        alignment: Alignment.topRight,
-                        children: [
-                          Image.memory(
-                            photo!,
-                            fit: BoxFit.cover,
-                            height: 90,
-                            width: 90,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(2),
-                            child: SvgPicture.asset(
-                              SvgIcons.deletePhoto,
-                            ),
-                          ),
-                        ],
+    return InkWell(
+      highlightColor: Colors.transparent,
+      splashColor: Colors.transparent,
+      onTap: showOptions,
+      child: SizedBox(
+        height: 90,
+        width: 90,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: DecoratedBox(
+            decoration: const BoxDecoration(
+              color: AppColors.photoColorGray,
+            ),
+            child: Center(
+              child: (photo == null || photo!.isEmpty)
+                  ? InkWell(
+                highlightColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                      onTap: showOptions,
+                      child: SvgPicture.asset(
+                        SvgIcons.photoCamera,
                       ),
-              ),
+                    )
+                  : Stack(
+                      alignment: Alignment.topRight,
+                      children: [
+                        Image.memory(
+                          photo!,
+                          fit: BoxFit.cover,
+                          height: 90,
+                          width: 90,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(2),
+                          child: SvgPicture.asset(
+                            SvgIcons.deletePhoto,
+                          ),
+                        ),
+                      ],
+                    ),
             ),
           ),
         ),

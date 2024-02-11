@@ -4,8 +4,6 @@ import 'package:flutter_template/assets/colors/app_colors.dart';
 import 'package:flutter_template/assets/res/resources.dart';
 import 'package:flutter_template/assets/text/text_style.dart';
 
-import 'package:flutter_template/features/common/widgets/delete_dialog_widget.dart';
-
 class EditOrDeleteDialogWidget extends StatelessWidget {
   final Function() editGiftsScreen;
   final Function() deleteGift;
@@ -32,6 +30,8 @@ class EditOrDeleteDialogWidget extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 InkWell(
+                  highlightColor: Colors.transparent,
+                  splashColor: Colors.transparent,
                   onTap: deleteGift,
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -43,6 +43,8 @@ class EditOrDeleteDialogWidget extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 InkWell(
+                  highlightColor: Colors.transparent,
+                  splashColor: Colors.transparent,
                   onTap:( ){editGiftsScreen();},
                   child: Row(
                     mainAxisSize: MainAxisSize.min,

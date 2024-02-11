@@ -34,7 +34,7 @@ class EditHolidayScreenWidgetModel extends WidgetModel<EditHolidayScreen, EditHo
   );
 
   final TextEditingController _holidayNameController = TextEditingController();
-  final TextEditingController _dateController = TextEditingController();
+  final _dateTimeState = ValueNotifier<DateTime?>(null);
 
   @override
   void initWidgetModel() {
@@ -42,15 +42,13 @@ class EditHolidayScreenWidgetModel extends WidgetModel<EditHolidayScreen, EditHo
     _holidayNameController.addListener(() {
       model.holidayName = _holidayNameController.text;
     });
-    _dateController.addListener(() {
-      model.holidayDate = _dateController.text;
-    });
     if (args != null) {
       _holidayNameController.text = args.holiday.holidayName;
-      _dateController.text = args.holiday.holidayDate;
       model
         ..photo = args.holiday.photo
-        ..id = args.holiday.id;
+        ..id = args.holiday.id
+        ..holidayDate = args.holiday.holidayDate;
+      _dateTimeState.value = model.holidayDate;
     }
 
     super.initWidgetModel();
@@ -59,17 +57,17 @@ class EditHolidayScreenWidgetModel extends WidgetModel<EditHolidayScreen, EditHo
   @override
   void dispose() {
     _holidayNameController.dispose();
-    _dateController.dispose();
     super.dispose();
   }
 
   @override
   void initBottomSheetWidgetModel(Holiday holiday) {
     _holidayNameController.text = holiday.holidayName;
-    _dateController.text = holiday.holidayDate;
     model
       ..photo = holiday.photo
-      ..id = holiday.id;
+      ..id = holiday.id
+      ..holidayDate = holiday.holidayDate;
+    _dateTimeState.value = model.holidayDate;
   }
 
   @override
@@ -80,6 +78,12 @@ class EditHolidayScreenWidgetModel extends WidgetModel<EditHolidayScreen, EditHo
   @override
   Future<void> savePhoto(Uint8List photo) async {
     model.photo = photo;
+  }
+
+  @override
+  void addDate(DateTime? date) {
+    model.holidayDate = date;
+    _dateTimeState.value = date;
   }
 
   @override
@@ -98,7 +102,7 @@ class EditHolidayScreenWidgetModel extends WidgetModel<EditHolidayScreen, EditHo
   TextEditingController get holidayNameController => _holidayNameController;
 
   @override
-  TextEditingController get dateController => _dateController;
+  ValueNotifier<DateTime?> get dateTimeState => _dateTimeState;
 }
 
 /// Interface of [EditHolidayScreenWidgetModel].
@@ -108,9 +112,6 @@ abstract class IEditHolidayScreenWidgetModel implements IWidgetModel {
 
   /// Method get email controller for holiday name field
   TextEditingController get holidayNameController;
-
-  /// Method get date controller for date field
-  TextEditingController get dateController;
 
   ///Method to save photo
   void savePhoto(Uint8List photo);
@@ -123,4 +124,8 @@ abstract class IEditHolidayScreenWidgetModel implements IWidgetModel {
 
   /// init Bottom Sheet Widget
   void initBottomSheetWidgetModel(Holiday holiday);
+
+  void addDate(DateTime? date);
+
+  ValueNotifier<DateTime?> get dateTimeState;
 }

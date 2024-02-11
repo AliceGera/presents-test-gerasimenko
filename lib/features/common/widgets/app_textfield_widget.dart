@@ -7,15 +7,17 @@ import 'package:flutter_template/assets/text/text_style.dart';
 
 class AppTextFieldWidget extends StatefulWidget {
   AppTextFieldWidget({
-    required this.text, required this.controller, super.key,
+    required this.text,
+    this.controller,
+    super.key,
     this.validatorText,
     this.lines = 1,
+    this.isPrice = false,
   });
 
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final int lines;
-
-  //final GlobalKey<FormState> formKey;
+  final bool isPrice;
   final String text;
   final String? Function()? validatorText;
   String? _currentValidationText;
@@ -33,20 +35,20 @@ class _AppTextFieldWidgetState extends State<AppTextFieldWidget> {
 
   void listener() {
     setState(() {
-      showClose = widget.controller.text.isEmpty;
+      showClose = widget.controller!.text.isEmpty;
     });
   }
 
   @override
   void initState() {
     _focus.addListener(_onFocusChange);
-    widget.controller.addListener(listener);
+    widget.controller?.addListener(listener);
     super.initState();
   }
 
   @override
   void dispose() {
-    widget.controller.removeListener(listener);
+    widget.controller?.removeListener(listener);
     _focus
       ..removeListener(_onFocusChange)
       ..dispose();
@@ -60,7 +62,6 @@ class _AppTextFieldWidgetState extends State<AppTextFieldWidget> {
   @override
   Widget build(BuildContext context) {
     return Form(
-
       //key: widget.formKey,
       child: DecoratedBox(
         decoration: BoxDecoration(
@@ -88,38 +89,50 @@ class _AppTextFieldWidgetState extends State<AppTextFieldWidget> {
               focusNode: _focus,
               controller: widget.controller,
               decoration: InputDecoration(
-                suffixIcon: (widget.lines > 1)
-                    ? Padding(
-                        padding: const EdgeInsets.only(left: 0, top: 0, right: 0, bottom: 100),
-                        child: Align(
-                          widthFactor: 1,
-                          heightFactor: 1,
-                          child: !showClose
-                              ? InkWell(
-                                  onTap: () {
-                                    widget.controller.text = '';
-                                  },
-                                  child: SvgPicture.asset(
-                                    SvgIcons.close,
-                                  ),
-                                )
-                              : const SizedBox(),
+                suffixIcon: widget.isPrice
+                    ? IconButton(
+                        icon: SvgPicture.asset(
+                          SvgIcons.dollar,
+                          height: 25,
                         ),
+                        onPressed: () {},
                       )
-                    : Align(
-                        widthFactor: 1,
-                        heightFactor: 1,
-                        child: !showClose
-                            ? InkWell(
-                                onTap: () {
-                                  widget.controller.text = '';
-                                },
-                                child: SvgPicture.asset(
-                                  SvgIcons.close,
-                                ),
-                              )
-                            : const SizedBox(),
-                      ),
+                    : ((widget.lines > 1)
+                        ? Padding(
+                            padding: const EdgeInsets.only(left: 0, top: 0, right: 0, bottom: 100),
+                            child: Align(
+                              widthFactor: 1,
+                              heightFactor: 1,
+                              child: !showClose
+                                  ? InkWell(
+                                      highlightColor: Colors.transparent,
+                                      splashColor: Colors.transparent,
+                                      onTap: () {
+                                        widget.controller?.text = '';
+                                      },
+                                      child: SvgPicture.asset(
+                                        SvgIcons.close,
+                                      ),
+                                    )
+                                  : const SizedBox(),
+                            ),
+                          )
+                        : Align(
+                            widthFactor: 1,
+                            heightFactor: 1,
+                            child: !showClose
+                                ? InkWell(
+                                    highlightColor: Colors.transparent,
+                                    splashColor: Colors.transparent,
+                                    onTap: () {
+                                      widget.controller?.text = '';
+                                    },
+                                    child: SvgPicture.asset(
+                                      SvgIcons.close,
+                                    ),
+                                  )
+                                : const SizedBox(),
+                          )),
                 isDense: true,
                 contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                 errorBorder: const OutlineInputBorder(

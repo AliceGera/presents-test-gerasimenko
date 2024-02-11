@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_template/assets/colors/app_colors.dart';
 import 'package:flutter_template/assets/text/text_style.dart';
 import 'package:flutter_template/features/common/domain/data/holiday_with_gifts/holiday_with_gifts_data.dart';
+import 'package:flutter_template/features/common/widgets/app_failed_state_widget.dart';
 import 'package:flutter_template/features/common/widgets/app_gifts_widget.dart';
-import 'package:flutter_template/features/gifts_received/screens/gifts_received_screen/gifts_received_screen_wm.dart';
+import 'package:flutter_template/features/common/widgets/app_loading_state_widget.dart';
+import 'package:flutter_template/features/gifts_received/screens/gifts_received_screen/gifts_received_screen_widget_model.dart';
 import 'package:flutter_template/features/navigation/domain/entity/app_route_names.dart';
 import 'package:union_state/union_state.dart';
 
@@ -36,14 +38,15 @@ class GiftsReceivedScreen extends ElementaryWidget<IGiftsReceivedScreenWidgetMod
         unionStateListenable: wm.giftsState,
         builder: (_, gifts) {
           return AppGiftWidget(
+            isReceived:true,
             editGiftsScreen: wm.editGiftsScreen,
             holidayWithGifts: gifts,
             deleteGift: wm.deleteGift,
             openAddGiftScreen: wm.openAddGiftScreen,
           );
         },
-        loadingBuilder: (_, hotel) => const SizedBox(),
-        failureBuilder: (_, exception, hotel) => const SizedBox(),
+        loadingBuilder: (_, hotel) => const AppLoadingStateWidget(),
+        failureBuilder: (_, exception, hotel) => AppFailedStateWidget(loadAgain:wm.loadAgain),
       ),
     );
   }

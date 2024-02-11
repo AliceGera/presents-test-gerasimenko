@@ -12,6 +12,11 @@ abstract class AppRoutePaths {
   /// Path to gifts given screen.
   static const String giftsGivenPath = 'gifts_given';
 
+  /// Path to add gift given screen.
+  static const String addGiftGivenPath = '/add_gift_given';
+
+  /// Path to edit gift given screen.
+  static const String editGiftGivenPath = '/edit_gift_given';
 
   /// Path to holidays screen.
   static const String holidaysPath = 'holidays';

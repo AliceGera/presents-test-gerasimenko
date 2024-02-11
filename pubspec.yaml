@@ -4,7 +4,9 @@ description: a Flutter template project for development.
 publish_to: none
 
 dependencies:
-  syncfusion_flutter_datepicker: ^24.2.4
+  url_launcher: ^6.1.11
+  in_app_review: ^2.0.8
+  calendar_date_picker2: ^0.5.3
   shimmer: ^3.0.0
   image_picker: ^1.0.7
   union_state: ^0.0.1

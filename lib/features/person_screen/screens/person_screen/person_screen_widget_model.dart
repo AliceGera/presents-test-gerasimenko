@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_template/features/app/di/app_scope.dart';
 import 'package:flutter_template/features/common/domain/data/person/person_data.dart';
 import 'package:flutter_template/features/common/mixin/theme_mixin.dart';
-import 'package:flutter_template/features/gifts_received/screens/person_screen/person_screen.dart';
-import 'package:flutter_template/features/gifts_received/screens/person_screen/person_screen_model.dart';
 import 'package:flutter_template/features/navigation/service/router.dart';
+import 'package:flutter_template/features/person_screen/screens/person_screen/person_screen.dart';
+import 'package:flutter_template/features/person_screen/screens/person_screen/person_screen_model.dart';
 import 'package:provider/provider.dart';
 import 'package:union_state/union_state.dart';
 
@@ -16,9 +16,13 @@ PersonScreenWidgetModel personScreenWmFactory(
   BuildContext context,
 ) {
   final appScope = context.read<IAppScope>();
-
-  final model = PersonScreenModel(appScope.personsService);
-  return PersonScreenWidgetModel(model, appScope.router);
+  final model = PersonScreenModel(
+    appScope.personsService,
+  );
+  return PersonScreenWidgetModel(
+    model,
+    appScope.router,
+  );
 }
 
 /// Widget model [PersonScreen]
@@ -26,15 +30,20 @@ class PersonScreenWidgetModel extends WidgetModel<PersonScreen, PersonScreenMode
   /// Create an instance [PersonScreenWidgetModel].
   final AppRouter router;
 
-  PersonScreenWidgetModel(super._model, this.router);
+  PersonScreenWidgetModel(
+    super._model,
+    this.router,
+  );
 
   final _personsState = UnionStateNotifier<List<Person>>([]);
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _commentController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
+  void Function(Person selectedPerson)? deletePerson;
 
   @override
   void initWidgetModel() {
+    _personsState.loading();
     _getPersons();
     _firstNameController.addListener(() {
       model.firstName = _firstNameController.text;
@@ -45,6 +54,8 @@ class PersonScreenWidgetModel extends WidgetModel<PersonScreen, PersonScreenMode
     _lastNameController.addListener(() {
       model.lastName = _lastNameController.text;
     });
+    final args = router.current.args as PersonRouterArgs?;
+    deletePerson = args?.updatePerson;
     super.initWidgetModel();
   }
 
@@ -57,8 +68,12 @@ class PersonScreenWidgetModel extends WidgetModel<PersonScreen, PersonScreenMode
   }
 
   Future<void> _getPersons() async {
-    final persons = await model.getPersons();
-    _personsState.content(persons);
+    try {
+      final persons = await model.getPersons();
+      _personsState.content(persons);
+    } on Exception catch (e) {
+      _personsState.failure(e);
+    }
   }
 
   @override
@@ -83,12 +98,8 @@ class PersonScreenWidgetModel extends WidgetModel<PersonScreen, PersonScreenMode
   Future<void> deletePersonOnTap(Person person) async {
     await model.deletePerson(person);
     await _getPersons();
+    deletePerson?.call(person);
     await router.pop();
-  }
-
-  @override
-  void editPersonOnTap(Person person) {
-    router.push(EditPersonRouter(person: person, loadAgain: loadAgain));
   }
 
   @override
@@ -129,9 +140,6 @@ abstract interface class IPersonScreenWidgetModel with ThemeIModelMixin implemen
 
   ///clean controllers in bottom sheet
   void cleanBottomSheetForAddPersonOnTap();
-
-  /// Navigate to edit Person screen.
-  void editPersonOnTap(Person person);
 
   /// Navigate to choose Person
   void choosePersonOnTap(Person person);

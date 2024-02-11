@@ -14,11 +14,13 @@ class GiftsTable extends Table {
 
   TextColumn get giftsName => text()();
 
-  IntColumn get giftsPrice => integer()();
+  TextColumn get giftsPrice => text()();
 
   BoolColumn get isReceivedGifts => boolean()();
 
   TextColumn get whoGave => text()();
+
+  IntColumn get whoGaveId => integer()();
 
   IntColumn get holidaysId => integer()();
 

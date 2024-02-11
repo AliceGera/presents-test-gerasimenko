@@ -7,8 +7,6 @@ import 'package:flutter_template/features/news/screens/news_screen/news_screen.d
 import 'package:flutter_template/features/news/screens/news_screen/news_screen_model.dart';
 import 'package:provider/provider.dart';
 
-// ignore_for_file: avoid_positional_boolean_parameters
-
 /// Factory for [NewsScreenWidgetModel].
 NewsScreenWidgetModel newsScreenWidgetModelFactory(
   BuildContext context,
@@ -47,7 +45,6 @@ class NewsScreenWidgetModel extends WidgetModel<NewsScreen, NewsScreenModel> imp
   void openNewsScreen() {
     router.push(ReadNewsRouter());
   }
-
 }
 
 /// Interface of [NewsScreenWidgetModel].

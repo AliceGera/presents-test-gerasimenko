@@ -52,10 +52,14 @@ class AppItemListWidget<T> extends StatelessWidget {
                         width: 90,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(8),
-                          child: Image.memory(
-                            photoList[index],
-                            fit: BoxFit.cover,
-                          ),
+                          child: photoList[index].isNotEmpty
+                              ? Image.memory(
+                                  photoList[index],
+                                  fit: BoxFit.cover,
+                                )
+                              : Container(
+                                  color: AppColors.photoColorGray,
+                                ),
                         ),
                       ),
                       Expanded(
@@ -90,6 +94,8 @@ class AppItemListWidget<T> extends StatelessWidget {
             );
             return onItemTap != null
                 ? InkWell(
+                    highlightColor: Colors.transparent,
+                    splashColor: Colors.transparent,
                     onTap: () {
                       onItemTap?.call(values[index]);
                     },

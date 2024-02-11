@@ -4,9 +4,9 @@ import 'package:flutter_template/features/common/domain/data/holidays/holiday_da
 import 'package:flutter_template/features/common/service/holidays_service.dart';
 
 /// Model fol
-class HolidayNameScreenModel extends ElementaryModel {
+class HolidaySelectionScreenModel extends ElementaryModel {
 
-  HolidayNameScreenModel(this._holidaysService) : super();
+  HolidaySelectionScreenModel(this._holidaysService) : super();
   final HolidaysService _holidaysService;
 
   Future<List<Holiday>> getHolidays() async {

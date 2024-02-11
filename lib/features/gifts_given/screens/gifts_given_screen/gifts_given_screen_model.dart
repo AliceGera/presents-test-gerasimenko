@@ -1,26 +1,58 @@
+import 'dart:typed_data';
+
 import 'package:elementary/elementary.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_template/config/app_config.dart';
-import 'package:flutter_template/features/gifts_given/screens/gifts_given_screen/gifts_given_screen.dart';
+import 'package:flutter_template/features/common/domain/data/gifts/gift_data.dart';
+import 'package:flutter_template/features/common/domain/data/holiday_with_gifts/holiday_with_gifts_data.dart';
+import 'package:flutter_template/features/common/service/gifts_service.dart';
+import 'package:flutter_template/features/common/service/holidays_and_gifts_service.dart';
 
-// ignore_for_file: avoid_positional_boolean_parameters
-
-/// Model for [GiftsGivenScreen].
+/// Model fol
 class GiftsGivenScreenModel extends ElementaryModel {
-  /// Interface for handle error in business logic.
-  final ErrorHandler errorHandler;
+  GiftsGivenScreenModel(this._holidayAndGiftsService, this._giftsService) : super();
+  final GiftsService _giftsService;
+  final HolidayAndGiftsService _holidayAndGiftsService;
+  Gift _gift = Gift.init();
 
-  /// Config change Notifier.
-  late ValueNotifier<AppConfig> configNotifier;
+  Gift get gift => _gift;
 
-  /// Create an instance [GiftsGivenScreenModel].
-  GiftsGivenScreenModel(
-    this.errorHandler,
-  ) : super(errorHandler: errorHandler);
+  set gift(Gift newGift) {
+    _gift = newGift;
+  }
 
-  @override
-  void init() {}
+  set giftName(String newGiftName) {
+    _gift = _gift.copyWith(giftName: newGiftName);
+  }
 
-  @override
-  void dispose() {}
+  set holidayId(int newHolidayId) {
+    _gift = _gift.copyWith(holidayId: newHolidayId);
+  }
+
+  set giftComment(String newGiftComment) {
+    _gift = _gift.copyWith(giftComment: newGiftComment);
+  }
+
+  set photo(Uint8List newPhoto) {
+    _gift = _gift.copyWith(photo: newPhoto);
+  }
+
+  set whoGavePresent(String newWhoGavePresent) {
+    _gift = _gift.copyWith(whoGave: newWhoGavePresent);
+  }
+
+  set holidayName(String newHolidayName) {
+    _gift = _gift.copyWith(holidayName: newHolidayName);
+  }
+
+  Future<void> editGift() async {
+    await _giftsService.editGift(_gift);
+  }
+
+  Future<void> deleteGift(Gift gift) async {
+    await _giftsService.deleteGift(gift);
+  }
+
+  Future<List<HolidayWithGiftsData>> getGifts() async {
+    final gifts = await _holidayAndGiftsService.getHolidaysWithGifts();
+    return gifts;
+  }
 }

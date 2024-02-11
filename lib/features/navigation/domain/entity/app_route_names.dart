@@ -12,6 +12,12 @@ abstract class AppRouteNames {
   /// GiftsGivenScreen route name.
   static const String giftsGivenScreen = 'giftsGivenRouter';
 
+  /// AddGiftGivenScreen route name.
+  static const String addGiftGivenScreen = 'addGiftGivenRouter';
+
+  /// EditGiftGivenScreen route name.
+  static const String editGiftGivenScreen = 'editGiftGivenRouter';
+
   /// HolidaysScreen route name.
   static const String holidaysScreen = 'holidaysRouter';
 

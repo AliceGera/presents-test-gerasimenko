@@ -53,7 +53,9 @@ class AppScope implements IAppScope {
   VoidCallback holidayRebuilder = () {};
 
   @override
-  VoidCallback gifRecievedRebuilder = () {};
+  VoidCallback giftRecievedRebuilder = () {};
+  @override
+  VoidCallback giftGivenRebuilder = () {};
 
   @override
   Dio get dio => _dio;
@@ -168,7 +170,9 @@ abstract class IAppScope {
 
   VoidCallback get holidayRebuilder;
 
-  VoidCallback get gifRecievedRebuilder;
+  VoidCallback get giftRecievedRebuilder;
+
+  VoidCallback get giftGivenRebuilder;
 
   /// Class that coordinates navigation for the whole app.
   AppRouter get router;

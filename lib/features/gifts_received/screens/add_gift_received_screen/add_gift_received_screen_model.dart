@@ -4,13 +4,16 @@ import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/config/app_config.dart';
 import 'package:flutter_template/features/common/domain/data/gifts/gift_data.dart';
+import 'package:flutter_template/features/common/domain/data/holidays/holiday_data.dart';
 import 'package:flutter_template/features/common/service/gifts_service.dart';
+import 'package:flutter_template/features/common/service/holidays_service.dart';
 
 /// Model for
 class AddGiftReceivedScreenModel extends ElementaryModel {
   /// Interface for handle error in business logic.
   final ErrorHandler errorHandler;
   final GiftsService _giftsService;
+  final HolidaysService _holidaysService;
 
   /// Config change Notifier.
   late ValueNotifier<AppConfig> configNotifier;
@@ -20,6 +23,7 @@ class AddGiftReceivedScreenModel extends ElementaryModel {
   Uint8List _photo = Uint8List(0);
   int _giftRate = 0;
   String _whoGavePresent = '';
+  int _whoGaveId = 0;
 
   String _holidayName = '';
 
@@ -59,6 +63,10 @@ class AddGiftReceivedScreenModel extends ElementaryModel {
     _whoGavePresent = newWhoGavePresent;
   }
 
+  set whoGaveId(int whoGaveId) {
+    _whoGaveId = whoGaveId;
+  }
+
   String get holidayName => _holidayName;
 
   set holidayName(String newHolidayName) {
@@ -70,9 +78,10 @@ class AddGiftReceivedScreenModel extends ElementaryModel {
         photo: _photo,
         giftRaiting: _giftRate,
         giftName: _giftName,
-        giftPrice: 0,
+        giftPrice: '',
         isReceivedGift: true,
         whoGave: _whoGavePresent,
+        whoGaveId: _whoGaveId,
         holidayId: _holidayId,
         giftComment: _giftComment,
       );
@@ -84,18 +93,25 @@ class AddGiftReceivedScreenModel extends ElementaryModel {
         photo: _photo,
         giftRaiting: _giftRate,
         giftName: _giftName,
-        giftPrice: 0,
+        giftPrice: '',
         isReceivedGift: true,
         whoGave: _whoGavePresent,
+        whoGaveId: _whoGaveId,
         holidayId: _holidayId,
         giftComment: _giftComment,
       ),
     );
   }
 
+  Future<List<Holiday>> getHolidays() async {
+    final holidays = await _holidaysService.getHolidays();
+    return holidays;
+  }
+
   /// Create an instance [AddGiftReceivedScreenModel].
   AddGiftReceivedScreenModel(
     this.errorHandler,
     this._giftsService,
+    this._holidaysService,
   ) : super(errorHandler: errorHandler);
 }

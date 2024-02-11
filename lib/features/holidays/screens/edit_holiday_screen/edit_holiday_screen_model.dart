@@ -12,7 +12,7 @@ class EditHolidayScreenModel extends ElementaryModel {
   final ErrorHandler errorHandler;
   final HolidaysService _holidaysService;
   String _holidayName = '';
-  String _holidayDate = '';
+  DateTime? _holidayDate ;
   Uint8List _photo = Uint8List(0);
   int _id = 0;
 
@@ -22,9 +22,9 @@ class EditHolidayScreenModel extends ElementaryModel {
     _holidayName = newHolidayName;
   }
 
-  String get holidayDate => _holidayDate;
+  DateTime? get holidayDate => _holidayDate;
 
-  set holidayDate(String newHolidayDate) {
+  set holidayDate(DateTime? newHolidayDate) {
     _holidayDate = newHolidayDate;
   }
 

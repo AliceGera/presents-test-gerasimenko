@@ -13,10 +13,38 @@ import 'package:flutter_template/features/news/screens/news_screen/news_screen_w
 )
 class NewsScreen extends ElementaryWidget<INewsScreenWidgetModel> {
   /// Create an instance [NewsScreen].
-  const NewsScreen({
+  NewsScreen({
     Key? key,
     WidgetModelFactory wmFactory = newsScreenWidgetModelFactory,
   }) : super(wmFactory, key: key);
+  List<String> images = [
+    'assets/images/balls.png',
+    'assets/images/image.png',
+    'assets/images/dog.png',
+    'assets/images/shirts.png',
+    'assets/images/social_media.png',
+  ];
+  List<String> title = [
+    'The Art of Gift Giving: How to Choose the Perfect Present',
+    'Exquisite Mementos: The 12 Best Gifts from Dubai',
+    'Top 30 Gifts for Your Pet: Show Your Furry Friend Some Love',
+    '6 Attainable Ways to Craft Your Custom T-shirt & Apparel',
+    'Social Medias Impact on Gift-giving and Generosity',
+  ];
+  List<String> date = [
+    '01.11.2024',
+    '17.01.2024',
+    '02.05.2024',
+    '18.01.2024',
+    '15.01.2024',
+  ];
+  List<String> time = [
+    '4 minutes',
+    '12 minutes',
+    '7 minutes',
+    '10 minutes',
+    '6 minutes',
+  ];
 
   @override
   Widget build(INewsScreenWidgetModel wm) {
@@ -30,87 +58,71 @@ class NewsScreen extends ElementaryWidget<INewsScreenWidgetModel> {
           ),
         ),
       ),
-      body: _Body(openNewsScreen: wm.openNewsScreen),
-    );
-  }
-}
-
-class _Body extends StatelessWidget {
-  final VoidCallback openNewsScreen;
-
-  const _Body({required this.openNewsScreen});
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        child: Column(
-          children: [
-            ListView.separated(
-              separatorBuilder: (context, index) => const SizedBox(height: 16),
-              physics: const ClampingScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: 11,
-              itemBuilder: (context, index) => InkWell(
-                onTap: openNewsScreen,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Stack(
-                    alignment: AlignmentDirectional.bottomEnd,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 80),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: FittedBox(
-                            fit: BoxFit.fill,
-                            child: Image.asset('assets/images/image.png'),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 90,
-                        child: DecoratedBox(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            color: AppColors.darkBlue,
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'The Art of Gift Giving: How to Choose the Perfect Present',
-                                  style: AppTextStyle.regular14.value.copyWith(color: AppColors.white),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 4),
-                                  child: Text(
-                                    '25.01.2024 • 5 minutes',
-                                    style: AppTextStyle.regular12.value.copyWith(color: AppColors.lightGray),
-                                  ),
-                                )
-                              ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          child: Column(
+            children: [
+              ListView.separated(
+                separatorBuilder: (context, index) => const SizedBox(height: 16),
+                physics: const ClampingScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: title.length,
+                itemBuilder: (context, index) => InkWell(
+                  onTap: wm.openNewsScreen,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Stack(
+                      alignment: AlignmentDirectional.bottomEnd,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 80),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: FittedBox(
+                              fit: BoxFit.fill,
+                              child: Image.asset(images[index]),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                        SizedBox(
+                          height: 90,
+                          width: double.infinity,
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: AppColors.darkBlue,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    title[index],
+                                    style: AppTextStyle.regular14.value.copyWith(color: AppColors.white),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 4),
+                                    child: Text(
+                                      '${date[index]} ${time[index]}',
+                                      style: AppTextStyle.regular12.value.copyWith(color: AppColors.lightGray),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  /*child: Image.network(
-                  //subject['images']['large'],
-                  height: 150.0,
-                  width: 100.0,
-                ),*/
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
-    // return Column();
   }
 }

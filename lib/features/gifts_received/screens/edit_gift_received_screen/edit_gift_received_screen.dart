@@ -7,7 +7,7 @@ import 'package:flutter_template/assets/res/resources.dart';
 import 'package:flutter_template/assets/text/text_style.dart';
 import 'package:flutter_template/features/common/domain/data/gifts/gift_data.dart';
 import 'package:flutter_template/features/common/domain/data/holidays/holiday_data.dart';
-import 'package:flutter_template/features/common/widgets/app_add_or_edit_gift_widget.dart';
+import 'package:flutter_template/features/common/widgets/app_edit_gift_widget.dart';
 import 'package:flutter_template/features/common/widgets/delete_dialog_widget.dart';
 import 'package:flutter_template/features/gifts_received/screens/edit_gift_received_screen/edit_gift_received_screen_widget_model.dart';
 import 'package:flutter_template/features/navigation/domain/entity/app_route_names.dart';
@@ -22,6 +22,7 @@ class EditGiftReceivedScreen extends ElementaryWidget<IEditGiftReceivedScreenWid
     required this.loadAgain,
     required this.holiday,
     required this.gift,
+    this.updateHoliday,
     Key? key,
     WidgetModelFactory wmFactory = editGiftReceivedScreenWidgetModelFactory,
   }) : super(wmFactory, key: key);
@@ -29,6 +30,7 @@ class EditGiftReceivedScreen extends ElementaryWidget<IEditGiftReceivedScreenWid
   final VoidCallback loadAgain;
   final Gift gift;
   final Holiday holiday;
+  final void Function(Holiday selectedHoliday)? updateHoliday;
 
   @override
   Widget build(IEditGiftReceivedScreenWidgetModel wm) {
@@ -75,7 +77,7 @@ class EditGiftReceivedScreen extends ElementaryWidget<IEditGiftReceivedScreenWid
       body: ValueListenableBuilder<Gift>(
         builder: (context, gift, child) {
           return SingleChildScrollView(
-            child: AppAddOrEditGiftWidget(
+            child: AppEditGiftWidget(
               savePhoto: wm.savePhoto,
               closeScreen: wm.closeScreen,
               personScreen: wm.choosePersonOnTap,
@@ -83,10 +85,11 @@ class EditGiftReceivedScreen extends ElementaryWidget<IEditGiftReceivedScreenWid
               giftNameController: wm.giftNameController,
               commentController: wm.commentController,
               gift: gift,
-              editGift: wm.editGiftOnTap,
+              saveGift: wm.editGiftOnTap,
               loadAgain: loadAgain,
               rateOnTap: wm.rateOnTap,
               isEdit: true,
+              isReceived: true,
             ),
           );
         },

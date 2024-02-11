@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_template/assets/colors/app_colors.dart';
 import 'package:flutter_template/features/common/domain/data/person/person_data.dart';
 import 'package:flutter_template/features/common/widgets/person_bottom_sheet_widget.dart';
-import 'package:flutter_template/features/gifts_received/screens/edit_person_screen/edit_person_screen_widget_model.dart';
 import 'package:flutter_template/features/navigation/domain/entity/app_route_names.dart';
+import 'package:flutter_template/features/person_screen/screens/edit_person_screen/edit_person_screen_widget_model.dart';
 
 /// GiftsGiven screens.
 @RoutePage(
@@ -14,15 +14,17 @@ import 'package:flutter_template/features/navigation/domain/entity/app_route_nam
 )
 class EditPersonScreen extends ElementaryWidget<IEditPersonScreenWidgetModel> {
   /// Create an instance [EditPersonScreen].
-  const EditPersonScreen({
+  EditPersonScreen({
     required this.loadAgain,
     required this.person,
+    this.updatePerson,
     Key? key,
     WidgetModelFactory wmFactory = editPersonScreenWidgetModelFactory,
   }) : super(wmFactory, key: key);
 
   final VoidCallback loadAgain;
   final Person person;
+  void Function(Person)? updatePerson;
 
   @override
   Widget build(IEditPersonScreenWidgetModel wm) {
@@ -30,7 +32,9 @@ class EditPersonScreen extends ElementaryWidget<IEditPersonScreenWidgetModel> {
       loadAgain: loadAgain,
       wm: wm,
       initWidgetModel: () {
-        wm.initBottomSheetWidgetModel(person);
+        wm
+          ..initBottomSheetWidgetModel(person)
+          ..updatePerson = updatePerson;
       },
     );
   }
@@ -72,7 +76,6 @@ class _BottomSheetState extends State<BottomSheet> {
             child: ValueListenableBuilder<Uint8List>(
               builder: (context, photo, child) {
                 return PersonBottomSheetWidget(
-
                   isEdit: true,
                   addOrEditPerson: widget.wm.editPerson,
                   loadAgain: widget.loadAgain,

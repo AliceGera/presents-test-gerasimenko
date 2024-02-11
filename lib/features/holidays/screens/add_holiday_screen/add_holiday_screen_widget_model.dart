@@ -33,15 +33,12 @@ class AddHolidayScreenWidgetModel extends WidgetModel<AddHolidayScreen, AddHolid
   );
 
   final TextEditingController _holidayNameController = TextEditingController();
-  final TextEditingController _dateController = TextEditingController();
+  final _dateTimeState = ValueNotifier<DateTime?>(null);
 
   @override
   void initWidgetModel() {
     _holidayNameController.addListener(() {
       model.holidayName = _holidayNameController.text;
-    });
-    _dateController.addListener(() {
-      model.holidayDate = _dateController.text;
     });
 
     super.initWidgetModel();
@@ -50,8 +47,13 @@ class AddHolidayScreenWidgetModel extends WidgetModel<AddHolidayScreen, AddHolid
   @override
   void dispose() {
     _holidayNameController.dispose();
-    _dateController.dispose();
     super.dispose();
+  }
+
+  @override
+  void addDate(DateTime? date) {
+    model.holidayDate = date;
+    _dateTimeState.value = date;
   }
 
   @override
@@ -74,7 +76,7 @@ class AddHolidayScreenWidgetModel extends WidgetModel<AddHolidayScreen, AddHolid
   TextEditingController get holidayNameController => _holidayNameController;
 
   @override
-  TextEditingController get dateController => _dateController;
+  ValueNotifier<DateTime?> get dateTimeState => _dateTimeState;
 }
 
 /// Interface of [AddHolidayScreenWidgetModel].
@@ -88,9 +90,10 @@ abstract class IAddHolidayScreenWidgetModel implements IWidgetModel {
   ///save photo
   void savePhoto(Uint8List photo);
 
+  void addDate(DateTime? date);
+
   /// Method get email controller for holiday name field
   TextEditingController get holidayNameController;
 
-  /// Method get date controller for date field
-  TextEditingController get dateController;
+  ValueNotifier<DateTime?> get dateTimeState;
 }

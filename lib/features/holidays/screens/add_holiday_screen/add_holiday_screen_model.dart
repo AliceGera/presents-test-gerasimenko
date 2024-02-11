@@ -10,21 +10,25 @@ class AddHolidayScreenModel extends ElementaryModel {
   /// Interface for handle error in business logic.
   final ErrorHandler errorHandler;
   final HolidaysService _holidaysService;
+
   String _holidayName = '';
-  String _holidayDate = '';
-  Uint8List _photo =Uint8List(0) ;
+  DateTime? _holidayDate;
+  Uint8List _photo = Uint8List(0);
+
   String get holidayName => _holidayName;
 
   set holidayName(String newHolidayName) {
     _holidayName = newHolidayName;
   }
 
-  String get holidayDate => _holidayDate;
+  DateTime? get holidayDate => _holidayDate;
 
-  set holidayDate(String newHolidayDate) {
-    _holidayDate = newHolidayDate;
+  set holidayDate(DateTime? date) {
+    _holidayDate = date;
   }
+
   Uint8List get photo => _photo;
+
   set photo(Uint8List newPhoto) {
     _photo = newPhoto;
   }
@@ -49,4 +53,3 @@ class AddHolidayScreenModel extends ElementaryModel {
     this._holidaysService,
   ) : super(errorHandler: errorHandler);
 }
-

@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:elementary/elementary.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_template/assets/colors/app_colors.dart';
@@ -8,13 +7,15 @@ import 'package:flutter_template/assets/res/resources.dart';
 import 'package:flutter_template/assets/text/text_style.dart';
 import 'package:flutter_template/features/common/domain/data/person/person_data.dart';
 import 'package:flutter_template/features/common/widgets/app_button_widget.dart';
+import 'package:flutter_template/features/common/widgets/app_failed_state_widget.dart';
 import 'package:flutter_template/features/common/widgets/app_iteams_list_widget.dart';
+import 'package:flutter_template/features/common/widgets/app_loading_state_widget.dart';
 import 'package:flutter_template/features/common/widgets/choose_edit_or_delete_dialog_widget.dart';
 import 'package:flutter_template/features/common/widgets/delete_dialog_widget.dart';
 import 'package:flutter_template/features/common/widgets/person_bottom_sheet_widget.dart';
-import 'package:flutter_template/features/gifts_received/screens/edit_person_screen/edit_person_screen_export.dart';
-import 'package:flutter_template/features/gifts_received/screens/person_screen/person_screen_widget_model.dart';
 import 'package:flutter_template/features/navigation/domain/entity/app_route_names.dart';
+import 'package:flutter_template/features/person_screen/screens/edit_person_screen/edit_person_screen.dart';
+import 'package:flutter_template/features/person_screen/screens/person_screen/person_screen_widget_model.dart';
 import 'package:union_state/union_state.dart';
 
 /// Main widget for GiftsReceivedScreen feature.
@@ -26,7 +27,12 @@ class PersonScreen extends ElementaryWidget<IPersonScreenWidgetModel> {
   const PersonScreen({
     Key? key,
     WidgetModelFactory wmFactory = personScreenWmFactory,
+    this.updatePerson,
+    this.deletePerson,
   }) : super(wmFactory, key: key);
+
+  final void Function(Person selectedPerson)? updatePerson;
+  final void Function(Person selectedPerson)? deletePerson;
 
   @override
   Widget build(IPersonScreenWidgetModel wm) {
@@ -46,7 +52,11 @@ class PersonScreen extends ElementaryWidget<IPersonScreenWidgetModel> {
         ),
       ),
       body: SafeArea(
-        child: _Body(wm: wm),
+        child: _Body(
+          wm: wm,
+          updatePerson: updatePerson,
+          deletePerson: deletePerson,
+        ),
       ),
     );
   }
@@ -54,8 +64,13 @@ class PersonScreen extends ElementaryWidget<IPersonScreenWidgetModel> {
 
 class _Body extends StatelessWidget {
   final IPersonScreenWidgetModel wm;
-
-  _Body({required this.wm});
+  final void Function(Person selectedPerson)? updatePerson;
+  final void Function(Person selectedPerson)?  deletePerson;
+  _Body({
+    required this.wm,
+    this.updatePerson,
+    this.deletePerson,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -80,6 +95,9 @@ class _Body extends StatelessWidget {
                       editGiftsScreen: () {
                         Navigator.pop(ctx);
                         showModalBottomSheet<void>(
+                          constraints: BoxConstraints(
+                            maxWidth:  MediaQuery.of(context).size.width,
+                          ),
                           shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
                           ),
@@ -90,6 +108,7 @@ class _Body extends StatelessWidget {
                             return EditPersonScreen(
                               loadAgain: wm.loadAgain,
                               person: person,
+                              updatePerson: updatePerson,
                             );
                           },
                         );
@@ -100,6 +119,7 @@ class _Body extends StatelessWidget {
                           context: context,
                           builder: (ctx) => DeleteDialogWidget(
                             deleteGift: () async {
+                              deletePerson?.call(person);
                               await wm.deletePersonOnTap.call(person);
                             },
                           ),
@@ -119,6 +139,9 @@ class _Body extends StatelessWidget {
                   title: 'Add a person +',
                   onPressed: () {
                     showModalBottomSheet<void>(
+                      constraints: BoxConstraints(
+                        maxWidth:  MediaQuery.of(context).size.width,
+                      ),
                       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
                       backgroundColor: AppColors.darkBlue,
                       context: context,
@@ -150,8 +173,8 @@ class _Body extends StatelessWidget {
           ),
         );
       },
-      loadingBuilder: (_, hotel) => const SizedBox(),
-      failureBuilder: (_, exception, hotel) => const SizedBox(),
+      loadingBuilder: (_, hotel) =>const AppLoadingStateWidget(),
+      failureBuilder: (_, exception, hotel) => AppFailedStateWidget(loadAgain:wm.loadAgain),
     );
   }
 }

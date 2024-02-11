@@ -11,25 +11,17 @@ class GiftsRepository {
     final some = await _apiClient.getGifts();
     return mapDatabaseToGifts(some);
   }
+
   Future<void> addGift(Gift data) async {
     await _apiClient.addGift(data);
   }
-  Future<void> deleteGift(Gift data) async {
 
+  Future<void> deleteGift(Gift data) async {
     await _apiClient.deleteGift(data);
   }
+
   Future<void> editGift(Gift data) async {
     await _apiClient.editGift(data);
   }
- /* Future<void> addHoliday(Holiday data) async {
-    await _apiClient.addHoliday(data);
-  }
 
-  Future<void> editHoliday(Holiday data) async {
-    await _apiClient.editHoliday(data);
-  }
-  Future<void> deleteHoliday(Holiday data) async {
-
-    await _apiClient.deleteHoliday(data);
-  }*/
 }

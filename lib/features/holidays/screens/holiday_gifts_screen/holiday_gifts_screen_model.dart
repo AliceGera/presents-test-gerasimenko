@@ -14,6 +14,7 @@ class HolidayGiftsScreenModel extends ElementaryModel {
   final HolidaysService _holidaysService;
   final HolidayAndGiftsService _holidayAndGiftsService;
   final GiftsService _giftsService;
+
   Holiday _holiday = Holiday.init();
 
   set holiday(Holiday newHoliday) => _holiday = newHoliday;

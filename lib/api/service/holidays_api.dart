@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart';
 import 'package:flutter_template/api/data/holiday_database.dart';
 import 'package:flutter_template/features/common/domain/data/holidays/holiday_data.dart';
 
@@ -14,7 +15,7 @@ class HolidaysApi {
     await appDatabase.into(appDatabase.holidaysTable).insert(
           HolidaysTableCompanion.insert(
             holidaysName: data.holidayName,
-            holidayDate: data.holidayDate,
+            holidayDate: Value(data.holidayDate),
             photo: data.photo,
           ),
         );
@@ -25,7 +26,7 @@ class HolidaysApi {
     await resultTable.write(
       HolidaysTableCompanion.insert(
         holidaysName: data.holidayName,
-        holidayDate: data.holidayDate,
+
         photo: data.photo,
       ),
     );

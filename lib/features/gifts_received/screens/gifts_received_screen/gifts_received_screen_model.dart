@@ -51,7 +51,7 @@ class GiftsReceivedScreenModel extends ElementaryModel {
     await _giftsService.deleteGift(gift);
   }
 
-  Future<List<HolidayWithGiftsData>> getGifts() async {
+  Future<List<HolidayWithGiftsData>> getHolidaysWithGifts() async {
     final gifts = await _holidayAndGiftsService.getHolidaysWithGifts();
     return gifts;
   }

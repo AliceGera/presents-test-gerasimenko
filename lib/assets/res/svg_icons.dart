@@ -26,6 +26,7 @@ class SvgIcons {
   static const String editGift ='assets/icons/edit_gift.svg';
   static const String trash ='assets/icons/trash.svg';
   static const String checkChoose ='assets/icons/check_choose.svg';
+  static const String datePicker ='assets/icons/date_picker.svg';
   static const String close ='assets/icons/close.svg';
   static const String photoCamera ='assets/icons/photoCamera.svg';
   static const String deletePhoto ='assets/icons/delete_photo.svg';
@@ -35,5 +36,6 @@ class SvgIcons {
   static const String checkChooseDialog ='assets/icons/check_choose_dialog.svg';
   static const String addGift ='assets/icons/add_gift.svg';
   static const String errorState ='assets/icons/error.svg';
+  static const String dollar='assets/icons/dollar.svg';
   static const List<String> values = [testSvg];
 }

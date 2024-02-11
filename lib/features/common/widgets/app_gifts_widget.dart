@@ -20,11 +20,13 @@ class AppGiftWidget extends StatelessWidget {
   final List<HolidayWithGiftsData> holidayWithGifts;
   final void Function(Gift, Holiday) editGiftsScreen;
   final Future<void> Function(Gift) deleteGift;
+  final bool isReceived;
 
   const AppGiftWidget({
     required this.editGiftsScreen,
     required this.deleteGift,
     required this.holidayWithGifts,
+    required this.isReceived,
     super.key,
     this.openAddGiftScreen,
   });
@@ -34,129 +36,142 @@ class AppGiftWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 12),
           Expanded(
-            child: SingleChildScrollView(
-              child: ListView.separated(
-                separatorBuilder: (context, ind) => const SizedBox(height: 32),
-                physics: const ClampingScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: holidayWithGifts.length,
-                itemBuilder: (context, ind) => Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+            child: ListView.separated(
+              separatorBuilder: (context, ind) => (isReceived ? holidayWithGifts[ind].giftsReceived.isNotEmpty : holidayWithGifts[ind].giftsGiven.isNotEmpty)
+                  ? const SizedBox(height: 32)
+                  : const SizedBox(),
+              physics: const ClampingScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: holidayWithGifts.length,
+              itemBuilder: (context, ind) => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (isReceived ? holidayWithGifts[ind].giftsReceived.isNotEmpty : holidayWithGifts[ind].giftsGiven.isNotEmpty)
                     Padding(
                       padding: const EdgeInsets.only(bottom: 16),
-                      child: holidayWithGifts[ind].giftsReceived.isNotEmpty
-                          ? Text(
-                              '${holidayWithGifts[ind].holiday.holidayName} ${holidayWithGifts[ind].holiday.holidayDate}',
-                              style: AppTextStyle.medium16.value.copyWith(color: AppColors.white),
-                            )
-                          : const SizedBox(),
+                      child: Text(
+                        '${holidayWithGifts[ind].holiday.holidayName}, ${holidayWithGifts[ind].holiday.holidayDate}',
+                        style: AppTextStyle.medium16.value.copyWith(color: AppColors.white),
+                      ),
                     ),
-                    if (holidayWithGifts[ind].giftsReceived.isNotEmpty)
-                      SizedBox(
-                        height: 250,
-                        child: ListView.separated(
-                          physics: const ClampingScrollPhysics(),
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          itemCount: holidayWithGifts[ind].giftsReceived.length,
-                          itemBuilder: (context, index) => SizedBox(
-                            height: 250,
-                            width: 170,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Stack(
-                                  alignment: AlignmentDirectional.topEnd,
-                                  children: [
-                                    SizedBox(
-                                      height: 170,
-                                      width: 170,
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(8),
-                                        child: holidayWithGifts[ind].giftsReceived[index].photo.isNotEmpty
-                                            ? Image.memory(
-                                                holidayWithGifts[ind].giftsReceived[index].photo,
-                                                fit: BoxFit.cover,
-                                              )
-                                            : Container(
-                                                color: AppColors.photoColorGray,
-                                              ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8),
-                                      child: Builder(builder: (context) {
-                                        return InkWell(
-                                          highlightColor: Colors.transparent,
-                                          splashColor: Colors.transparent,
-                                          onTap: () => showDialog<void>(
-                                              context: context,
-                                              builder: (ctx) => EditOrDeleteDialogWidget(
-                                                    editGiftsScreen: () {
-                                                      editGiftsScreen.call(
-                                                        holidayWithGifts[ind].giftsReceived[index],
-                                                        holidayWithGifts[ind].holiday,
-                                                      );
-                                                      Navigator.pop(ctx);
-                                                    },
-                                                    deleteGift: () {
-                                                      showDialog<void>(
-                                                        context: context,
-                                                        builder: (ctx) => DeleteDialogWidget(
-                                                          deleteGift: () async {
-                                                            Navigator.pop(ctx);
-                                                            await deleteGift.call(holidayWithGifts[ind].giftsReceived[index]);
-                                                          },
-                                                        ),
-                                                      );
-                                                    },
-                                                  )),
-                                          child: SvgPicture.asset(SvgIcons.editGift),
-                                        );
-                                      }),
-
-                                      //),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  holidayWithGifts[ind].giftsReceived[index].giftName,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: AppTextStyle.bold14.value.copyWith(color: AppColors.white),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  holidayWithGifts[ind].giftsReceived[index].whoGave,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: AppTextStyle.regular13.value.copyWith(color: AppColors.white),
-                                ),
-                                const SizedBox(height: 8),
-                                Expanded(
-                                  child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: 5,
-                                    itemBuilder: (context, itemIndex) => Icon(
-                                      Icons.star,
-                                      size: 20,
-                                      color: (itemIndex <= holidayWithGifts[ind].giftsReceived[index].giftRaiting - 1) ? AppColors.fillStar : AppColors.emptyStar,
+                  if (isReceived ? holidayWithGifts[ind].giftsReceived.isNotEmpty : holidayWithGifts[ind].giftsGiven.isNotEmpty)
+                    SizedBox(
+                      height: 250,
+                      child: ListView.separated(
+                        physics: const ClampingScrollPhysics(),
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: isReceived ? holidayWithGifts[ind].giftsReceived.length : holidayWithGifts[ind].giftsGiven.length,
+                        itemBuilder: (context, index) => SizedBox(
+                          height: 250,
+                          width: 170,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Stack(
+                                alignment: AlignmentDirectional.topEnd,
+                                children: [
+                                  SizedBox(
+                                    height: 170,
+                                    width: 170,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(8),
+                                      child: (isReceived
+                                              ? holidayWithGifts[ind].giftsReceived[index].photo.isNotEmpty
+                                              : holidayWithGifts[ind].giftsGiven[index].photo.isNotEmpty)
+                                          ? Image.memory(
+                                              isReceived ? holidayWithGifts[ind].giftsReceived[index].photo : holidayWithGifts[ind].giftsGiven[index].photo,
+                                              fit: BoxFit.cover,
+                                            )
+                                          : Container(
+                                              color: AppColors.photoColorGray,
+                                            ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8),
+                                    child: Builder(builder: (context) {
+                                      return InkWell(
+                                        highlightColor: Colors.transparent,
+                                        splashColor: Colors.transparent,
+                                        onTap: () => showDialog<void>(
+                                            context: context,
+                                            builder: (ctx) => EditOrDeleteDialogWidget(
+                                                  editGiftsScreen: () {
+                                                    editGiftsScreen.call(
+                                                      isReceived ? holidayWithGifts[ind].giftsReceived[index] : holidayWithGifts[ind].giftsGiven[index],
+                                                      holidayWithGifts[ind].holiday,
+                                                    );
+                                                    Navigator.pop(ctx);
+                                                  },
+                                                  deleteGift: () {
+                                                    showDialog<void>(
+                                                      context: context,
+                                                      builder: (ctx) => DeleteDialogWidget(
+                                                        deleteGift: () async {
+                                                          Navigator.pop(ctx);
+                                                          await deleteGift.call(isReceived
+                                                              ? holidayWithGifts[ind].giftsReceived[index]
+                                                              : holidayWithGifts[ind].giftsGiven[index]);
+                                                        },
+                                                      ),
+                                                    );
+                                                  },
+                                                )),
+                                        child: SvgPicture.asset(SvgIcons.editGift),
+                                      );
+                                    }),
+
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                isReceived ? holidayWithGifts[ind].giftsReceived[index].giftName : holidayWithGifts[ind].giftsGiven[index].giftName,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: AppTextStyle.bold14.value.copyWith(color: AppColors.white),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                isReceived ? holidayWithGifts[ind].giftsReceived[index].whoGave : holidayWithGifts[ind].giftsGiven[index].whoGave,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: AppTextStyle.regular13.value.copyWith(color: AppColors.lightGray),
+                              ),
+                              const SizedBox(height: 8),
+                              if (isReceived) Expanded(
+                                      child: ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: 5,
+                                        itemBuilder: (context, itemIndex) => Icon(
+                                          Icons.star,
+                                          size: 20,
+                                          color: (itemIndex <=
+                                                  (isReceived
+                                                      ? (holidayWithGifts[ind].giftsReceived[index].giftRaiting - 1)
+                                                      : (holidayWithGifts[ind].giftsGiven[index].giftRaiting - 1)))
+                                              ? AppColors.fillStar
+                                              : AppColors.emptyStar,
+                                        ),
+                                      ),
+                                    ) else Text(
+                                      '\$ ${holidayWithGifts[ind].giftsGiven[index].giftPrice}',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: AppTextStyle.bold14.value.copyWith(color: AppColors.lightGray),
+                                    ),
+                            ],
                           ),
-                          separatorBuilder: (context, index) => const SizedBox(width: 7),
                         ),
+                        separatorBuilder: (context, index) => const SizedBox(width: 7),
                       ),
-                  ],
-                ),
+                    ),
+                ],
               ),
             ),
           ),

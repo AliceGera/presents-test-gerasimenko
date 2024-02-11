@@ -6,13 +6,14 @@ import 'package:flutter_template/assets/res/resources.dart';
 import 'package:flutter_template/assets/text/text_style.dart';
 import 'package:flutter_template/features/common/domain/data/holidays/holiday_data.dart';
 import 'package:flutter_template/features/common/widgets/app_button_widget.dart';
+import 'package:flutter_template/features/common/widgets/app_failed_state_widget.dart';
 import 'package:flutter_template/features/common/widgets/app_iteams_list_widget.dart';
+import 'package:flutter_template/features/common/widgets/app_loading_state_widget.dart';
 import 'package:flutter_template/features/common/widgets/choose_edit_or_delete_dialog_widget.dart';
 import 'package:flutter_template/features/common/widgets/delete_dialog_widget.dart';
-import 'package:flutter_template/features/common/widgets/failed_state_screen.dart';
-import 'package:flutter_template/features/holidays/screens/holidays_screen/holidays_screen_wm.dart';
-import 'package:flutter_template/features/holidays/screens/holidays_screen/widgets/loading_holidays_widget.dart';
+import 'package:flutter_template/features/holidays/screens/holidays_screen/holidays_screen_widget_model.dart';
 import 'package:flutter_template/features/navigation/domain/entity/app_route_names.dart';
+import 'package:intl/intl.dart';
 import 'package:union_state/union_state.dart';
 
 /// Main widget for HolidaysScreen feature.
@@ -63,7 +64,7 @@ class _Body extends StatelessWidget {
             children: [
               AppItemListWidget<Holiday>(
                 mainNames: holidays.map((e) => e.holidayName).toList(),
-                secondText: holidays.map((e) => e.holidayDate).toList(),
+                secondText: holidays.map((e) => e.holidayDate != null ? DateFormat('dd.MM.yyyy').format(e.holidayDate!) : '').toList(),
                 photoList: holidays.map((e) => e.photo).toList(),
                 values: holidays,
                 onTapThreeDots: (holiday) {
@@ -107,8 +108,8 @@ class _Body extends StatelessWidget {
           ),
         );
       },
-      loadingBuilder: (_, hotel) => const LoadingHolidaysWidget(),
-      failureBuilder: (_, exception, hotel) => const FailedStateWidget(),
+      loadingBuilder: (_, hotel) => const AppLoadingStateWidget(),
+      failureBuilder: (_, exception, hotel) => AppFailedStateWidget(loadAgain: wm.loadAgain),
     );
   }
 }

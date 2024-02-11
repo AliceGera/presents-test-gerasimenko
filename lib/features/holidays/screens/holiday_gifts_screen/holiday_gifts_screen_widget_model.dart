@@ -45,6 +45,7 @@ class HolidayGiftsScreenWidgetModel extends WidgetModel<HolidayGiftsScreen, Holi
 
   @override
   void initWidgetModel() {
+    _holidayAndGiftsState.loading();
     final args = _appRouter.current.args as HolidayGiftsRouterArgs?;
 
     if (args != null) {
@@ -55,18 +56,18 @@ class HolidayGiftsScreenWidgetModel extends WidgetModel<HolidayGiftsScreen, Holi
   }
 
   @override
-  void openAddHolidayScreen() {
+  void openAddGiftReceivedScreen() {
     _appRouter.push(
-      AddHolidayRouter(
+      AddGiftReceivedRouter(
         loadAgain: loadAgain,
       ),
     );
   }
 
   @override
-  void openAddGiftReceivedScreen() {
+  void openAddGiftGivenScreen() {
     _appRouter.push(
-      AddGiftReceivedRouter(
+      AddGiftGivenRouter(
         loadAgain: loadAgain,
       ),
     );
@@ -82,16 +83,16 @@ class HolidayGiftsScreenWidgetModel extends WidgetModel<HolidayGiftsScreen, Holi
         gift: gift,
         loadAgain: loadAgain,
         holiday: holiday,
-      ),
-    );
-  }
-
-  @override
-  void editHolidayScreen(Holiday holiday) {
-    _appRouter.push(
-      EditHolidayRouter(
-        holiday: holiday,
-        loadAgain: loadAgain,
+        updateHoliday: (selectedHoliday) {
+          model.holiday = selectedHoliday;
+          _holidayAndGiftsState.content(
+            HolidayWithGiftsData(
+              giftsGiven: _holidayAndGiftsState.value.data?.giftsGiven ?? [],
+              giftsReceived: _holidayAndGiftsState.value.data?.giftsReceived ?? [],
+              holiday: selectedHoliday,
+            ),
+          );
+        },
       ),
     );
   }
@@ -105,8 +106,15 @@ class HolidayGiftsScreenWidgetModel extends WidgetModel<HolidayGiftsScreen, Holi
 
   @override
   Future<void> loadAgain() async {
-    context.read<IAppScope>().gifRecievedRebuilder.call();
-    await _getHolidayAndGifts(model.holiday);
+
+    try {
+      context.read<IAppScope>().giftRecievedRebuilder.call();
+      context.read<IAppScope>().giftGivenRebuilder.call();
+      await _getHolidayAndGifts(model.holiday);
+    } on Exception catch (e) {
+      _holidayAndGiftsState.failure(e);
+    }
+
   }
 
   @override
@@ -115,17 +123,14 @@ class HolidayGiftsScreenWidgetModel extends WidgetModel<HolidayGiftsScreen, Holi
 
 /// Interface of [IHolidayGiftsScreenWidgetModel].
 abstract class IHolidayGiftsScreenWidgetModel with ThemeIModelMixin implements IWidgetModel {
-  /// Navigate to room screen.
-  void openAddHolidayScreen();
-
-  /// Navigate to edit holiday screen.
-  void editHolidayScreen(Holiday holiday);
-
   /// Navigate to edit holiday screen.
   Future<void> deleteGift(Gift gift);
 
   ///Navigate to add gift received screen
   void openAddGiftReceivedScreen();
+
+  ///Navigate to add gift given screen
+  void openAddGiftGivenScreen();
 
   ///Navigate to edit gift screen
   void openEditGiftsScreen(Gift gift, Holiday holiday);

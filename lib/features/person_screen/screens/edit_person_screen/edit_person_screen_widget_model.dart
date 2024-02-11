@@ -3,10 +3,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/features/app/di/app_scope.dart';
 import 'package:flutter_template/features/common/domain/data/person/person_data.dart';
-import 'package:flutter_template/features/gifts_received/screens/edit_person_screen/edit_person_screen.dart';
-import 'package:flutter_template/features/gifts_received/screens/edit_person_screen/edit_person_screen_model.dart';
 import 'package:flutter_template/features/holidays/screens/edit_holiday_screen/edit_holiday_screen_model.dart';
 import 'package:flutter_template/features/navigation/service/router.dart';
+import 'package:flutter_template/features/person_screen/screens/edit_person_screen/edit_person_screen.dart';
+import 'package:flutter_template/features/person_screen/screens/edit_person_screen/edit_person_screen_model.dart';
 import 'package:provider/provider.dart';
 
 /// Factory for [EditPersonScreenWidgetModel].
@@ -38,6 +38,9 @@ class EditPersonScreenWidgetModel extends WidgetModel<EditPersonScreen, EditPers
   final TextEditingController _commentController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final _photoState = ValueNotifier<Uint8List>(Uint8List(0));
+
+  @override
+  void Function(Person)? updatePerson;
 
   @override
   void initWidgetModel() {
@@ -84,6 +87,7 @@ class EditPersonScreenWidgetModel extends WidgetModel<EditPersonScreen, EditPers
   @override
   Future<void> editPerson() async {
     await model.editPerson();
+    updatePerson?.call(model.person);
     await router.pop();
   }
 
@@ -134,4 +138,6 @@ abstract class IEditPersonScreenWidgetModel implements IWidgetModel {
 
   /// Method to initBottomSheet.
   void initBottomSheetWidgetModel(Person person);
+
+  void Function(Person)? updatePerson;
 }

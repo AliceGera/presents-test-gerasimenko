@@ -22,6 +22,7 @@ AddGiftReceivedScreenWidgetModel addGiftReceivedScreenWidgetModelFactory(
   final model = AddGiftReceivedScreenModel(
     appDependencies.errorHandler,
     appScope.giftsService,
+    appScope.holidaysService,
   );
   final router = appDependencies.router;
   return AddGiftReceivedScreenWidgetModel(model, router);
@@ -52,7 +53,6 @@ class AddGiftReceivedScreenWidgetModel extends WidgetModel<AddGiftReceivedScreen
     _commentController.addListener(() {
       model.giftComment = _commentController.text;
     });
-
     super.initWidgetModel();
   }
 
@@ -70,16 +70,48 @@ class AddGiftReceivedScreenWidgetModel extends WidgetModel<AddGiftReceivedScreen
 
   @override
   Future<void> choosePersonScreenOnTap() async {
-    final result = await router.push(PersonRouter());
+    final result = await router.push(
+      PersonRouter(
+        updatePerson: (selectedPerson) async {
+          if (selectedPerson.id == model.gift.whoGaveId) {
+            model
+              ..whoGavePresent = '${selectedPerson.firstName} ${selectedPerson.lastName}'
+              ..whoGaveId = selectedPerson.id;
+            _personState.value = model.whoGavePresent;
+          }
+        },
+        deletePerson: (selectedPerson) async {
+          if (selectedPerson.id == model.gift.whoGaveId) {
+            model
+              ..whoGavePresent = ''
+              ..whoGaveId = 0;
+            _personState.value = model.whoGavePresent;
+          }
+        },
+      ),
+    );
     if (result is Person) {
-      model.whoGavePresent = '${result.firstName} ${result.lastName}';
+      model
+        ..whoGavePresent = '${result.firstName} ${result.lastName}'
+        ..whoGaveId = result.id;
       _personState.value = model.whoGavePresent;
     }
   }
 
   @override
   Future<void> chooseHolidayNameScreen() async {
-    final result = await router.push(HolidayNameRouter());
+    final result = await router.push(
+      HolidayNameRouter(
+        updateHoliday: (selectedHoliday) async {
+          if (selectedHoliday.id == model.holidayId) {
+            final holidays = await model.getHolidays();
+            final newHoliday = holidays.firstWhere((element) => element.id == selectedHoliday.id);
+            model.holidayName = newHoliday.holidayName;
+            _holidayNameState.value = model.holidayName;
+          }
+        },
+      ),
+    );
     if (result is Holiday) {
       model
         ..holidayName = result.holidayName

@@ -11,6 +11,7 @@ List<Gift> mapDatabaseToGifts(List<GiftsTableData> giftsTable) {
           giftPrice: e.giftsPrice,
           isReceivedGift: e.isReceivedGifts,
           whoGave: e.whoGave,
+          whoGaveId: e.whoGaveId,
           holidayId: e.holidaysId,
           giftComment: e.giftsComment,
           giftRaiting: e.giftsRaiting,

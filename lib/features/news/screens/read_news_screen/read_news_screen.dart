@@ -83,12 +83,15 @@ class _Body extends StatelessWidget {
                 'the highlight of the holiday season. It is a time when people come together to share their love and appreciation for one another. In addition, gift-giving can help relieve stress and anxiety. It feels good to give a gift that is appreciated and loved.',
                 style: AppTextStyle.regular16.value.copyWith(color: AppColors.white),
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 12),
-                child: Image(
-                  image: AssetImage('assets/images/presents.png'),
-                  width: double.infinity,
-                  fit: BoxFit.fitWidth,
+               Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: const Image(
+                    image: AssetImage('assets/images/presents.png'),
+                    width: double.infinity,
+                    fit: BoxFit.fitWidth,
+                  ),
                 ),
               ),
               Text(
@@ -104,12 +107,15 @@ class _Body extends StatelessWidget {
                 'gourmet food basket.It is also important to consider the occasion when selecting a gift. A birthday gift may be different from an anniversary gift, for example. Takethe time to think about the recipient and the occasion to ensure that you choose the perfect gift.',
                 style: AppTextStyle.regular16.value.copyWith(color: AppColors.white),
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 12),
-                child: Image(
-                  image: AssetImage('assets/images/children.png'),
-                  width: double.infinity,
-                  fit: BoxFit.fitWidth,
+               Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: const Image(
+                    image: AssetImage('assets/images/children.png'),
+                    width: double.infinity,
+                    fit: BoxFit.fitWidth,
+                  ),
                 ),
               ),
               Text(
@@ -144,12 +150,15 @@ class _Body extends StatelessWidget {
                 style: AppTextStyle.regular16.value.copyWith(color: AppColors.white),
               ),
               const SizedBox(height: 16),
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 12),
-                child: Image(
-                  image: AssetImage('assets/images/present.png'),
-                  width: double.infinity,
-                  fit: BoxFit.fitWidth,
+               Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: const Image(
+                    image: AssetImage('assets/images/present.png'),
+                    width: double.infinity,
+                    fit: BoxFit.fitWidth,
+                  ),
                 ),
               ),
               const SizedBox(height: 12),

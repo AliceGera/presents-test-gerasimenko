@@ -8,11 +8,12 @@ import 'package:flutter_template/assets/text/text_style.dart';
 import 'package:flutter_template/features/common/widgets/app_bottom_sheet.dart';
 import 'package:flutter_template/features/common/widgets/app_button_widget.dart';
 import 'package:flutter_template/features/common/widgets/app_camera_widget.dart';
+import 'package:flutter_template/features/common/widgets/app_date_picker_widget.dart';
+import 'package:flutter_template/features/common/widgets/app_edit_gift_widget.dart';
 import 'package:flutter_template/features/common/widgets/app_textfield_widget.dart';
 import 'package:flutter_template/features/holidays/screens/add_holiday_screen/add_holiday_screen_widget_model.dart';
 import 'package:flutter_template/features/navigation/domain/entity/app_route_names.dart';
-
-import 'package:flutter_template/features/holidays/screens/add_holiday_screen/calendar.dart';
+import 'package:intl/intl.dart';
 
 /// GiftsGiven screens.
 @RoutePage(
@@ -33,7 +34,7 @@ class AddHolidayScreen extends ElementaryWidget<IAddHolidayScreenWidgetModel> {
   @override
   Widget build(IAddHolidayScreenWidgetModel wm) {
     final body = _Body(
-      wm:wm,
+      wm: wm,
       loadAgain: loadAgain,
     );
     return showInBottomSheet == true
@@ -119,12 +120,29 @@ class _Body extends StatelessWidget {
             controller: wm.holidayNameController,
           ),
           const SizedBox(height: 8),
-          AppTextFieldWidget(
-            text: 'Date',
-            controller: wm.dateController,
+          ValueListenableBuilder<DateTime?>(
+            builder: (context, dateTime, child) {
+              return InkWell(
+                highlightColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                onTap: () async {
+                  final result = await showAppDatePicker(context);
+                  if (result != null && result.isNotEmpty) {
+                    wm.addDate(result.first);
+                  }
+                },
+                child: ChooseWidget(
+                  text: dateTime != null ? DateFormat('dd.MM.yyyy').format(dateTime) : 'Date',
+                  assetName: SvgIcons.datePicker,
+                ),
+              );
+            },
+            valueListenable: wm.dateTimeState,
           ),
-          //const Calendar(),
-          AppCameraWidget(savePhoto: wm.savePhoto),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: AppCameraWidget(savePhoto: wm.savePhoto),
+          ),
           Row(
             children: [
               Expanded(

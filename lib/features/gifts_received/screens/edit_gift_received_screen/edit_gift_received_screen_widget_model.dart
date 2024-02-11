@@ -19,6 +19,7 @@ EditGiftReceivedScreenWidgetModel editGiftReceivedScreenWidgetModelFactory(
   final model = EditGiftReceivedScreenModel(
     appDependencies.errorHandler,
     appScope.giftsService,
+    appScope.holidaysService,
   );
   final router = appDependencies.router;
   return EditGiftReceivedScreenWidgetModel(model, router);
@@ -38,6 +39,7 @@ class EditGiftReceivedScreenWidgetModel extends WidgetModel<EditGiftReceivedScre
   final TextEditingController _commentController = TextEditingController();
   final TextEditingController _giftNameController = TextEditingController();
   final ValueNotifier<Gift> _giftState = ValueNotifier<Gift>(Gift.init());
+  void Function(Holiday)? _updateHoliday;
 
   @override
   void dispose() {
@@ -66,10 +68,12 @@ class EditGiftReceivedScreenWidgetModel extends WidgetModel<EditGiftReceivedScre
     if (args != null) {
       model
         ..gift = args.gift
-        ..holidayName = args.holiday.holidayName;
+        ..holidayName = args.holiday.holidayName
+        ..holidayId = args.holiday.id;
       _commentController.text = args.gift.giftComment;
       _giftNameController.text = args.gift.giftName;
       _giftState.value = model.gift;
+      _updateHoliday = args.updateHoliday;
     }
 
     super.initWidgetModel();
@@ -87,19 +91,48 @@ class EditGiftReceivedScreenWidgetModel extends WidgetModel<EditGiftReceivedScre
 
   @override
   Future<void> choosePersonOnTap() async {
-    final result = await router.push(PersonRouter());
+    final result = await router.push(
+      PersonRouter(
+        updatePerson: (selectedPerson) async {
+          if (selectedPerson.id == model.gift.whoGaveId) {
+            model
+              ..whoGave = '${selectedPerson.firstName} ${selectedPerson.lastName}'
+              ..whoGaveId = selectedPerson.id;
+            _giftState.value = model.gift;
+          }
+        },
+        deletePerson: (selectedPerson) async {
+          if (selectedPerson.id == model.gift.whoGaveId) {
+            model
+              ..whoGave = ''
+              ..whoGaveId = 0;
+            _giftState.value = model.gift;
+          }
+        },
+      ),
+    );
     if (result is Person) {
       model.whoGave = '${result.firstName} ${result.lastName}';
+      model.whoGaveId = result.id;
       _giftState.value = model.gift;
-    }
-    if (kDebugMode) {
-      print(_giftState.value.whoGave);
     }
   }
 
   @override
   Future<void> chooseHolidayNameOnTap() async {
-    final result = await router.push(HolidayNameRouter());
+    final result = await router.push(
+      HolidayNameRouter(
+        updateHoliday: (selectedHoliday) async {
+          if (selectedHoliday.id == model.holidayId) {
+            final holidays = await model.getHolidays();
+            final newHoliday = holidays.firstWhere((element) => element.id == selectedHoliday.id);
+            model.holidayName = newHoliday.holidayName;
+            _giftState.value = model.gift;
+            _updateHoliday?.call(newHoliday);
+          }
+        },
+      ),
+    );
     if (result is Holiday) {
       model
         ..holidayName = result.holidayName

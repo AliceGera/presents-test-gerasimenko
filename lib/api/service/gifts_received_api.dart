@@ -22,6 +22,7 @@ class GiftsApi {
             giftsPrice: data.giftPrice,
             isReceivedGifts: data.isReceivedGift,
             whoGave: '',
+            whoGaveId: data.whoGaveId,
             giftsComment: '',
           ),
         );
@@ -41,34 +42,11 @@ class GiftsApi {
         giftsPrice: data.giftPrice,
         isReceivedGifts: data.isReceivedGift,
         whoGave: data.whoGave,
+        whoGaveId: data.whoGaveId,
         holidaysId: data.holidayId,
         giftsComment: data.giftComment,
         photo: data.photo,
       ),
     );
   }
-/* Future<void> addHoliday(Holiday data) async {
-    await appDatabase.into(appDatabase.holidaysTable).insert(
-          HolidaysTableCompanion.insert(
-            holidaysName: data.holidayName,
-            holidayDate: data.holidayDate,
-            photo: data.photo,
-          ),
-        );
-  }
-
-  Future<void> editHoliday(Holiday data) async {
-    final resultTable = appDatabase.update(appDatabase.holidaysTable)..where((t) => t.id.equals(data.id));
-    await resultTable.write(
-      HolidaysTableCompanion.insert(
-        holidaysName: data.holidayName,
-        holidayDate: data.holidayDate,
-        photo: data.photo,
-      ),
-    );
-  }
-  Future<void> deleteHoliday(Holiday data) async {
-    final resultTable = appDatabase.delete(appDatabase.holidaysTable)..where((t) => t.id.equals(data.id));
-    await resultTable.go();
-  }*/
 }

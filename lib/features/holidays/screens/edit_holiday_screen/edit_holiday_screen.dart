@@ -11,10 +11,13 @@ import 'package:flutter_template/features/common/domain/data/holidays/holiday_da
 import 'package:flutter_template/features/common/widgets/app_bottom_sheet.dart';
 import 'package:flutter_template/features/common/widgets/app_button_widget.dart';
 import 'package:flutter_template/features/common/widgets/app_camera_widget.dart';
+import 'package:flutter_template/features/common/widgets/app_date_picker_widget.dart';
+import 'package:flutter_template/features/common/widgets/app_edit_gift_widget.dart';
 import 'package:flutter_template/features/common/widgets/app_textfield_widget.dart';
 import 'package:flutter_template/features/common/widgets/delete_dialog_widget.dart';
 import 'package:flutter_template/features/holidays/screens/edit_holiday_screen/edit_holiday_screen_widget_model.dart';
 import 'package:flutter_template/features/navigation/domain/entity/app_route_names.dart';
+import 'package:intl/intl.dart';
 
 /// GiftsGiven screens.
 @RoutePage(
@@ -37,13 +40,9 @@ class EditHolidayScreen extends ElementaryWidget<IEditHolidayScreenWidgetModel> 
   @override
   Widget build(IEditHolidayScreenWidgetModel wm) {
     final body = _Body(
-      loadAgain: loadAgain,
-      closeScreen: wm.closeScreen,
       holiday: holiday,
-      holidayNameController: wm.holidayNameController,
-      dateController: wm.dateController,
-      savePhoto: wm.savePhoto,
-      editHoliday: wm.editHoliday,
+      loadAgain: loadAgain,
+      wm: wm,
     );
     return showInBottomSheet == true
         ? AppBottomSheet(
@@ -100,22 +99,24 @@ class EditHolidayScreen extends ElementaryWidget<IEditHolidayScreenWidgetModel> 
                       ),
                     ],
                   ),
-                  Builder(builder: (context) {
-                    return InkWell(
-                        highlightColor: Colors.transparent,
-                        splashColor: Colors.transparent,
-                        onTap: () => showDialog<void>(
-                              context: context,
-                              builder: (ctx) => DeleteDialogWidget(
-                                deleteGift: () async {
-                                  Navigator.pop(ctx);
-                                  await wm.deleteHoliday();
-                                },
-                                loadAgain: loadAgain,
+                  Builder(
+                    builder: (context) {
+                      return InkWell(
+                          highlightColor: Colors.transparent,
+                          splashColor: Colors.transparent,
+                          onTap: () => showDialog<void>(
+                                context: context,
+                                builder: (ctx) => DeleteDialogWidget(
+                                  deleteGift: () async {
+                                    Navigator.pop(ctx);
+                                    await wm.deleteHoliday();
+                                  },
+                                  loadAgain: loadAgain,
+                                ),
                               ),
-                            ),
-                        child: SvgPicture.asset(SvgIcons.trash));
-                  }),
+                          child: SvgPicture.asset(SvgIcons.trash));
+                    },
+                  ),
                 ],
               ),
             ),
@@ -125,22 +126,14 @@ class EditHolidayScreen extends ElementaryWidget<IEditHolidayScreenWidgetModel> 
 }
 
 class _Body extends StatelessWidget {
-  final VoidCallback closeScreen;
   final Holiday holiday;
-  final TextEditingController holidayNameController;
-  final TextEditingController dateController;
-  final void Function(Uint8List photo) savePhoto;
-  final Future<void> Function() editHoliday;
   final VoidCallback loadAgain;
+  final IEditHolidayScreenWidgetModel wm;
 
   const _Body({
-    required this.closeScreen,
     required this.holiday,
-    required this.holidayNameController,
-    required this.dateController,
-    required this.savePhoto,
-    required this.editHoliday,
     required this.loadAgain,
+    required this.wm,
   });
 
   @override
@@ -154,16 +147,31 @@ class _Body extends StatelessWidget {
           const SizedBox(height: 12),
           AppTextFieldWidget(
             text: 'Name of the holiday',
-            controller: holidayNameController,
+            controller: wm.holidayNameController,
           ),
           const SizedBox(height: 8),
-          AppTextFieldWidget(
-            text: 'Date',
-            controller: dateController,
+          ValueListenableBuilder<DateTime?>(
+            builder: (context, dateTime, child) {
+              return InkWell(
+                highlightColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                onTap: () async {
+                  final result = await showAppDatePicker(context);
+                  if (result != null && result.isNotEmpty) {
+                    wm.addDate(result.first);
+                  }
+                },
+                child: ChooseWidget(
+                  text: dateTime != null ? DateFormat('dd.MM.yyyy').format(dateTime) : 'Date',
+                  assetName: SvgIcons.datePicker,
+                ),
+              );
+            },
+            valueListenable: wm.dateTimeState,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16),
-            child: AppCameraWidget(savePhoto: savePhoto, photo: holiday.photo),
+            child: AppCameraWidget(savePhoto: wm.savePhoto, photo: holiday.photo),
           ),
           Row(
             children: [
@@ -172,7 +180,7 @@ class _Body extends StatelessWidget {
                   title: 'Cancel',
                   color: AppColors.white,
                   textColor: AppColors.black,
-                  onPressed: closeScreen,
+                  onPressed: wm.closeScreen,
                 ),
               ),
               const SizedBox(width: 8),
@@ -180,7 +188,7 @@ class _Body extends StatelessWidget {
                 child: AppButtonWidget(
                   title: 'Save',
                   onPressed: () async {
-                    await editHoliday();
+                    await wm.editHoliday();
                     loadAgain.call();
                   },
                 ),

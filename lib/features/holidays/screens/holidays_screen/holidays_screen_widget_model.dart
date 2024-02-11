@@ -1,8 +1,6 @@
 import 'package:elementary/elementary.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/features/app/di/app_scope.dart';
-import 'package:flutter_template/features/common/domain/data/holiday_with_gifts/holiday_with_gifts_data.dart';
 import 'package:flutter_template/features/common/domain/data/holidays/holiday_data.dart';
 import 'package:flutter_template/features/common/mixin/theme_mixin.dart';
 import 'package:flutter_template/features/holidays/screens/holidays_screen/holidays_screen.dart';
@@ -44,16 +42,19 @@ class HolidaysScreenWidgetModel extends WidgetModel<HolidaysScreen, HolidaysScre
 
   @override
   void initWidgetModel() {
+    _holidaysState.loading();
     _getHolidays();
     _appScope.holidayRebuilder = _getHolidays;
     super.initWidgetModel();
   }
 
   Future<void> _getHolidays() async {
-    final holidays = await model.getHolidays();
-
-    _holidaysState.content(holidays);
-    await Future.delayed(const Duration(milliseconds: 500));
+    try {
+      final holidays = await model.getHolidays();
+      _holidaysState.content(holidays);
+    } on Exception catch (e) {
+      _holidaysState.failure(e);
+    }
   }
 
   @override
@@ -80,7 +81,6 @@ class HolidaysScreenWidgetModel extends WidgetModel<HolidaysScreen, HolidaysScre
     _appRouter.push(HolidayGiftsRouter(holiday: holiday));
   }
 
-
   @override
   Future<void> deleteHolidayScreen(Holiday holiday) async {
     await model.deleteHolidays(holiday);
@@ -90,7 +90,8 @@ class HolidaysScreenWidgetModel extends WidgetModel<HolidaysScreen, HolidaysScre
 
   @override
   Future<void> loadAgain() async {
-    _appScope.gifRecievedRebuilder.call();
+    _appScope.giftRecievedRebuilder.call();
+    _appScope.giftGivenRebuilder.call();
     await _getHolidays();
   }
 
@@ -113,7 +114,7 @@ abstract class IHolidaysScreenWidgetModel with ThemeIModelMixin implements IWidg
   Future<void> deleteHolidayScreen(Holiday holiday);
 
   /// Navigate to load screen again.
-  Future<void> loadAgain();
+ void loadAgain();
 
   /// Method to get holidays screen.
   UnionStateNotifier<List<Holiday>> get holidaysState;

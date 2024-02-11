@@ -46,19 +46,26 @@ class GiftsReceivedScreenWidgetModel extends WidgetModel<GiftsReceivedScreen, Gi
 
   @override
   void initWidgetModel() {
-    _appScope.gifRecievedRebuilder = loadAgain;
-    _getGifts();
+    _giftsState.loading();
+    _appScope.giftRecievedRebuilder = loadAgain;
+    getHolidaysWithGifts();
     super.initWidgetModel();
   }
 
-  Future<void> _getGifts() async {
-    final gifts = await model.getGifts();
-    _giftsState.content(gifts);
+  Future<void> getHolidaysWithGifts() async {
+    try {
+      final gifts = await model.getHolidaysWithGifts();
+      await Future.delayed(const Duration(seconds: 2));
+      _giftsState.content(gifts);
+    } on Exception catch (e) {
+      _giftsState.failure(e);
+    }
+
   }
 
   @override
   void loadAgain() {
-    _getGifts();
+    getHolidaysWithGifts();
   }
 
   @override
@@ -84,7 +91,7 @@ class GiftsReceivedScreenWidgetModel extends WidgetModel<GiftsReceivedScreen, Gi
   @override
   Future<void> deleteGift(Gift gift) async {
     await model.deleteGift(gift);
-    await _getGifts();
+    await getHolidaysWithGifts();
     await _appRouter.pop();
   }
 
