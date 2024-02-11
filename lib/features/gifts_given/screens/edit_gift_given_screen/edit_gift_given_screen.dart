@@ -88,7 +88,8 @@ class EditGiftGivenScreen extends ElementaryWidget<IEditGiftGivenScreenWidgetMod
               gift: gift,
               loadAgain: loadAgain,
               isEdit: true,
-              isReceived: false, saveGift: wm.editGiftOnTap,
+              isReceived: false,
+              saveGift: wm.editGiftOnTap,
             ),
           );
         },

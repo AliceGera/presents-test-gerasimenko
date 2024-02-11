@@ -26,7 +26,7 @@ class HolidaysApi {
     await resultTable.write(
       HolidaysTableCompanion.insert(
         holidaysName: data.holidayName,
-
+        holidayDate: Value(data.holidayDate),
         photo: data.photo,
       ),
     );

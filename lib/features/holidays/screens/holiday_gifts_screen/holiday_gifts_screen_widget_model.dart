@@ -74,12 +74,36 @@ class HolidayGiftsScreenWidgetModel extends WidgetModel<HolidayGiftsScreen, Holi
   }
 
   @override
-  void openEditGiftsScreen(
+  void openEditReceivedGiftsScreen(
     Gift gift,
     Holiday holiday,
   ) {
     _appRouter.push(
       EditGiftReceivedRouter(
+        gift: gift,
+        loadAgain: loadAgain,
+        holiday: holiday,
+        updateHoliday: (selectedHoliday) {
+          model.holiday = selectedHoliday;
+          _holidayAndGiftsState.content(
+            HolidayWithGiftsData(
+              giftsGiven: _holidayAndGiftsState.value.data?.giftsGiven ?? [],
+              giftsReceived: _holidayAndGiftsState.value.data?.giftsReceived ?? [],
+              holiday: selectedHoliday,
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  @override
+  void openEditGivenGiftsScreen(
+    Gift gift,
+    Holiday holiday,
+  ) {
+    _appRouter.push(
+      EditGiftGivenRouter(
         gift: gift,
         loadAgain: loadAgain,
         holiday: holiday,
@@ -106,7 +130,6 @@ class HolidayGiftsScreenWidgetModel extends WidgetModel<HolidayGiftsScreen, Holi
 
   @override
   Future<void> loadAgain() async {
-
     try {
       context.read<IAppScope>().giftRecievedRebuilder.call();
       context.read<IAppScope>().giftGivenRebuilder.call();
@@ -114,7 +137,6 @@ class HolidayGiftsScreenWidgetModel extends WidgetModel<HolidayGiftsScreen, Holi
     } on Exception catch (e) {
       _holidayAndGiftsState.failure(e);
     }
-
   }
 
   @override
@@ -133,7 +155,10 @@ abstract class IHolidayGiftsScreenWidgetModel with ThemeIModelMixin implements I
   void openAddGiftGivenScreen();
 
   ///Navigate to edit gift screen
-  void openEditGiftsScreen(Gift gift, Holiday holiday);
+  void openEditReceivedGiftsScreen(Gift gift, Holiday holiday);
+
+  ///Navigate to edit gift screen
+  void openEditGivenGiftsScreen(Gift gift, Holiday holiday);
 
   /// Navigate to load screen again.
   void loadAgain();

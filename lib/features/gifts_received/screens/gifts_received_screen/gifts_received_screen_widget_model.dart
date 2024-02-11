@@ -46,20 +46,19 @@ class GiftsReceivedScreenWidgetModel extends WidgetModel<GiftsReceivedScreen, Gi
 
   @override
   void initWidgetModel() {
-    _giftsState.loading();
     _appScope.giftRecievedRebuilder = loadAgain;
     getHolidaysWithGifts();
     super.initWidgetModel();
   }
 
   Future<void> getHolidaysWithGifts() async {
+    _giftsState.loading();
     try {
       final gifts = await model.getHolidaysWithGifts();
       _giftsState.content(gifts);
     } on Exception catch (e) {
       _giftsState.failure(e);
     }
-
   }
 
   @override

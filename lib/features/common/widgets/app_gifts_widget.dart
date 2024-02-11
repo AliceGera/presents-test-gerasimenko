@@ -14,6 +14,7 @@ import 'package:flutter_template/features/common/widgets/app_button_widget.dart'
 import 'package:flutter_template/features/common/widgets/delete_dialog_widget.dart';
 
 import 'package:flutter_template/features/common/widgets/edit_or_delete_dialog_widget.dart';
+import 'package:intl/intl.dart';
 
 class AppGiftWidget extends StatelessWidget {
   final VoidCallback? openAddGiftScreen;
@@ -54,7 +55,7 @@ class AppGiftWidget extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 16),
                       child: Text(
-                        '${holidayWithGifts[ind].holiday.holidayName}, ${holidayWithGifts[ind].holiday.holidayDate}',
+                        '${holidayWithGifts[ind].holiday.holidayName}, ${holidayWithGifts[ind].holiday.holidayDate != null ? DateFormat('dd.MM.yyyy').format(holidayWithGifts[ind].holiday.holidayDate!) : ''}',
                         style: AppTextStyle.medium16.value.copyWith(color: AppColors.white),
                       ),
                     ),
@@ -125,7 +126,6 @@ class AppGiftWidget extends StatelessWidget {
                                         child: SvgPicture.asset(SvgIcons.editGift),
                                       );
                                     }),
-
                                   ),
                                 ],
                               ),
@@ -144,27 +144,30 @@ class AppGiftWidget extends StatelessWidget {
                                 style: AppTextStyle.regular13.value.copyWith(color: AppColors.lightGray),
                               ),
                               const SizedBox(height: 8),
-                              if (isReceived) Expanded(
-                                      child: ListView.builder(
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount: 5,
-                                        itemBuilder: (context, itemIndex) => Icon(
-                                          Icons.star,
-                                          size: 20,
-                                          color: (itemIndex <=
-                                                  (isReceived
-                                                      ? (holidayWithGifts[ind].giftsReceived[index].giftRaiting - 1)
-                                                      : (holidayWithGifts[ind].giftsGiven[index].giftRaiting - 1)))
-                                              ? AppColors.fillStar
-                                              : AppColors.emptyStar,
-                                        ),
-                                      ),
-                                    ) else Text(
-                                      '\$ ${holidayWithGifts[ind].giftsGiven[index].giftPrice}',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: AppTextStyle.bold14.value.copyWith(color: AppColors.lightGray),
+                              if (isReceived)
+                                Expanded(
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: 5,
+                                    itemBuilder: (context, itemIndex) => Icon(
+                                      Icons.star,
+                                      size: 20,
+                                      color: (itemIndex <=
+                                              (isReceived
+                                                  ? (holidayWithGifts[ind].giftsReceived[index].giftRaiting - 1)
+                                                  : (holidayWithGifts[ind].giftsGiven[index].giftRaiting - 1)))
+                                          ? AppColors.fillStar
+                                          : AppColors.emptyStar,
                                     ),
+                                  ),
+                                )
+                              else
+                                Text(
+                                  '\$ ${holidayWithGifts[ind].giftsGiven[index].giftPrice}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppTextStyle.bold14.value.copyWith(color: AppColors.lightGray),
+                                ),
                             ],
                           ),
                         ),

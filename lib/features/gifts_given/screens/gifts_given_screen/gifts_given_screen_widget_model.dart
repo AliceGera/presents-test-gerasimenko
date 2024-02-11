@@ -29,9 +29,7 @@ GiftsGivenScreenWidgetModel giftsGivenScreenWmFactory(
 }
 
 /// Widget model for [GiftsGivenScreen].
-class GiftsGivenScreenWidgetModel extends WidgetModel<GiftsGivenScreen, GiftsGivenScreenModel>
-    with ThemeWMMixin
-    implements IGiftsGivenScreenWidgetModel {
+class GiftsGivenScreenWidgetModel extends WidgetModel<GiftsGivenScreen, GiftsGivenScreenModel> with ThemeWMMixin implements IGiftsGivenScreenWidgetModel {
   /// Create an instance [GiftsGivenScreenWidgetModel].
   final AppRouter router;
   final AppScope _appScope;
@@ -46,21 +44,19 @@ class GiftsGivenScreenWidgetModel extends WidgetModel<GiftsGivenScreen, GiftsGiv
 
   @override
   void initWidgetModel() {
-
     _appScope.giftGivenRebuilder = loadAgain;
-    _giftsState.loading();
     _getGifts();
     super.initWidgetModel();
   }
 
   Future<void> _getGifts() async {
+    _giftsState.loading();
     try {
       final gifts = await model.getGifts();
       _giftsState.content(gifts);
     } on Exception catch (e) {
       _giftsState.failure(e);
     }
-
   }
 
   @override

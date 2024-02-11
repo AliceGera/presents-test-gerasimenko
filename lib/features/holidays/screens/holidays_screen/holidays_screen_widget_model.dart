@@ -42,13 +42,13 @@ class HolidaysScreenWidgetModel extends WidgetModel<HolidaysScreen, HolidaysScre
 
   @override
   void initWidgetModel() {
-    _holidaysState.loading();
     _getHolidays();
     _appScope.holidayRebuilder = _getHolidays;
     super.initWidgetModel();
   }
 
   Future<void> _getHolidays() async {
+    _holidaysState.loading();
     try {
       final holidays = await model.getHolidays();
       _holidaysState.content(holidays);

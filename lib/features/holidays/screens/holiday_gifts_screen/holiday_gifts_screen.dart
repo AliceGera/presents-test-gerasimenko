@@ -63,7 +63,7 @@ class HolidayGiftsScreen extends ElementaryWidget<IHolidayGiftsScreenWidgetModel
                   deleteGift: wm.deleteGift,
                   giftsCount: holidayWithGifts.giftsReceived.length,
                   holidayWithGifts: holidayWithGifts,
-                  openEditGiftsScreen: wm.openEditGiftsScreen,
+                  openEditGiftsScreen: wm.openEditReceivedGiftsScreen,
                   isReceived: true,
                 ),
                 Padding(
@@ -80,7 +80,7 @@ class HolidayGiftsScreen extends ElementaryWidget<IHolidayGiftsScreenWidgetModel
                   deleteGift: wm.deleteGift,
                   giftsCount: holidayWithGifts.giftsGiven.length,
                   holidayWithGifts: holidayWithGifts,
-                  openEditGiftsScreen: wm.openEditGiftsScreen,
+                  openEditGiftsScreen: wm.openEditGivenGiftsScreen,
                   isReceived: false,
                 ),
               ],
@@ -190,10 +190,34 @@ class GiftsWidget extends StatelessWidget {
                 isReceived ? holidayWithGifts.giftsReceived[index].whoGave : holidayWithGifts.giftsGiven[index].whoGave,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: AppTextStyle.regular13.value.copyWith(color: AppColors.white),
+                style: AppTextStyle.regular12.value.copyWith(color: AppColors.lightGray),
               ),
               const SizedBox(height: 8),
-              //SvgPicture.asset(starsList[ind][index]),
+
+              if (isReceived)
+                Expanded(
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: 5,
+                    itemBuilder: (context, itemIndex) => Icon(
+                      Icons.star,
+                      size: 20,
+                      color: (itemIndex <=
+                          (isReceived
+                              ? (holidayWithGifts.giftsReceived[index].giftRaiting - 1)
+                              : (holidayWithGifts.giftsGiven[index].giftRaiting - 1)))
+                          ? AppColors.fillStar
+                          : AppColors.emptyStar,
+                    ),
+                  ),
+                )
+              else
+                Text(
+                  '\$ ${holidayWithGifts.giftsGiven[index].giftPrice}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyle.bold14.value.copyWith(color: AppColors.white),
+                ),
             ],
           ),
         ),
