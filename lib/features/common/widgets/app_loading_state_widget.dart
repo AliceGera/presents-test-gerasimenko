@@ -22,12 +22,13 @@ class AppLoadingStateWidget extends StatelessWidget {
             baseColor: AppColors.gray.withOpacity(0.2),
             highlightColor: AppColors.white,
             child: const Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _BoxWidget(boxHeight: 270),
-                SizedBox(height: 16),
-                _BoxWidget(boxHeight: 270),
-                SizedBox(height: 16),
-                _BoxWidget(boxHeight: 270),
+                _BoxWidget(boxHeight: 150),
+                SizedBox(height: 20),
+                _BoxWidget(boxHeight: 150),
+                SizedBox(height: 20),
+                _BoxWidget(boxHeight: 150),
               ],
             ),
           ),

@@ -145,11 +145,11 @@ class AppAddGiftWidget extends StatelessWidget {
                     valueListenable: holidayNameState,
                   ),
                   const SizedBox(height: 8),
-                  AppTextFieldWidget(
+                 if (!isReceived) AppTextFieldWidget(
                     text: 'Price',
                     controller: priceController,
                     isPrice: true,
-                  ),
+                  ) else SizedBox(),
                   const SizedBox(height: 8),
                   AppTextFieldWidget(
                     text: 'A comment',

@@ -75,7 +75,7 @@ class _Body extends StatelessWidget {
             gift: gift,
             loadAgain: loadAgain,
             savePhoto: wm.savePhoto,
-            isReceived: false,
+            isReceived: true,
           );
         },
         loadingBuilder: (_, hotel) => const SizedBox(),
