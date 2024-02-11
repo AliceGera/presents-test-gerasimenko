@@ -149,7 +149,7 @@ class AppAddGiftWidget extends StatelessWidget {
                     text: 'Price',
                     controller: priceController,
                     isPrice: true,
-                  ) else SizedBox(),
+                  ) else const SizedBox(),
                   const SizedBox(height: 8),
                   AppTextFieldWidget(
                     text: 'A comment',

@@ -55,7 +55,6 @@ class GiftsReceivedScreenWidgetModel extends WidgetModel<GiftsReceivedScreen, Gi
   Future<void> getHolidaysWithGifts() async {
     try {
       final gifts = await model.getHolidaysWithGifts();
-      await Future.delayed(const Duration(seconds: 2));
       _giftsState.content(gifts);
     } on Exception catch (e) {
       _giftsState.failure(e);
