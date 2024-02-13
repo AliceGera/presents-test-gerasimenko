@@ -39,7 +39,7 @@ class TempScreenWidgetModel extends WidgetModel<TempScreen, ITempScreenModel> wi
     BottomNavigationBarItem(
       label: 'news',
       icon: SvgPicture.asset(SvgIcons.news),
-      activeIcon: SvgPicture.asset(SvgIcons.activeNews, color: Color(0xff30BEAB)),
+      activeIcon: SvgPicture.asset(SvgIcons.news, color: const Color(0xff30BEAB)),
     ),
     BottomNavigationBarItem(
       label: 'Settings',

@@ -16,7 +16,7 @@ import 'package:flutter_template/features/common/widgets/app_textfield_widget.da
 class PersonBottomSheetWidget extends StatelessWidget {
   final VoidCallback closeScreen;
   final bool? isEdit;
-  final Future<void> Function() addOrEditPerson;
+  final Future<bool> Function() addOrEditPerson;
   final TextEditingController firstNameController;
   final TextEditingController commentController;
   final TextEditingController lastNameController;
@@ -24,8 +24,16 @@ class PersonBottomSheetWidget extends StatelessWidget {
   final VoidCallback loadAgain;
   final Uint8List? photo;
   final VoidCallback? cleanBottomSheetForAddPersonOnTap;
+  final GlobalKey<FormState>? formFirstNameKey;
+  final String? Function()? getLastNameValidationText;
+  final String? Function()? getFirstNameValidationText;
+  final GlobalKey<FormState>? formLastNameKey;
 
   PersonBottomSheetWidget({
+    this.getLastNameValidationText,
+    this.getFirstNameValidationText,
+    this.formLastNameKey,
+    this.formFirstNameKey,
     required this.closeScreen,
     required this.addOrEditPerson,
     required this.firstNameController,
@@ -71,13 +79,17 @@ class PersonBottomSheetWidget extends StatelessWidget {
             photo: photo,
           ),
           AppTextFieldWidget(
+            formKey: formFirstNameKey,
             text: 'First name',
             controller: firstNameController,
+            validatorText: getFirstNameValidationText,
           ),
           const SizedBox(height: 8),
           AppTextFieldWidget(
+            formKey: formLastNameKey,
             text: 'Last Name',
             controller: lastNameController,
+            validatorText: getLastNameValidationText,
           ),
           const SizedBox(height: 8),
           AppTextFieldWidget(
@@ -106,8 +118,8 @@ class PersonBottomSheetWidget extends StatelessWidget {
                   child: AppButtonWidget(
                     title: 'Save',
                     onPressed: () async {
-                      await addOrEditPerson();
-                      if (cleanBottomSheetForAddPersonOnTap != null) {
+                      final isSuccessfully = await addOrEditPerson();
+                      if (isSuccessfully && cleanBottomSheetForAddPersonOnTap != null) {
                         cleanBottomSheetForAddPersonOnTap!();
                       }
                       loadAgain.call();

@@ -45,9 +45,22 @@ class AddGiftReceivedScreenWidgetModel extends WidgetModel<AddGiftReceivedScreen
   final TextEditingController _giftNameController = TextEditingController();
   final TextEditingController _commentController = TextEditingController();
 
+  final _personMessageState = ValueNotifier<String?>(null);
+  final _holidayNameMessageState = ValueNotifier<String?>(null);
+
+  final GlobalKey<FormState> _formGiftNameKey = GlobalKey<FormState>();
+
+  String? _holidayNameValidationText;
+  String? _personValidationText;
+  String? _giftNameValidationText;
+
   @override
   void initWidgetModel() {
     _giftNameController.addListener(() {
+      if (_giftNameValidationText != null && _giftNameController.text.isNotEmpty) {
+        _giftNameValidationText = null;
+        _formGiftNameKey.currentState?.validate();
+      }
       model.giftName = _giftNameController.text;
     });
     _commentController.addListener(() {
@@ -95,6 +108,7 @@ class AddGiftReceivedScreenWidgetModel extends WidgetModel<AddGiftReceivedScreen
         ..whoGavePresent = '${result.firstName} ${result.lastName}'
         ..whoGaveId = result.id;
       _personState.value = model.whoGavePresent;
+      _personMessageState.value = null;
     }
   }
 
@@ -117,6 +131,7 @@ class AddGiftReceivedScreenWidgetModel extends WidgetModel<AddGiftReceivedScreen
         ..holidayName = result.holidayName
         ..holidayId = result.id;
       _holidayNameState.value = model.holidayName;
+      _holidayNameMessageState.value = null;
     }
   }
 
@@ -133,8 +148,23 @@ class AddGiftReceivedScreenWidgetModel extends WidgetModel<AddGiftReceivedScreen
 
   @override
   Future<void> addGift() async {
-    await model.addGift();
-    await router.pop();
+    final isGiftNameCorrect = _giftNameController.text.isNotEmpty;
+    if (!isGiftNameCorrect) {
+      _giftNameValidationText = 'error';
+      _formGiftNameKey.currentState?.validate();
+    }
+    final isPersonCorrect = _personState.value != null;
+    if (!isPersonCorrect) {
+      _personMessageState.value = 'error';
+    }
+    final isHolidayNameCorrect = _holidayNameState.value != null;
+    if (!isHolidayNameCorrect) {
+      _holidayNameMessageState.value = 'error';
+    }
+    if (isGiftNameCorrect && isPersonCorrect && isHolidayNameCorrect) {
+      await model.addGift();
+      await router.pop();
+    }
   }
 
   @override
@@ -151,6 +181,24 @@ class AddGiftReceivedScreenWidgetModel extends WidgetModel<AddGiftReceivedScreen
 
   @override
   ValueNotifier<String?> get personState => _personState;
+
+  @override
+  String? getHolidayNameValidationText() => _holidayNameValidationText;
+
+  @override
+  String? getPersonValidationText() => _personValidationText;
+
+  @override
+  String? getGiftNameValidationText() => _giftNameValidationText;
+
+  @override
+  ValueNotifier<String?> get personMessageState => _personMessageState;
+
+  @override
+  ValueNotifier<String?> get holidayNameMessageState => _holidayNameMessageState;
+
+  @override
+  GlobalKey<FormState> get formGiftNameKey => _formGiftNameKey;
 }
 
 /// Interface of [AddGiftReceivedScreenWidgetModel].
@@ -187,4 +235,19 @@ abstract class IAddGiftReceivedScreenWidgetModel implements IWidgetModel {
 
   ///  Method to get person state.
   ValueNotifier<String?> get personState;
+
+  ///////////////
+
+  ValueNotifier<String?> get personMessageState;
+
+  ValueNotifier<String?> get holidayNameMessageState;
+
+  /// Method get formKey for holiday name field
+  GlobalKey<FormState> get formGiftNameKey;
+
+  String? getHolidayNameValidationText();
+
+  String? getPersonValidationText();
+
+  String? getGiftNameValidationText();
 }

@@ -76,6 +76,8 @@ class _BottomSheetState extends State<BottomSheet> {
             child: ValueListenableBuilder<Uint8List>(
               builder: (context, photo, child) {
                 return PersonBottomSheetWidget(
+                  formLastNameKey: widget.wm.formLastNameKey,
+                  formFirstNameKey: widget.wm.formFirstNameKey,
                   isEdit: true,
                   addOrEditPerson: widget.wm.editPerson,
                   loadAgain: widget.loadAgain,
@@ -85,6 +87,8 @@ class _BottomSheetState extends State<BottomSheet> {
                   commentController: widget.wm.commentController,
                   lastNameController: widget.wm.lastNameController,
                   photo: photo,
+                  getLastNameValidationText: widget.wm.getLastNameValidationText,
+                  getFirstNameValidationText: widget.wm.getFirstNameValidationText,
                 );
               },
               valueListenable: widget.wm.photoState,

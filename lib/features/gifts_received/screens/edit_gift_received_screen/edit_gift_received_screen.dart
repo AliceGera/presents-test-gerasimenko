@@ -90,6 +90,11 @@ class EditGiftReceivedScreen extends ElementaryWidget<IEditGiftReceivedScreenWid
               rateOnTap: wm.rateOnTap,
               isEdit: true,
               isReceived: true,
+              formKey: wm.formGiftNameKey,
+              validatorText: () {
+                return wm.getGiftNameValidationText();
+              },
+              personMessageState: wm.personMessageState,
             ),
           );
         },

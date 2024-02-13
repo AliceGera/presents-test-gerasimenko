@@ -65,7 +65,8 @@ class PersonScreen extends ElementaryWidget<IPersonScreenWidgetModel> {
 class _Body extends StatelessWidget {
   final IPersonScreenWidgetModel wm;
   final void Function(Person selectedPerson)? updatePerson;
-  final void Function(Person selectedPerson)?  deletePerson;
+  final void Function(Person selectedPerson)? deletePerson;
+
   _Body({
     required this.wm,
     this.updatePerson,
@@ -82,6 +83,7 @@ class _Body extends StatelessWidget {
           child: Column(
             children: [
               AppItemListWidget<Person>(
+                onItemTap: wm.choosePersonOnTap,
                 mainNames: persons.map((e) => e.firstName).toList(),
                 secondText: persons.map((e) => e.comment).toList(),
                 photoList: persons.map((e) => e.photo).toList(),
@@ -96,7 +98,7 @@ class _Body extends StatelessWidget {
                         Navigator.pop(ctx);
                         showModalBottomSheet<void>(
                           constraints: BoxConstraints(
-                            maxWidth:  MediaQuery.of(context).size.width,
+                            maxWidth: MediaQuery.of(context).size.width,
                           ),
                           shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
@@ -140,7 +142,7 @@ class _Body extends StatelessWidget {
                   onPressed: () {
                     showModalBottomSheet<void>(
                       constraints: BoxConstraints(
-                        maxWidth:  MediaQuery.of(context).size.width,
+                        maxWidth: MediaQuery.of(context).size.width,
                       ),
                       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
                       backgroundColor: AppColors.darkBlue,
@@ -153,6 +155,8 @@ class _Body extends StatelessWidget {
                           ),
                           child: SingleChildScrollView(
                             child: PersonBottomSheetWidget(
+                              formLastNameKey: wm.formLastNameKey,
+                              formFirstNameKey: wm.formFirstNameKey,
                               addOrEditPerson: wm.addPersonOnTap,
                               loadAgain: wm.loadAgain,
                               savePhoto: wm.savePhotoOnTap,
@@ -161,6 +165,8 @@ class _Body extends StatelessWidget {
                               firstNameController: wm.firstNameController,
                               commentController: wm.commentController,
                               lastNameController: wm.lastNameController,
+                              getLastNameValidationText: wm.getLastNameValidationText,
+                              getFirstNameValidationText: wm.getFirstNameValidationText,
                             ),
                           ),
                         );
@@ -173,8 +179,8 @@ class _Body extends StatelessWidget {
           ),
         );
       },
-      loadingBuilder: (_, hotel) =>const AppLoadingStateWidget(),
-      failureBuilder: (_, exception, hotel) => AppFailedStateWidget(loadAgain:wm.loadAgain),
+      loadingBuilder: (_, hotel) => const AppLoadingStateWidget(),
+      failureBuilder: (_, exception, hotel) => AppFailedStateWidget(loadAgain: wm.loadAgain),
     );
   }
 }

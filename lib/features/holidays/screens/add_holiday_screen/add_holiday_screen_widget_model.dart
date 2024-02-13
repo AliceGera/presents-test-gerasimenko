@@ -34,10 +34,21 @@ class AddHolidayScreenWidgetModel extends WidgetModel<AddHolidayScreen, AddHolid
 
   final TextEditingController _holidayNameController = TextEditingController();
   final _dateTimeState = ValueNotifier<DateTime?>(null);
+  final _dateTimeMessageState = ValueNotifier<String?>(null);
+
+  final GlobalKey<FormState> _formHolidayNameKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formDateTimeKey = GlobalKey<FormState>();
+
+  String? _holidayNameValidationText;
+  String? _dateTimeValidationText;
 
   @override
   void initWidgetModel() {
     _holidayNameController.addListener(() {
+      if (_holidayNameValidationText != null && _holidayNameValidationText!.isNotEmpty) {
+        _holidayNameValidationText = null;
+        _formHolidayNameKey.currentState?.validate();
+      }
       model.holidayName = _holidayNameController.text;
     });
 
@@ -54,6 +65,7 @@ class AddHolidayScreenWidgetModel extends WidgetModel<AddHolidayScreen, AddHolid
   void addDate(DateTime? date) {
     model.holidayDate = date;
     _dateTimeState.value = date;
+    _dateTimeMessageState.value = null;
   }
 
   @override
@@ -63,8 +75,19 @@ class AddHolidayScreenWidgetModel extends WidgetModel<AddHolidayScreen, AddHolid
 
   @override
   Future<void> addHoliday() async {
-    await model.addHoliday();
-    await router.pop();
+    final isHolidayNameCorrect = _holidayNameController.text.isNotEmpty;
+    if (!isHolidayNameCorrect) {
+      _holidayNameValidationText = 'error';
+      _formHolidayNameKey.currentState?.validate();
+    }
+    final isDateTimeCorrect = _dateTimeState.value != null;
+    if (!isDateTimeCorrect) {
+      _dateTimeMessageState.value = 'error';
+    }
+    if (isHolidayNameCorrect && isDateTimeCorrect) {
+      await model.addHoliday();
+      await router.pop();
+    }
   }
 
   @override
@@ -73,10 +96,25 @@ class AddHolidayScreenWidgetModel extends WidgetModel<AddHolidayScreen, AddHolid
   }
 
   @override
+  String? getHolidayNameValidationText() => _holidayNameValidationText;
+
+  @override
+  String? getDateTimeValidationText() => _dateTimeValidationText;
+
+  @override
   TextEditingController get holidayNameController => _holidayNameController;
 
   @override
   ValueNotifier<DateTime?> get dateTimeState => _dateTimeState;
+
+  @override
+  ValueNotifier<String?> get dateTimeMessageState => _dateTimeMessageState;
+
+  @override
+  GlobalKey<FormState> get formHolidayNameKey => _formHolidayNameKey;
+
+  @override
+  GlobalKey<FormState> get formDateTimeKey => _formDateTimeKey;
 }
 
 /// Interface of [AddHolidayScreenWidgetModel].
@@ -96,4 +134,16 @@ abstract class IAddHolidayScreenWidgetModel implements IWidgetModel {
   TextEditingController get holidayNameController;
 
   ValueNotifier<DateTime?> get dateTimeState;
+
+  ValueNotifier<String?> get dateTimeMessageState;
+
+  /// Method get formKey for holiday name field
+  GlobalKey<FormState> get formHolidayNameKey;
+
+  /// Method get formKey for date field
+  GlobalKey<FormState> get formDateTimeKey;
+
+  String? getHolidayNameValidationText();
+
+  String? getDateTimeValidationText();
 }

@@ -1,12 +1,6 @@
-import 'dart:async';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter_template/config/app_config.dart';
 import 'package:flutter_template/config/environment/build_types.dart';
-import 'package:flutter_template/persistence/storage/config_storage/config_storage.dart';
-import 'package:flutter_template/util/log_history.dart';
-import 'package:logger/logger.dart';
-import 'package:surf_logger/surf_logger.dart' as surf;
 
 /// Environment configuration.
 class Environment implements Listenable {
@@ -59,19 +53,5 @@ class Environment implements Listenable {
       buildType,
       config,
     );
-  }
-
-  /// Update config proxy url from storage.
-  Future<void> refreshConfigProxy(IConfigSettingsStorage storage) async {
-    final savedProxy = await storage.getProxyUrl();
-    if (savedProxy?.isNotEmpty ?? false) {
-      config = config.copyWith(proxyUrl: savedProxy);
-    }
-  }
-
-  /// Save config proxy url to storage.
-  Future<void> saveConfigProxy(IConfigSettingsStorage storage) {
-    final config = this.config;
-    return storage.setProxyUrl(proxy: config.proxyUrl ?? '');
   }
 }

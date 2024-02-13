@@ -61,65 +61,61 @@ class NewsScreen extends ElementaryWidget<INewsScreenWidgetModel> {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          child: Column(
-            children: [
-              ListView.separated(
-                separatorBuilder: (context, index) => const SizedBox(height: 16),
-                physics: const ClampingScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: title.length,
-                itemBuilder: (context, index) => InkWell(
-                  onTap: wm.openNewsScreen,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Stack(
-                      alignment: AlignmentDirectional.bottomEnd,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 80),
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: FittedBox(
-                              fit: BoxFit.fill,
-                              child: Image.asset(images[index]),
-                            ),
-                          ),
+          child: ListView.separated(
+            separatorBuilder: (context, index) => const SizedBox(height: 16),
+            physics: const ClampingScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: title.length,
+            itemBuilder: (context, index) => InkWell(
+              onTap: wm.openNewsScreen,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Stack(
+                  alignment: AlignmentDirectional.bottomEnd,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 80),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: Image.asset(
+                          images[index],
+                          fit: BoxFit.fill,
                         ),
-                        SizedBox(
-                          height: 90,
-                          width: double.infinity,
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: AppColors.darkBlue,
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    title[index],
-                                    style: AppTextStyle.regular14.value.copyWith(color: AppColors.white),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 4),
-                                    child: Text(
-                                      '${date[index]} ${time[index]}',
-                                      style: AppTextStyle.regular12.value.copyWith(color: AppColors.lightGray),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
+                    SizedBox(
+                      height: 90,
+                      width: double.infinity,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: AppColors.darkBlue,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                title[index],
+                                style: AppTextStyle.regular14.value.copyWith(color: AppColors.white),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 4),
+                                child: Text(
+                                  '${date[index]} ${time[index]}',
+                                  style: AppTextStyle.regular12.value.copyWith(color: AppColors.lightGray),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
+            ),
           ),
         ),
       ),

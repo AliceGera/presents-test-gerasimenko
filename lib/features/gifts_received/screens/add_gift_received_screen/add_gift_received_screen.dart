@@ -7,7 +7,7 @@ import 'package:flutter_template/assets/res/resources.dart';
 import 'package:flutter_template/assets/text/text_style.dart';
 import 'package:flutter_template/features/common/domain/data/gifts/gift_data.dart';
 import 'package:flutter_template/features/common/domain/data/holidays/holiday_data.dart';
-import 'package:flutter_template/features/common/widgets/di_scope/app_add_gift_widget.dart';
+import 'package:flutter_template/features/common/widgets/app_add_gift_widget.dart';
 import 'package:flutter_template/features/gifts_received/screens/add_gift_received_screen/add_gift_received_screen_widget_model.dart';
 import 'package:flutter_template/features/navigation/domain/entity/app_route_names.dart';
 import 'package:union_state/union_state.dart';
@@ -65,6 +65,7 @@ class _Body extends StatelessWidget {
         unionStateListenable: wm.giftsState,
         builder: (_, gift) {
           return AppAddGiftWidget(
+            formKey: wm.formGiftNameKey,
             addGift: wm.addGift,
             holidayNameState: wm.holidayNameState,
             choosePersonScreenOnTap: wm.choosePersonScreenOnTap,
@@ -76,7 +77,10 @@ class _Body extends StatelessWidget {
             loadAgain: loadAgain,
             savePhoto: wm.savePhoto,
             isReceived: true,
-              rateOnTap:wm.chooseRateOnTap,
+            rateOnTap: wm.chooseRateOnTap,
+            validatorText: wm.getGiftNameValidationText,
+            holidayNameMessageState: wm.holidayNameMessageState,
+            personMessageState: wm.personMessageState,
           );
         },
         loadingBuilder: (_, hotel) => const SizedBox(),
@@ -85,28 +89,3 @@ class _Body extends StatelessWidget {
     );
   }
 }
-
-/*class ChooseWidget extends StatelessWidget {
-   const ChooseWidget({
-    required this.text, super.key,
-  });
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: AppColors.textFieldBackground),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(text, style: AppTextStyle.regular13.value.copyWith(color: AppColors.white)),
-            SvgPicture.asset(SvgIcons.checkChoose),
-          ],
-        ),
-      ),
-    );
-  }
-}*/

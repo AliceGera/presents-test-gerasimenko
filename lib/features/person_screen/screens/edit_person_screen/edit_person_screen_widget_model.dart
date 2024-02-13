@@ -39,18 +39,32 @@ class EditPersonScreenWidgetModel extends WidgetModel<EditPersonScreen, EditPers
   final TextEditingController _lastNameController = TextEditingController();
   final _photoState = ValueNotifier<Uint8List>(Uint8List(0));
 
+  final GlobalKey<FormState> _formFirstNameKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formLastNameKey = GlobalKey<FormState>();
+
+  String? _firstNameValidationText;
+  String? _lastNameValidationText;
+
   @override
   void Function(Person)? updatePerson;
 
   @override
   void initWidgetModel() {
     _firstNameController.addListener(() {
+      if (_firstNameValidationText != null) {
+        _firstNameValidationText = null;
+        _formFirstNameKey.currentState?.validate();
+      }
       model.firstName = _firstNameController.text;
     });
     _commentController.addListener(() {
       model.comment = _commentController.text;
     });
     _lastNameController.addListener(() {
+      if (_lastNameValidationText != null) {
+        _lastNameValidationText = null;
+        _formLastNameKey.currentState?.validate();
+      }
       model.lastName = _lastNameController.text;
     });
 
@@ -85,10 +99,23 @@ class EditPersonScreenWidgetModel extends WidgetModel<EditPersonScreen, EditPers
   }
 
   @override
-  Future<void> editPerson() async {
-    await model.editPerson();
-    updatePerson?.call(model.person);
-    await router.pop();
+  Future<bool> editPerson() async {
+    final isFirstNameCorrect = _firstNameController.text.isNotEmpty;
+    if (!isFirstNameCorrect) {
+      _firstNameValidationText = 'error';
+      _formFirstNameKey.currentState?.validate();
+    }
+    final isLastNameCorrect = _lastNameController.text.isNotEmpty;
+    if (!isLastNameCorrect) {
+      _lastNameValidationText = 'error';
+      _formLastNameKey.currentState?.validate();
+    }
+    if (isFirstNameCorrect && isLastNameCorrect) {
+      await model.editPerson();
+      updatePerson?.call(model.person);
+      await router.pop();
+    }
+    return true;
   }
 
   @override
@@ -96,6 +123,12 @@ class EditPersonScreenWidgetModel extends WidgetModel<EditPersonScreen, EditPers
     await model.deletePerson();
     await router.pop();
   }
+
+  @override
+  String? getFirstNameValidationText() => _firstNameValidationText;
+
+  @override
+  String? getLastNameValidationText() => _lastNameValidationText;
 
   @override
   TextEditingController get commentController => _commentController;
@@ -108,6 +141,12 @@ class EditPersonScreenWidgetModel extends WidgetModel<EditPersonScreen, EditPers
 
   @override
   ValueNotifier<Uint8List> get photoState => _photoState;
+
+  @override
+  GlobalKey<FormState> get formFirstNameKey => _formFirstNameKey;
+
+  @override
+  GlobalKey<FormState> get formLastNameKey => _formLastNameKey;
 }
 
 /// Interface of [EditPersonScreenWidgetModel].
@@ -131,7 +170,7 @@ abstract class IEditPersonScreenWidgetModel implements IWidgetModel {
   void savePhoto(Uint8List photo);
 
   /// Method to edit person.
-  Future<void> editPerson();
+  Future<bool> editPerson();
 
   /// Method to delete person.
   Future<void> deletePerson();
@@ -140,4 +179,14 @@ abstract class IEditPersonScreenWidgetModel implements IWidgetModel {
   void initBottomSheetWidgetModel(Person person);
 
   void Function(Person)? updatePerson;
+
+  /// Method get formKey for FirstName  field
+  GlobalKey<FormState> get formFirstNameKey;
+
+  /// Method get formKey for LastName field
+  GlobalKey<FormState> get formLastNameKey;
+
+  String? getFirstNameValidationText();
+
+  String? getLastNameValidationText();
 }

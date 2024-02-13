@@ -9,7 +9,6 @@ import 'package:flutter_template/features/common/widgets/app_bottom_sheet.dart';
 import 'package:flutter_template/features/common/widgets/app_button_widget.dart';
 import 'package:flutter_template/features/common/widgets/app_camera_widget.dart';
 import 'package:flutter_template/features/common/widgets/app_date_picker_widget.dart';
-import 'package:flutter_template/features/common/widgets/app_edit_gift_widget.dart';
 import 'package:flutter_template/features/common/widgets/app_textfield_widget.dart';
 import 'package:flutter_template/features/holidays/screens/add_holiday_screen/add_holiday_screen_widget_model.dart';
 import 'package:flutter_template/features/navigation/domain/entity/app_route_names.dart';
@@ -116,10 +115,16 @@ class _Body extends StatelessWidget {
         children: <Widget>[
           const SizedBox(height: 12),
           AppTextFieldWidget(
+            formKey: wm.formHolidayNameKey,
             text: 'Name of the holiday',
             controller: wm.holidayNameController,
+            validatorText: wm.getHolidayNameValidationText,
           ),
           const SizedBox(height: 8),
+          Text(
+            'Date',
+            style: AppTextStyle.regular12.value.copyWith(color: AppColors.white),
+          ),
           ValueListenableBuilder<DateTime?>(
             builder: (context, dateTime, child) {
               return InkWell(
@@ -131,9 +136,15 @@ class _Body extends StatelessWidget {
                     wm.addDate(result.first);
                   }
                 },
-                child: ChooseWidget(
-                  text: dateTime != null ? DateFormat('dd.MM.yyyy').format(dateTime) : 'Date',
-                  assetName: SvgIcons.datePicker,
+                child: ValueListenableBuilder<String?>(
+                  builder: (context, dateTimeMessage, child) {
+                    return ChooseWidget(
+                      color: dateTimeMessage != null ? Colors.red : Colors.transparent,
+                      text: dateTime != null ? DateFormat('dd.MM.yyyy').format(dateTime) : 'Date',
+                      assetName: SvgIcons.datePicker,
+                    );
+                  },
+                  valueListenable: wm.dateTimeMessageState,
                 ),
               );
             },
@@ -166,6 +177,40 @@ class _Body extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+class ChooseWidget extends StatelessWidget {
+  const ChooseWidget({
+    required this.text,
+    required this.assetName,
+    required this.color,
+    super.key,
+  });
+
+  final String text;
+  final String assetName;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: AppColors.textFieldBackground,
+        border: Border.all(color: color, width: 1),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(text, style: AppTextStyle.regular13.value.copyWith(color: AppColors.white)),
+            SvgPicture.asset(assetName),
+          ],
+        ),
       ),
     );
   }

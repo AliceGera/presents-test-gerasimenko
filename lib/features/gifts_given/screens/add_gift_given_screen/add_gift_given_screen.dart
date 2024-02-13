@@ -9,7 +9,7 @@ import 'package:flutter_template/features/common/domain/data/gifts/gift_data.dar
 import 'package:flutter_template/features/common/widgets/app_button_widget.dart';
 import 'package:flutter_template/features/common/widgets/app_camera_widget.dart';
 import 'package:flutter_template/features/common/widgets/app_textfield_widget.dart';
-import 'package:flutter_template/features/common/widgets/di_scope/app_add_gift_widget.dart';
+import 'package:flutter_template/features/common/widgets/app_add_gift_widget.dart';
 import 'package:flutter_template/features/gifts_given/screens/add_gift_given_screen/add_gift_given_screen_widget_model.dart';
 import 'package:flutter_template/features/navigation/domain/entity/app_route_names.dart';
 import 'package:union_state/union_state.dart';
@@ -77,6 +77,10 @@ class _Body extends StatelessWidget {
             loadAgain: loadAgain,
             savePhoto: wm.savePhoto,
             isReceived: false,
+            formKey: wm.formGiftNameKey,
+            validatorText: wm.getGiftNameValidationText,
+            holidayNameMessageState: wm.holidayNameMessageState,
+            personMessageState: wm.personMessageState,
           );
         },
         loadingBuilder: (_, hotel) => const SizedBox(),

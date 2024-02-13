@@ -67,6 +67,7 @@ class _Body extends StatelessWidget {
                 secondText: holidays.map((e) => e.holidayDate != null ? DateFormat('dd.MM.yyyy').format(e.holidayDate!) : '').toList(),
                 photoList: holidays.map((e) => e.photo).toList(),
                 values: holidays,
+                onItemTap: wm.openHolidayGiftsScreen,
                 onTapThreeDots: (holiday) {
                   showDialog<void>(
                     context: context,

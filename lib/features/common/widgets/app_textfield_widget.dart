@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:flutter_template/assets/colors/app_colors.dart';
@@ -8,19 +9,24 @@ import 'package:flutter_template/assets/text/text_style.dart';
 class AppTextFieldWidget extends StatefulWidget {
   AppTextFieldWidget({
     required this.text,
+    this.formKey,
     this.controller,
     super.key,
     this.validatorText,
     this.lines = 1,
     this.isPrice = false,
+    this.keyboardType,
+    this.inputFormatters,
   });
 
+  final GlobalKey<FormState>? formKey;
   final TextEditingController? controller;
   final int lines;
   final bool isPrice;
   final String text;
   final String? Function()? validatorText;
-  String? _currentValidationText;
+  final TextInputType? keyboardType;
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   State<AppTextFieldWidget> createState() => _AppTextFieldWidgetState();
@@ -62,7 +68,7 @@ class _AppTextFieldWidgetState extends State<AppTextFieldWidget> {
   @override
   Widget build(BuildContext context) {
     return Form(
-      //key: widget.formKey,
+      key: widget.formKey,
       child: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
@@ -78,13 +84,12 @@ class _AppTextFieldWidgetState extends State<AppTextFieldWidget> {
             else
               const SizedBox(),
             TextFormField(
+              inputFormatters: widget.inputFormatters,
+              keyboardType: widget.keyboardType,
               maxLines: widget.lines,
               style: AppTextStyle.regular13.value.copyWith(color: AppColors.white),
               validator: (value) {
-                setState(() {
-                  widget._currentValidationText = widget.validatorText?.call();
-                });
-                return '';
+                return widget.validatorText?.call() != null ? '' : null;
               },
               focusNode: _focus,
               controller: widget.controller,
@@ -137,6 +142,7 @@ class _AppTextFieldWidgetState extends State<AppTextFieldWidget> {
                 contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                 errorBorder: const OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(12)),
+                  borderSide: BorderSide(color: Colors.red, width: 1),
                 ),
                 enabledBorder: UnderlineInputBorder(
                   borderSide: const BorderSide(width: 0, color: AppColors.textFieldBackground),

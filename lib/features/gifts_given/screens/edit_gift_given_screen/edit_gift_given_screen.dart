@@ -90,6 +90,11 @@ class EditGiftGivenScreen extends ElementaryWidget<IEditGiftGivenScreenWidgetMod
               isEdit: true,
               isReceived: false,
               saveGift: wm.editGiftOnTap,
+              formKey: wm.formGiftNameKey,
+              validatorText: () {
+                return wm.getGiftNameValidationText();
+              },
+              personMessageState: wm.personMessageState,
             ),
           );
         },

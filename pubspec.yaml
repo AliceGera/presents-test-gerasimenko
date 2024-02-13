@@ -13,23 +13,16 @@ dependencies:
   drift: ^2.15.0
   sqlite3_flutter_libs: ^0.5.0
   flutter_svg: ^2.0.9
-  analytics: 1.0.2
   auto_route: 7.8.4
   collection: 1.18.0
-  dio: 5.4.0
   elementary: 3.0.0
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
   intl: 0.18.1
-  logger: 1.4.0
-  path: 1.8.3
-  path_provider: 2.1.2
   provider: 6.1.1
-  retrofit: 4.0.3
-  shared_preferences: 2.2.2
-  surf_logger: 1.1.0
+  path_provider: 2.1.2
 
 dev_dependencies:
   auto_route_generator: 7.3.2
@@ -39,23 +32,20 @@ dev_dependencies:
   flutter_native_splash: 2.3.9
   flutter_test:
     sdk: flutter
-  golden_toolkit: 0.15.0
-  json_serializable: 6.7.1
-  mocktail: 1.0.3
-  retrofit_generator: 8.0.6
-  spider: 4.2.2
   surf_lint_rules: 3.0.0
   drift_dev: ^2.9.0
+
+flutter_native_splash:
+  color: "#FF131849"
+  image: assets/images/splash.png
 
 environment:
     sdk: '>=3.2.5 <4.0.0'
     flutter: 3.16.8
 
-
 flutter:
   uses-material-design: true
   generate: true
   assets:
-    - assets/fonts/
     - assets/icons/
     - assets/images/

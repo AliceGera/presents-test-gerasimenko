@@ -5,6 +5,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_template/assets/colors/app_colors.dart';
 import 'package:flutter_template/assets/res/resources.dart';
@@ -28,9 +29,15 @@ class AppEditGiftWidget extends StatelessWidget {
   final bool? isEdit;
   final bool isReceived;
   void Function(Uint8List photo) savePhoto;
+  final GlobalKey<FormState>? formKey;
+  final String? Function()? validatorText;
+  final ValueNotifier<String?> personMessageState;
 
   AppEditGiftWidget({
-     this.rateOnTap,
+    required this.personMessageState,
+    this.validatorText,
+    this.formKey,
+    this.rateOnTap,
     required this.personScreen,
     required this.chooseHolidayNameScreen,
     required this.commentController,
@@ -66,36 +73,39 @@ class AppEditGiftWidget extends StatelessWidget {
                     photo: gift.photo,
                   ),
                   const SizedBox(width: 30),
-                  if (isReceived) Column(
-                    children: [
-                      Text(
-                        'Rate the gift',
-                        style: AppTextStyle.regular14.value.copyWith(
-                          color: AppColors.white,
+                  if (isReceived)
+                    Column(
+                      children: [
+                        Text(
+                          'Rate the gift',
+                          style: AppTextStyle.regular14.value.copyWith(
+                            color: AppColors.white,
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 45,
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          itemCount: 5,
-                          itemBuilder: (context, index) => InkWell(
-                            highlightColor: Colors.transparent,
-                            splashColor: Colors.transparent,
-                            onTap: () {
-                              rateOnTap?.call(index + 1);
-                            },
-                            child: Icon(
-                              Icons.star,
-                              size: 30,
-                              color: (index + 1 <= gift.giftRaiting) ? AppColors.fillStar : AppColors.emptyStar,
+                        SizedBox(
+                          height: 45,
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: 5,
+                            itemBuilder: (context, index) => InkWell(
+                              highlightColor: Colors.transparent,
+                              splashColor: Colors.transparent,
+                              onTap: () {
+                                rateOnTap?.call(index + 1);
+                              },
+                              child: Icon(
+                                Icons.star,
+                                size: 30,
+                                color: (index + 1 <= gift.giftRaiting) ? AppColors.fillStar : AppColors.emptyStar,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ) else const SizedBox(),
+                      ],
+                    )
+                  else
+                    const SizedBox(),
                 ],
               ),
             ),
@@ -111,6 +121,8 @@ class AppEditGiftWidget extends StatelessWidget {
                   AppTextFieldWidget(
                     text: 'Gift name',
                     controller: giftNameController,
+                    formKey: formKey,
+                    validatorText: validatorText,
                   ),
                   const SizedBox(height: 8),
                   Text(
@@ -121,9 +133,15 @@ class AppEditGiftWidget extends StatelessWidget {
                     highlightColor: Colors.transparent,
                     splashColor: Colors.transparent,
                     onTap: personScreen,
-                    child: ChooseWidget(
-                      text: gift.whoGave.isEmpty ? 'Who gave it' : gift.whoGave,
-                      assetName: SvgIcons.checkChoose,
+                    child: ValueListenableBuilder<String?>(
+                      builder: (context, personMessage, child) {
+                        return ChooseWidget(
+                          text: gift.whoGave.isEmpty ? 'Who gave it' : gift.whoGave,
+                          assetName: SvgIcons.checkChoose,
+                          color: personMessage != null ? Colors.red : Colors.transparent,
+                        );
+                      },
+                      valueListenable: personMessageState,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -141,11 +159,18 @@ class AppEditGiftWidget extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  if (isReceived) const SizedBox() else AppTextFieldWidget(
-                          text: 'Price',
-                          controller: priceController,
-                    isPrice: !isReceived,
-                        ),
+                  if (isReceived)
+                    const SizedBox()
+                  else
+                    AppTextFieldWidget(
+                      text: 'Price',
+                      controller: priceController,
+                      isPrice: !isReceived,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                    ),
                   const SizedBox(height: 8),
                   AppTextFieldWidget(
                     text: 'A comment',
@@ -182,16 +207,22 @@ class ChooseWidget extends StatelessWidget {
   const ChooseWidget({
     required this.text,
     required this.assetName,
+    this.color = Colors.transparent,
     super.key,
   });
 
+  final Color color;
   final String text;
   final String assetName;
 
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: AppColors.textFieldBackground),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: AppColors.textFieldBackground,
+        border: Border.all(color: color, width: 1),
+      ),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
         child: Row(
