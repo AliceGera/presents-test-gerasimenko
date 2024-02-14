@@ -1,16 +1,16 @@
 # fvm flutter pub run flutter_native_splash:create
 flutter_native_splash:
   color: "#131849"
-  image: assets/splash/4.0x/splash1.png
+  image: assets/splash/splash.png
   color_dark: "#131849"
-  image_dark: assets/splash/4.0x/splash1.png
+  image_dark: assets/splash/splash.png
   android_12:
     color: "#131849"
     icon_background_color: "#131849"
-    image: assets/splash/4.0x/splash1.png
+    image: assets/splash/splash_dev_android.png
     color_dark: "#131849"
     icon_background_color_dark: "#131849"
-    image_dark: assets/splash/4.0x/splash1.png
+    image_dark:  assets/splash/splash_dev_android.png
   android: true
   ios: true
   web: true
